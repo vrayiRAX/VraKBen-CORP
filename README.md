@@ -1,7 +1,6 @@
 # VraKBen-CORP
 contexto:
 El caso de la automotriz "VraKBen"
-VraKBen es una empresa automotriz en plena expansión que ofrece una solución integral a sus clientes. Por un lado, manejan una tienda de venta de repuestos (filtros, neumáticos, parachoques) e insumos de carrocería (masilla, pintura, lijas). Por otro lado, operan un taller especializado en mecánica general, preparación para revisión técnica y desabolladura y pintura (D&P).
 
 El Problema Operativo:
 A pesar del éxito comercial, VraKBen enfrenta una grave crisis de gestión interna. Actualmente, operan con sistemas descentralizados y obsoletos (planillas de cálculo y un software antiguo) que no se comunican entre sí. Esto ha generado los siguientes puntos críticos:
@@ -14,5 +13,6 @@ Falta de Trazabilidad del Cliente: No existe un historial unificado. Si un clien
 
 Cuellos de botella tecnológicos: Su sistema monolítico actual es inestable. Cuando hay alta demanda de consultas de stock de neumáticos, el sistema colapsa y los mecánicos no pueden ingresar sus órdenes de trabajo.
 La Solución Requerida (El Proyecto de Ustedes):
+
 VraKBen necesita urgentemente una plataforma digital unificada. Requieren migrar a una arquitectura de microservicios  que separe las responsabilidades (Inventario, Taller, Ventas y Usuarios). De esta forma, si el módulo de tienda online tiene un pico de tráfico, el sistema interno del taller no se verá afectado, garantizando la escalabilidad y funcionalidad operativa.
 

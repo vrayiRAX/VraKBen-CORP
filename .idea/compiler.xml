@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Annotation profile for appointment-scheduler" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+        </processorPath>
+        <module name="warehouse-location" />
+        <module name="catalog" />
+        <module name="auth-server" />
+        <module name="job-orders" />
+        <module name="order-management" />
+        <module name="vehicle-history" />
+        <module name="config-server" />
+        <module name="notification" />
+        <module name="appointment-scheduler" />
+        <module name="shopping-cart" />
+        <module name="stock-engine" />
+        <module name="customer-profile" />
+        <module name="supplier-procurement" />
+        <module name="api-gateway" />
+        <module name="resource-planner" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="appointment-scheduler" options="-parameters" />
+      <module name="auth-server" options="-parameters" />
+      <module name="catalog" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="customer-profile" options="-parameters" />
+      <module name="job-orders" options="-parameters" />
+      <module name="notification" options="-parameters" />
+      <module name="order-management" options="-parameters" />
+      <module name="resource-planner" options="-parameters" />
+      <module name="shopping-cart" options="-parameters" />
+      <module name="stock-engine" options="-parameters" />
+      <module name="supplier-procurement" options="-parameters" />
+      <module name="vehicle-history" options="-parameters" />
+      <module name="warehouse-location" options="-parameters" />
+    </option>
+  </component>
+</project>

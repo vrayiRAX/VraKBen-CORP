@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Base de Datos Centralizada (con múltiples BDs)
+  vrakben-db:
+    image: postgres:15
+    container_name: vrakben-db
+    environment:
+      POSTGRES_USER: user_vrakben
+      POSTGRES_PASSWORD: password_vrakben
+    ports:
+      - "5432:5432"
+    networks:
+      - vrakben-net
+
+  # Service Discovery (Eureka) - Vital para que los 15 se conecten
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - vrakben-net
+
+  # Ejemplo de Microservicio: Inventario
+  ms-stock-engine:
+    build: ./ms-stock-engine
+    container_name: ms-stock-engine
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/db_inventory
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - vrakben-db
+      - eureka-server
+    networks:
+      - vrakben-net
+
+networks:
+  vrakben-net:
+    driver: bridge

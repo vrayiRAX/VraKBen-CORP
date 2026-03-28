@@ -1,0 +1,16 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: ms-order-management
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_orders
+    username: user_vrakben
+    password: password_vrakben
+  jpa:
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

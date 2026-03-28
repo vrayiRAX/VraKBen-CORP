@@ -5,34 +5,65 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="897ff707-ae6d-4edb-84f5-1aec647c72ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/controller/StockController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/model/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/repository/ProductRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/service/StockService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/Controller/AppointmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/client/StockClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/model/Appointment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/repository/AppointmentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/service/AppointmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth-server/src/main/java/ms_auth_server/auth_server/Auth/AuthApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth-server/src/main/java/ms_auth_server/auth_server/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth-server/src/main/java/ms_auth_server/auth_server/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth-server/src/main/java/ms_auth_server/auth_server/service/JwtService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth-server/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/src/main/java/ms_catalog/catalog/controller/CatalogController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/src/main/java/ms_catalog/catalog/model/ProductCatalog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/src/main/java/ms_catalog/catalog/repository/CatalogRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/src/main/java/ms_catalog/catalog/service/CatalogService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config-server/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer-profile/src/main/java/ms_customer_profile/customer_profile/controller/CustomerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer-profile/src/main/java/ms_customer_profile/customer_profile/model/Customer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer-profile/src/main/java/ms_customer_profile/customer_profile/repository/CustomerRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer-profile/src/main/java/ms_customer_profile/customer_profile/service/CustomerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer-profile/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/job-orders/src/main/java/ms_job_orders/job_orders/controller/JobOrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/job-orders/src/main/java/ms_job_orders/job_orders/model/JobOrder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/job-orders/src/main/java/ms_job_orders/job_orders/repository/JobOrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/job-orders/src/main/java/ms_job_orders/job_orders/service/JobOrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/job-orders/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification/src/main/java/notification/notification/controller/NotificationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification/src/main/java/notification/notification/model/NotificationRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification/src/main/java/notification/notification/service/EmailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/client/StockClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/controller/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/model/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/repository/OrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/service/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-management/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource-planner/src/main/java/ms_resource_planner/resource_planner/controller/PlannerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource-planner/src/main/java/ms_resource_planner/resource_planner/model/Technician.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource-planner/src/main/java/ms_resource_planner/resource_planner/repository/TechnicianRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource-planner/src/main/java/ms_resource_planner/resource_planner/service/PlannerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource-planner/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shopping-cart/src/main/java/ms_shopping_cart/shopping_cart/controller/CartController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shopping-cart/src/main/java/ms_shopping_cart/shopping_cart/model/CartItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shopping-cart/src/main/java/ms_shopping_cart/shopping_cart/repository/CartRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shopping-cart/src/main/java/ms_shopping_cart/shopping_cart/service/CartService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ms_api_gateway/api_gateway/ApiGatewayApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/ApiGatewayApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/TestApiGatewayApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/TestcontainersConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/api_gateway/api_gateway/ApiGatewayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/api_gateway/api_gateway/ApiGatewayApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment-scheduler/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/appointment-scheduler/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/AppointmentSchedulerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment-scheduler/src/main/java/ms_appointment_scheduler/appointment_scheduler/AppointmentSchedulerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment-scheduler/src/test/java/ms_appointment_scheduler/appointment_scheduler/TestAppointmentSchedulerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment-scheduler/src/test/java/ms_appointment_scheduler/appointment_scheduler/TestAppointmentSchedulerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/java/ms_config_server/config_server/ConfigServerApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/ConfigServerApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/TestConfigServerApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/TestcontainersConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/notification/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/notification/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/java/config_server/config_server/ConfigServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/java/config_server/config_server/ConfigServerApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notification/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/src/main/java/ms_notification/notification/NotificationApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/NotificationApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/TestNotificationApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/TestcontainersConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/src/main/java/notification/notification/NotificationApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification/src/main/java/notification/notification/NotificationApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-management/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-management/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/OrderManagementApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-management/src/main/java/ms_order_management/order_management/OrderManagementApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +105,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -101,6 +133,14 @@
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="api_gateway.api_gateway.ApiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AppointmentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="appointment-scheduler" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_appointment_scheduler.appointment_scheduler.AppointmentApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -225,7 +265,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774705025591</updated>
-      <workItem from="1774705027251" duration="1517000" />
+      <workItem from="1774705027251" duration="17126000" />
     </task>
     <servers />
   </component>

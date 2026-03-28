@@ -1,4 +1,4 @@
-package ms_config_server.config_server;
+package notification.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-class ConfigServerApplicationTests {
+class NotificationApplicationTests {
 
 	@Test
 	void contextLoads() {

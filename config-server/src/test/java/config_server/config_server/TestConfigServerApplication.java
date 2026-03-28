@@ -1,4 +1,4 @@
-package ms_config_server.config_server;
+package config_server.config_server;
 
 import org.springframework.boot.SpringApplication;
 

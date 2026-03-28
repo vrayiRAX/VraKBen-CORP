@@ -1,4 +1,4 @@
-package ms_notification.notification;
+package notification.notification;
 
 import org.springframework.boot.SpringApplication;
 

@@ -4,61 +4,88 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9656c4ea-bbc6-4a1d-9afd-efbeae837709" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="897ff707-ae6d-4edb-84f5-1aec647c72ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/controller/StockController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/model/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/repository/ProductRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/java/ms_stock_engine/stock_engine/service/StockService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stock-engine/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ms_api_gateway/api_gateway/ApiGatewayApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/ApiGatewayApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/TestApiGatewayApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/test/java/ms_api_gateway/api_gateway/TestcontainersConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/java/ms_config_server/config_server/ConfigServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/ConfigServerApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/TestConfigServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/test/java/ms_config_server/config_server/TestcontainersConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/notification/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/notification/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/src/main/java/ms_notification/notification/NotificationApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/NotificationApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/TestNotificationApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/src/test/java/ms_notification/notification/TestcontainersConfiguration.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;vrayiRAX&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "vrayiRAX"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/vrayiRAX/VraKBen-CORP.git&quot;,
-    &quot;accountId&quot;: &quot;c7389d7a-456c-4f2f-8f36-e148d3b0f3cb&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/vrayiRAX/VraKBen-CORP.git",
+    "accountId": "c7389d7a-456c-4f2f-8f36-e148d3b0f3cb"
   }
-}</component>
-  <component name="KubernetesApiPersistence">{}</component>
-  <component name="KubernetesApiProvider">{
-  &quot;isMigrated&quot;: true
-}</component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
-}</component>
-  <component name="ProjectId" id="3B8nlRAyY8jL6fl5I2wgaeFOcQt" />
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="3BZmZj6dmwiaStHAuooaXVE3ybw" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunDashboard">
     <option name="configurationTypes">
       <set>
@@ -69,11 +96,11 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.CatalogApplication">
+  <component name="RunManager" selected="Spring Boot.JobOrdersApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="api-gateway" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_api_gateway.api_gateway.ApiGatewayApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="api_gateway.api_gateway.ApiGatewayApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -86,10 +113,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CatalogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="AuthServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="catalog" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_catalog.catalog.CatalogApplication" />
+      <module name="auth-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_auth_server.auth_server.AuthServerApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -97,7 +124,15 @@
     <configuration name="ConfigServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="config-server" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_config_server.config_server.ConfigServerApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="config_server.config_server.ConfigServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CustomerProfileApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="customer-profile" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_customer_profile.customer_profile.CustomerProfileApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -106,6 +141,14 @@
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="job-orders" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ms_job_orders.job_orders.JobOrdersApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="notification" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="notification.notification.NotificationApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -150,6 +193,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="VehicleHistoryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="vehicle-history" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_vehicle_history.vehicle_history.VehicleHistoryApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WarehouseLocationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="warehouse-location" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_warehouse_location.warehouse_location.WarehouseLocationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -161,15 +220,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9656c4ea-bbc6-4a1d-9afd-efbeae837709" name="Changes" comment="" />
-      <created>1773879720680</created>
+      <changelist id="897ff707-ae6d-4edb-84f5-1aec647c72ce" name="Changes" comment="" />
+      <created>1774705025591</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1773879720680</updated>
-      <workItem from="1773879722744" duration="3004000" />
-      <workItem from="1774359683925" duration="3537000" />
-      <workItem from="1774450861032" duration="4471000" />
-      <workItem from="1774465950431" duration="1947000" />
+      <updated>1774705025591</updated>
+      <workItem from="1774705027251" duration="1517000" />
     </task>
     <servers />
   </component>

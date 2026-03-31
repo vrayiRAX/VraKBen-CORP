@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ms-stock-engine
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vrakben_stock
+    username: user_vrakben
+    password: password_vrakben
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

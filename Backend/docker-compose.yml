@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # 1. Base de Datos Centralizada
+  vrakben-db:
+    image: postgres:15
+    container_name: vrakben-db
+    environment:
+      POSTGRES_USER: user_vrakben
+      POSTGRES_PASSWORD: password_vrakben
+    ports:
+      - "5432:5432"
+    networks:
+      - vrakben-net
+
+  # 2. Service Discovery (Eureka)
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - vrakben-net
+
+  # 3. API Gateway - Puerta de entrada
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - eureka-server
+    networks:
+      - vrakben-net
+
+  # 4. Auth Server - Para los tokens JWT y Login
+  auth-server:
+    build: ./auth-server
+    container_name: auth-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/db_auth
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - vrakben-db
+      - eureka-server
+    networks:
+      - vrakben-net
+
+  # 5. Catálogo de Repuestos - Para nuestra tienda
+  ms-catalog:
+    build: ./catalog
+    container_name: ms-catalog
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/db_catalog
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - vrakben-db
+      - eureka-server
+    networks:
+      - vrakben-net
+
+  # 6. Motor de Inventario
+  ms-stock-engine:
+    build: ./stock-engine
+    container_name: ms-stock-engine
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/db_inventory
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - vrakben-db
+      - eureka-server
+    networks:
+      - vrakben-net
+
+networks:
+  vrakben-net:
+    driver: bridge

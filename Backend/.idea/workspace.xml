@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="897ff707-ae6d-4edb-84f5-1aec647c72ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/supplier-procurement/src/main/java/ms_supplier_procurement/supplier_procurement/controller/ProcurementController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supplier-procurement/src/main/java/ms_supplier_procurement/supplier_procurement/model/SupplierOrder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supplier-procurement/src/main/java/ms_supplier_procurement/supplier_procurement/repository/ProcurementRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supplier-procurement/src/main/java/ms_supplier_procurement/supplier_procurement/service/ProcurementService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supplier-procurement/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/controller/VehicleHistoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/model/VehicleHistory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/repository/VehicleHistoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/service/VehicleHistoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle-history/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse-location/src/main/java/ms_warehouse_location/warehouse_location/controller/LocationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse-location/src/main/java/ms_warehouse_location/warehouse_location/model/Location.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse-location/src/main/java/ms_warehouse_location/warehouse_location/repository/LocationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse-location/src/main/java/ms_warehouse_location/warehouse_location/service/LocationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/VehicleHistoryApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle-history/src/main/java/ms_vehicle_history/vehicle_history/VehicleHistoryApplication.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "vrayiRAX"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/vrayiRAX/VraKBen-CORP.git",
+    "accountId": "c7389d7a-456c-4f2f-8f36-e148d3b0f3cb"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="3BZmZj6dmwiaStHAuooaXVE3ybw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.JobOrdersApplication">
+    <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="api-gateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="api_gateway.api_gateway.ApiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AppointmentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="appointment-scheduler" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_appointment_scheduler.appointment_scheduler.AppointmentApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AppointmentSchedulerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="appointment-scheduler" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_appointment_scheduler.appointment_scheduler.AppointmentSchedulerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="auth-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_auth_server.auth_server.AuthServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConfigServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="config-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="config_server.config_server.ConfigServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CustomerProfileApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="customer-profile" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_customer_profile.customer_profile.CustomerProfileApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JobOrdersApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="job-orders" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_job_orders.job_orders.JobOrdersApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="notification" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="notification.notification.NotificationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderManagementApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="order-management" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_order_management.order_management.OrderManagementApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ResourcePlannerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="resource-planner" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_resource_planner.resource_planner.ResourcePlannerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ShoppingCartApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="shopping-cart" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_shopping_cart.shopping_cart.ShoppingCartApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StockEngineApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="stock-engine" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_stock_engine.stock_engine.StockEngineApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SupplierProcurementApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="supplier-procurement" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_supplier_procurement.supplier_procurement.SupplierProcurementApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VehicleHistoryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="vehicle-history" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_vehicle_history.vehicle_history.VehicleHistoryApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WarehouseLocationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="warehouse-location" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ms_warehouse_location.warehouse_location.WarehouseLocationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="897ff707-ae6d-4edb-84f5-1aec647c72ce" name="Changes" comment="" />
+      <created>1774705025591</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774705025591</updated>
+      <workItem from="1774705027251" duration="18790000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

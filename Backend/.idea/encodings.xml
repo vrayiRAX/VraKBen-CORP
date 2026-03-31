@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/appointment-scheduler/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auth-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/catalog/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/customer-profile/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/job-orders/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notification/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/resource-planner/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shopping-cart/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/stock-engine/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/supplier-procurement/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/vehicle-history/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/warehouse-location/src/main/java" charset="UTF-8" />
+  </component>
+</project>

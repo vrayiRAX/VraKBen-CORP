@@ -1,0 +1,33 @@
+flowchart TD
+    Inicio[Landing Page VrakBen] --> Auth{¿Usuario Logueado?}
+
+    %% Flujo Público (Sin Login)
+    Auth -- No --> Pub[Navegación Pública]
+    Pub --> Home(Home: Equipo y Servicios)
+    Pub --> Vitrina(Catálogo de Repuestos)
+    Pub --> Carrito(Carrito de Compras)
+    Pub --> Login(Página de Login / Registro)
+
+    %% Flujo Autenticado
+    Auth -- Sí --> CheckRol{Validar Rol desde Auth-Server}
+
+    %% Rol Cliente
+    CheckRol -- Rol: Cliente --> FlowCliente[Portal Cliente]
+    FlowCliente --> Home
+    FlowCliente --> Vitrina
+    FlowCliente --> Carrito
+    Carrito --> Pago(Checkout y Pago)
+    FlowCliente --> Agenda(Agendar Servicio en Taller)
+    FlowCliente --> Perfil(Mi Perfil: Historial de mi Vehículo)
+
+    %% Rol Mecánico
+    CheckRol -- Rol: Mecánico --> FlowMecanico[Intranet Taller]
+    FlowMecanico --> DashMec(Dashboard: Mis Órdenes de Trabajo)
+    FlowMecanico --> InvMec(Consultar Inventario)
+    FlowMecanico --> Solicitud(Generar Solicitud de Material)
+
+    %% Rol Administrador
+    CheckRol -- Rol: Admin --> FlowAdmin[Panel de Control Admin]
+    FlowAdmin --> Metricas(Métricas: Ventas y Citas)
+    FlowAdmin --> GestInv(Gestión Total de Bodega)
+    FlowAdmin --> GestUser(Gestión de Usuarios/Roles)

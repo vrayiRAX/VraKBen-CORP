@@ -21,4 +21,10 @@ public class CatalogController {
     public ProductCatalog getBySku(@PathVariable String sku) {
         return service.getProductBySku(sku);
     }
+
+    // --- NUEVO MÉTODO POST PARA CREAR ---
+    @PostMapping("/create")
+    public ProductCatalog create(@RequestBody ProductCatalog product) {
+        return service.saveProduct(product);
+    }
 }

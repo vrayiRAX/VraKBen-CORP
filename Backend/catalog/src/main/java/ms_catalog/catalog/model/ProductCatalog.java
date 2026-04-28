@@ -17,7 +17,12 @@ public class ProductCatalog {
     private String name;
     private String brand;
     private String category;
+
     @Column(length = 500)
     private String description;
+
     private Double price;
+
+    // --- NUEVO CAMPO PARA LA IMAGEN ---
+    private String imageUrl;
 }

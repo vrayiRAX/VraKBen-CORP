@@ -19,4 +19,9 @@ public class CatalogService {
         return repository.findBySku(sku)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado en catálogo"));
     }
+
+    // --- NUEVO MÉTODO PARA GUARDAR ---
+    public ProductCatalog saveProduct(ProductCatalog product) {
+        return repository.save(product);
+    }
 }

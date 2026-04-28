@@ -10,23 +10,75 @@ spring:
         locator:
           enabled: true
       routes:
-        # Ruta para el Stock Engine
+        # Ruta para el Auth Server (Pública, sin filtro JWT)
+        - id: auth-server-route
+          uri: lb://ms-auth-server
+          predicates:
+            - Path=/api/auth/**
+
+        # Ruta para el Catálogo (Se requiere token, a menos que el GET sea público, por ahora proteger todo)
+        - id: catalog-route
+          uri: lb://ms-catalog
+          predicates:
+            - Path=/api/catalog/**
+          filters:
+            - JwtAuthentication
+
+        # Ruta para el Stock Engine (Protegida)
         - id: stock-engine-route
           uri: lb://ms-stock-engine
           predicates:
             - Path=/api/stock/**
+          filters:
+            - JwtAuthentication
 
-        # Ruta para el Agendamiento
+        # Ruta para el Agendamiento (Protegida)
         - id: appointment-route
           uri: lb://ms-appointment-scheduler
           predicates:
             - Path=/api/appointments/**
+          filters:
+            - JwtAuthentication
 
-        # Ruta para el Historial
+        # Ruta para el Historial (Protegida)
         - id: vehicle-history-route
           uri: lb://ms-vehicle-history
           predicates:
             - Path=/api/history/**
+          filters:
+            - JwtAuthentication
+
+        # Ruta para el Carrito (Protegida)
+        - id: shopping-cart-route
+          uri: lb://ms-shopping-cart
+          predicates:
+            - Path=/api/cart/**
+          filters:
+            - JwtAuthentication
+
+        # Ruta para Órdenes y Checkout (Protegida)
+        - id: order-management-route
+          uri: lb://ms-order-management
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - JwtAuthentication
+
+        # Ruta para Órdenes de Trabajo de Mecánicos (Protegida)
+        - id: job-orders-route
+          uri: lb://ms-job-orders
+          predicates:
+            - Path=/api/jobs/**
+          filters:
+            - JwtAuthentication
+
+        # Ruta para Solicitud de Materiales (Protegida)
+        - id: supplier-procurement-route
+          uri: lb://ms-supplier-procurement
+          predicates:
+            - Path=/api/procurement/**
+          filters:
+            - JwtAuthentication
 
 eureka:
   client:

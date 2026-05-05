@@ -6,9 +6,9 @@ Esta carpeta contiene la documentación oficial del proyecto.
 
 | Archivo | Descripción |
 |---|---|
-| `Guia_Parcial_2.pdf` | Rúbrica de evaluación del Parcial 2 |
+| `Parcial1 FIII.pdf` | Informe del Parcial 1 — entregado al profesor |
 
-## ⚠️ Instrucciones
+## 📌 Notas
 
-Coloca aquí el PDF de la guía de evaluación entregado por el profesor.
-El archivo debe llamarse `Guia_Parcial_2.pdf` para que coincida con las referencias del README principal.
+- El informe del **Parcial 2** debe colocarse aquí una vez sea generado.
+- Todos los documentos de evaluación deben quedar en esta carpeta para facilitar la revisión del profesor.

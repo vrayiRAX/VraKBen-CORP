@@ -18,7 +18,7 @@ services:
 
   # 2. Service Discovery (Eureka)
   eureka-server:
-    build: ./eureka-server
+    build: ./Backend/eureka-server
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -27,7 +27,7 @@ services:
 
   # 3. API Gateway - Puerta de entrada
   api-gateway:
-    build: ./api-gateway
+    build: ./bff
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -40,7 +40,7 @@ services:
 
   # 4. Auth Server
   auth-server:
-    build: ./auth-server
+    build: ./ms-auth-server
     container_name: auth-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -53,7 +53,7 @@ services:
 
   # 5. Catálogo de Repuestos (con puerto trasero y BD corregida)
   ms-catalog:
-    build: ./catalog
+    build: ./ms-catalog
     container_name: ms-catalog
     ports:
       - "8084:8084" # Puerta trasera para acceso directo
@@ -68,7 +68,7 @@ services:
 
   # 6. Motor de Inventario
   ms-stock-engine:
-    build: ./stock-engine
+    build: ./ms-stock
     container_name: ms-stock-engine
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -81,7 +81,7 @@ services:
 
   # 7. Carrito de Compras
   ms-shopping-cart:
-    build: ./shopping-cart
+    build: ./Backend/shopping-cart
     container_name: ms-shopping-cart
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -94,7 +94,7 @@ services:
 
   # 8. Gestión de Órdenes / Ventas
   ms-order-management:
-    build: ./order-management
+    build: ./Backend/order-management
     container_name: ms-order-management
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -107,7 +107,7 @@ services:
 
   # 9. Agendamiento de Citas
   ms-appointment-scheduler:
-    build: ./appointment-scheduler
+    build: ./Backend/appointment-scheduler
     container_name: ms-appointment-scheduler
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -120,7 +120,7 @@ services:
 
   # 10. Historial de Vehículos
   ms-vehicle-history:
-    build: ./vehicle-history
+    build: ./Backend/vehicle-history
     container_name: ms-vehicle-history
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -133,7 +133,7 @@ services:
 
   # 11. Órdenes de Trabajo para Mecánicos
   ms-job-orders:
-    build: ./job-orders
+    build: ./Backend/job-orders
     container_name: ms-job-orders
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -146,7 +146,7 @@ services:
 
   # 12. Solicitudes de Material
   ms-supplier-procurement:
-    build: ./supplier-procurement
+    build: ./Backend/supplier-procurement
     container_name: ms-supplier-procurement
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db

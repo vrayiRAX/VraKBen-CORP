@@ -1,41 +1,70 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+// Páginas Públicas
 import Home from './pages/Home';
 import Catalogo from './pages/Catalogo';
-import Carrito from './pages/Carrito';
 import Login from './pages/Login';
 import Register from './pages/Register';
+
+// Páginas Cliente
+import Carrito from './pages/Carrito';
 import Agendar from './pages/Agendar';
-// Aquí luego importaremos Login y Register
+import Pago from './pages/Pago';
+import Perfil from './pages/Perfil';
+
+// Páginas Mecánico
+import DashMec from './pages/mechanic/DashMec';
+import InvMec from './pages/mechanic/InvMec';
+import Solicitud from './pages/mechanic/Solicitud';
+
+// Páginas Admin
+import Metricas from './pages/admin/Metricas';
+import GestInv from './pages/admin/GestInv';
+import GestUser from './pages/admin/GestUser';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  
-  // NUEVO ESTADO: Por defecto lo ponemos en "false" (no está logueado)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <Router>
-      <div style={{ backgroundColor: isDarkMode ? '#121212' : '#ffffff', minHeight: '100vh' }}>
-        {/* Le pasamos la variable isLoggedIn al Navbar */}
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} isLoggedIn={isLoggedIn} />
-        
-        <Routes>
-          <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
-          <Route path="/tienda" element={<Catalogo isDarkMode={isDarkMode} />} />
-          <Route path="/carrito" element={<Carrito isDarkMode={isDarkMode} />} />
+    <AuthProvider>
+      <Router>
+        <div style={{ backgroundColor: isDarkMode ? '#121212' : '#ffffff', minHeight: '100vh', transition: 'background-color 0.3s' }}>
+          <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           
-          {/* RUTAS DE AUTENTICACIÓN */}
-          <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
-          <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
-          {/*Ruta Agendar*/}
-          <Route path="/agendar" element={<Agendar isDarkMode={isDarkMode} />} />
-        </Routes>
-        <Footer isDarkMode={isDarkMode} />
-      </div>
-    </Router>
+          <Routes>
+            {/* RUTAS PÚBLICAS */}
+            <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
+            <Route path="/tienda" element={<Catalogo isDarkMode={isDarkMode} />} />
+            <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
+            <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
+            
+            {/* RUTAS DE CLIENTE */}
+            <Route path="/carrito" element={<ProtectedRoute allowedRoles={['CLIENTE', 'ADMIN']}><Carrito isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/pago" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Pago isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/agendar" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Agendar isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/perfil" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Perfil isDarkMode={isDarkMode} /></ProtectedRoute>} />
+
+            {/* RUTAS DE MECÁNICO */}
+            <Route path="/mecanico/dashboard" element={<ProtectedRoute allowedRoles={['MECANICO']}><DashMec isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/mecanico/inventario" element={<ProtectedRoute allowedRoles={['MECANICO']}><InvMec isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/mecanico/solicitud" element={<ProtectedRoute allowedRoles={['MECANICO']}><Solicitud isDarkMode={isDarkMode} /></ProtectedRoute>} />
+
+            {/* RUTAS DE ADMIN */}
+            <Route path="/admin/metricas" element={<ProtectedRoute allowedRoles={['ADMIN']}><Metricas isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/inventario" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestInv isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/usuarios" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestUser isDarkMode={isDarkMode} /></ProtectedRoute>} />
+          </Routes>
+          
+          <Footer isDarkMode={isDarkMode} />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

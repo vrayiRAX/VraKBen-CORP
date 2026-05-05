@@ -5,7 +5,6 @@ flowchart TD
     Auth -- No --> Pub[Navegación Pública]
     Pub --> Home(Home: Equipo y Servicios)
     Pub --> Vitrina(Catálogo de Repuestos)
-    Pub --> Carrito(Carrito de Compras)
     Pub --> Login(Página de Login / Registro)
 
     %% Flujo Autenticado

@@ -1,13 +1,37 @@
 // src/services/apiClient.js
 import axios from 'axios';
 
-// Creamos una "instancia" de Axios pre-configurada
+// Instancia de Axios apuntando al BFF (API Gateway)
 const apiClient = axios.create({
-  // Vite lee la variable de entorno que creamos en el paso 2
-  baseURL: import.meta.env.VITE_API_GATEWAY_URL, 
+  baseURL: import.meta.env.VITE_API_GATEWAY_URL || 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Interceptor de REQUEST: inyecta el JWT en cada petición automáticamente
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Interceptor de RESPONSE: si el token expiró (401), limpia la sesión
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;

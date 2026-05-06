@@ -22,10 +22,13 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         var userOpt = userRepository.findByUsername(request.getUsername());
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(request.getPassword())) {
+        if (userOpt.isPresent() && passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             String token = jwtService.generateToken(request.getUsername());
             LoginResponseDTO response = new LoginResponseDTO(token, request.getUsername(), "Login exitoso");
             return ResponseEntity.ok(response);
@@ -38,8 +41,10 @@ public class AuthController {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Usuario ya existe");
         }
-        // En producción se debe encriptar la contraseña, aquí la guardamos en texto
-        // plano para el MVP
+        
+        // Encriptar la contraseña antes de guardar
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
         userRepository.save(user);
         return ResponseEntity.ok("Usuario registrado exitosamente");
     }

@@ -69,18 +69,18 @@ useEffect(() => {
               {/* Imagen del producto (usamos placeholder si no viene URL del backend) */}
               <div style={{ width: '100%', height: '200px', backgroundColor: '#fff', borderRadius: '4px', marginBottom: '15px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <img 
-                  src={producto.imagen || "https://via.placeholder.com/200?text=Repuesto"} 
-                  alt={producto.nombre} 
+                  src={producto.imageUrl || "https://via.placeholder.com/200?text=Repuesto"} 
+                  alt={producto.name} 
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} 
                 />
               </div>
               
-              <h3 style={{ color: theme.textMain, margin: '0 0 10px 0', fontSize: '1.2rem' }}>{producto.nombre}</h3>
-              <p style={{ color: theme.textSecondary, fontSize: '0.9rem', flexGrow: 1 }}>{producto.descripcion}</p>
+              <h3 style={{ color: theme.textMain, margin: '0 0 10px 0', fontSize: '1.2rem' }}>{producto.name}</h3>
+              <p style={{ color: theme.textSecondary, fontSize: '0.9rem', flexGrow: 1 }}>{producto.description}</p>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
                 <span style={{ color: '#e63946', fontWeight: 'bold', fontSize: '1.3rem' }}>
-                  ${producto.precio?.toLocaleString('es-CL')}
+                  ${producto.price?.toLocaleString('es-CL')}
                 </span>
                 <button style={{ 
                   backgroundColor: '#111', 

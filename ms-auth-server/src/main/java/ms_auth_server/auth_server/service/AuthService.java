@@ -40,7 +40,11 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         // Rol por defecto si no lo envían
-        user.setRoles(request.getRoles() != null ? request.getRoles() : "USER");
+        if (request.getRoles() == null || request.getRoles().isEmpty()) {
+            user.setRoles(java.util.Set.of("USER"));
+        } else {
+            user.setRoles(request.getRoles());
+        }
         
         userRepository.save(user);
         return true;

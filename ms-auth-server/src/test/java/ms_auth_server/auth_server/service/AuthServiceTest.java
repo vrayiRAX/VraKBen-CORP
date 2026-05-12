@@ -72,7 +72,7 @@ class AuthServiceTest {
 
     @Test
     void testRegisterSuccess() {
-        UserRegisterDTO dto = new UserRegisterDTO("newuser", "password", "USER");
+        UserRegisterDTO dto = new UserRegisterDTO("newuser", "password", java.util.Set.of("USER"));
 
         when(userRepository.findByUsername("newuser")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password")).thenReturn("hashedPassword");
@@ -85,7 +85,7 @@ class AuthServiceTest {
 
     @Test
     void testRegisterUserAlreadyExists() {
-        UserRegisterDTO dto = new UserRegisterDTO("existing", "password", "USER");
+        UserRegisterDTO dto = new UserRegisterDTO("existing", "password", java.util.Set.of("USER"));
         User existingUser = new User();
         
         when(userRepository.findByUsername("existing")).thenReturn(Optional.of(existingUser));

@@ -39,7 +39,10 @@ class AuthServiceTest {
 
     @Test
     void testLoginSuccess() {
-        LoginRequestDTO request = new LoginRequestDTO("user", "password");
+        LoginRequestDTO request = new LoginRequestDTO();
+        request.setUsername("user");
+        request.setPassword("password");
+        
         User user = new User();
         user.setUsername("user");
         user.setPassword("hashedPassword");
@@ -57,7 +60,10 @@ class AuthServiceTest {
 
     @Test
     void testLoginInvalidCredentials() {
-        LoginRequestDTO request = new LoginRequestDTO("user", "wrongpassword");
+        LoginRequestDTO request = new LoginRequestDTO();
+        request.setUsername("user");
+        request.setPassword("wrongpassword");
+        
         User user = new User();
         user.setUsername("user");
         user.setPassword("hashedPassword");

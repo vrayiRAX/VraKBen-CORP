@@ -25,23 +25,48 @@ export default function Login({ isDarkMode }) {
     inputBorder: isDarkMode ? '1px solid #444' : '1px solid #ccc',
   };
 
+  // Decodifica el payload del JWT sin verificar firma (solo para lectura del rol en el cliente)
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return {};
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      // Llama al backend real via BFF
       const data = await loginUser(username, password);
       // data = { token, username, message }
 
-      // Guardamos al usuario en el contexto. El rol aún no viene del backend,
-      // por ahora lo dejamos como 'CLIENTE' por defecto.
-      // TODO: extraer el rol del JWT o del endpoint de perfil.
-      const userData = { name: data.username, role: 'CLIENTE' };
+      // Decodificamos el JWT para saber el rol real
+      const payload = parseJwt(data.token);
+      // El auth-server puede guardar el rol como 'roles', 'role', o 'authorities'
+      const rawRoles = payload.roles || payload.role || payload.authorities || [];
+      const rolesArr = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
+      
+      // Determinamos el rol principal para el routing
+      let role = 'CLIENTE';
+      const rolesUpper = rolesArr.map(r => (typeof r === 'string' ? r : r.authority || '').toUpperCase());
+      if (rolesUpper.some(r => r.includes('ADMIN'))) role = 'ADMIN';
+      else if (rolesUpper.some(r => r.includes('MECANICO') || r.includes('MECHANIC'))) role = 'MECANICO';
+
+      const userData = { name: data.username, role };
       login(userData, data.token);
 
-      navigate('/perfil');
+      // Redirige según rol (diagrama de flujo UML)
+      if (role === 'ADMIN') navigate('/admin');
+      else if (role === 'MECANICO') navigate('/mecanico');
+      else navigate('/');
     } catch (err) {
       if (err.response?.status === 401) {
         setError('Usuario o contraseña incorrectos.');

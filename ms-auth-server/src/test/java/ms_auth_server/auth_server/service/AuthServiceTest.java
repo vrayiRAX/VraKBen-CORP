@@ -13,9 +13,12 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class AuthServiceTest {
@@ -46,10 +49,11 @@ class AuthServiceTest {
         User user = new User();
         user.setUsername("user");
         user.setPassword("hashedPassword");
+        user.setRoles(Set.of("USER"));
 
         when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
-        when(jwtService.generateToken("user")).thenReturn("jwt-token-123");
+        when(jwtService.generateToken(eq("user"), anySet())).thenReturn("jwt-token-123");
 
         LoginResponseDTO response = authService.login(request);
 

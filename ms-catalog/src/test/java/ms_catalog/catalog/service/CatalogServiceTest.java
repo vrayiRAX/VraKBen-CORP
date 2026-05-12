@@ -47,7 +47,7 @@ class CatalogServiceTest {
     void testGetProductBySku() {
         // Arrange
         ProductCatalog p1 = new ProductCatalog(1L, "SKU1", "Bujía", "Bosch", "Motor", "Bujía platino", 5000.0, "url1");
-        when(catalogRepository.findBySku("SKU1")).thenReturn(p1);
+        when(catalogRepository.findBySku("SKU1")).thenReturn(java.util.Optional.of(p1));
 
         // Act
         ProductCatalog result = catalogService.getProductBySku("SKU1");
@@ -56,6 +56,20 @@ class CatalogServiceTest {
         assertNotNull(result);
         assertEquals("Bujía", result.getName());
         verify(catalogRepository, times(1)).findBySku("SKU1");
+    }
+
+    @Test
+    void testGetProductBySku_NotFound_ThrowsException() {
+        // Arrange
+        when(catalogRepository.findBySku("NOT_FOUND")).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            catalogService.getProductBySku("NOT_FOUND");
+        });
+        
+        assertEquals("Producto no encontrado en catálogo", exception.getMessage());
+        verify(catalogRepository, times(1)).findBySku("NOT_FOUND");
     }
 
     @Test

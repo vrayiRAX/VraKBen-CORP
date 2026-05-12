@@ -51,9 +51,10 @@ VraKBen-CORP/
 ├── ms-auth-server/         # Autenticación: login, registro y generación de JWT
 ├── ms-catalog/             # Catálogo público de repuestos
 ├── ms-stock/               # Control de bodega e inventario
+├── ms-shopping-cart/       # Microservicio del Carrito de Compras
 ├── frontend/               # Portal web en React (Vite)
 ├── docs/                   # Documentación y guías de evaluación
-├── Backend/                # Microservicios secundarios (eureka-server, shopping-cart, etc.)
+├── Backend/                # Microservicios secundarios (eureka-server, order-management, etc.)
 ├── docker-compose.yml      # Orquestación completa del ecosistema
 └── README.md
 ```
@@ -69,12 +70,14 @@ VraKBen-CORP/
 | **Java 17** | Lenguaje base de todos los microservicios |
 | **Spring Boot 4.0.3** | Framework principal de cada servicio |
 | **Spring Cloud Gateway** | BFF reactivo con filtros JWT y CORS global |
+| **Spring Security (BCrypt)** | Encriptación de contraseñas de usuarios |
 | **Netflix Eureka** | Registro y descubrimiento de servicios |
 | **Spring Data JPA + Hibernate** | Persistencia con PostgreSQL |
 | **JJWT 0.11.5** | Generación y validación de tokens JWT |
 | **Lombok** | Reducción de código boilerplate |
 | **PostgreSQL 15** | Base de datos relacional centralizada |
 | **Docker + Docker Compose** | Containerización y orquestación |
+| **JUnit 5 + Mockito** | Pruebas Unitarias e Integración |
 
 ### 🖌️ Frontend
 
@@ -103,6 +106,7 @@ git clone https://github.com/vrayiRAX/VraKBen-CORP.git
 cd VraKBen-CORP
 
 # 2. Construir y levantar todos los servicios
+docker-compose down -v  # Para reiniciar DB si existen credenciales previas a BCrypt
 docker-compose build
 docker-compose up -d
 
@@ -170,7 +174,9 @@ Header: Authorization: Bearer <token_obtenido>
 | 7 | Integración en `docker-compose.yml` | ✅ Completado |
 | 8 | Reestructuración multimódulo + DTOs + CORS | ✅ Completado |
 | 9 | Conexión Frontend ↔ Backend real (JWT + Axios) | ✅ Completado |
-| 10 | Conectar catálogo real con frontend | 🔄 En progreso |
+| 10 | Conectar catálogo real con frontend | ✅ Completado |
+| 11 | Seguridad BCrypt y Pruebas Unitarias (ms-auth-server) | ✅ Completado |
+| 12 | Integración Carrito de Compras (ms-shopping-cart) | ✅ Completado |
 
 ---
 
@@ -206,7 +212,7 @@ Header: Authorization: Bearer <token_obtenido>
 ## 📝 Notas Técnicas
 
 - **Clave secreta JWT**: Compartida entre `ms-auth-server` y `bff`. En producción debe externalizarse a variables de entorno.
-- **Contraseñas**: Almacenadas en texto plano para el MVP. En producción debe usarse `BCryptPasswordEncoder`.
+- **Contraseñas**: Almacenadas de forma segura con `BCryptPasswordEncoder` en la base de datos PostgreSQL.
 - **Base de datos**: Todos los microservicios comparten `vrakben_db`. En producción se recomienda una BD por servicio.
 
 ---

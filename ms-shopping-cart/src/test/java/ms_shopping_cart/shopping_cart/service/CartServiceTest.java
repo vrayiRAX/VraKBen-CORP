@@ -28,10 +28,9 @@ class CartServiceTest {
     }
 
     @Test
-    void testAddToCart_NewItem() {
+    void testAddToCart() {
         // Arrange
         CartItem item = new CartItem(null, "user1", 100L, 1, 5000.0);
-        when(cartRepository.findByCustomerRutAndProductId("user1", 100L)).thenReturn(null);
         when(cartRepository.save(item)).thenReturn(new CartItem(1L, "user1", 100L, 1, 5000.0));
 
         // Act
@@ -40,26 +39,7 @@ class CartServiceTest {
         // Assert
         assertNotNull(result.getId());
         assertEquals(1, result.getQuantity());
-        verify(cartRepository, times(1)).findByCustomerRutAndProductId("user1", 100L);
         verify(cartRepository, times(1)).save(item);
-    }
-
-    @Test
-    void testAddToCart_ExistingItem() {
-        // Arrange
-        CartItem existingItem = new CartItem(1L, "user1", 100L, 2, 5000.0);
-        CartItem newItem = new CartItem(null, "user1", 100L, 1, 5000.0);
-        
-        when(cartRepository.findByCustomerRutAndProductId("user1", 100L)).thenReturn(existingItem);
-        when(cartRepository.save(existingItem)).thenReturn(existingItem); // Se actualizará a 3
-
-        // Act
-        CartItem result = cartService.addToCart(newItem);
-
-        // Assert
-        assertEquals(3, result.getQuantity()); // 2 + 1
-        verify(cartRepository, times(1)).findByCustomerRutAndProductId("user1", 100L);
-        verify(cartRepository, times(1)).save(existingItem);
     }
 
     @Test

@@ -1,25 +1,24 @@
-package ms_auth_server.auth_server.controller;
+package ms_auth_server.auth_server.service;
 
 import ms_auth_server.auth_server.dto.LoginRequestDTO;
+import ms_auth_server.auth_server.dto.LoginResponseDTO;
+import ms_auth_server.auth_server.dto.UserRegisterDTO;
 import ms_auth_server.auth_server.model.User;
 import ms_auth_server.auth_server.repository.UserRepository;
-import ms_auth_server.auth_server.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class AuthControllerTest {
+class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -31,7 +30,7 @@ class AuthControllerTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private AuthController authController;
+    private AuthService authService;
 
     @BeforeEach
     void setUp() {
@@ -40,7 +39,6 @@ class AuthControllerTest {
 
     @Test
     void testLoginSuccess() {
-        // Preparación
         LoginRequestDTO request = new LoginRequestDTO("user", "password");
         User user = new User();
         user.setUsername("user");
@@ -50,17 +48,15 @@ class AuthControllerTest {
         when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
         when(jwtService.generateToken("user")).thenReturn("jwt-token-123");
 
-        // Ejecución
-        ResponseEntity<?> response = authController.login(request);
+        LoginResponseDTO response = authService.login(request);
 
-        // Verificación
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(jwtService, times(1)).generateToken("user");
+        assertNotNull(response);
+        assertEquals("jwt-token-123", response.getToken());
+        assertEquals("user", response.getUsername());
     }
 
     @Test
     void testLoginInvalidCredentials() {
-        // Preparación
         LoginRequestDTO request = new LoginRequestDTO("user", "wrongpassword");
         User user = new User();
         user.setUsername("user");
@@ -69,48 +65,34 @@ class AuthControllerTest {
         when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongpassword", "hashedPassword")).thenReturn(false);
 
-        // Ejecución
-        ResponseEntity<?> response = authController.login(request);
+        LoginResponseDTO response = authService.login(request);
 
-        // Verificación
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Credenciales inválidas", response.getBody());
+        assertNull(response);
     }
 
     @Test
     void testRegisterSuccess() {
-        // Preparación
-        User newUser = new User();
-        newUser.setUsername("newuser");
-        newUser.setPassword("password");
+        UserRegisterDTO dto = new UserRegisterDTO("newuser", "password", "USER");
 
         when(userRepository.findByUsername("newuser")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password")).thenReturn("hashedPassword");
 
-        // Ejecución
-        ResponseEntity<?> response = authController.register(newUser);
+        boolean result = authService.register(dto);
 
-        // Verificación
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Usuario registrado exitosamente", response.getBody());
-        verify(userRepository, times(1)).save(newUser);
-        assertEquals("hashedPassword", newUser.getPassword()); // Verifica que se seteó el hash
+        assertTrue(result);
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void testRegisterUserAlreadyExists() {
-        // Preparación
+        UserRegisterDTO dto = new UserRegisterDTO("existing", "password", "USER");
         User existingUser = new User();
-        existingUser.setUsername("existing");
-
+        
         when(userRepository.findByUsername("existing")).thenReturn(Optional.of(existingUser));
 
-        // Ejecución
-        ResponseEntity<?> response = authController.register(existingUser);
+        boolean result = authService.register(dto);
 
-        // Verificación
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Usuario ya existe", response.getBody());
+        assertFalse(result);
         verify(userRepository, never()).save(any());
     }
 }

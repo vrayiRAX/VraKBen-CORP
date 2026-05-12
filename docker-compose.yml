@@ -81,7 +81,7 @@ services:
 
   # 7. Carrito de Compras
   ms-shopping-cart:
-    build: ./Backend/shopping-cart
+    build: ./ms-shopping-cart
     container_name: ms-shopping-cart
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db

@@ -1,11 +1,14 @@
 // src/pages/Catalogo.jsx
 import { useState, useEffect } from 'react';
 import { obtenerProductos } from '../services/catalogoService';
+import { agregarAlCarrito } from '../services/carritoService';
+import { useAuth } from '../context/AuthContext';
 
 export default function Catalogo({ isDarkMode }) {
   // --- ESTADOS ---
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const { user, isLoggedIn } = useAuth(); // Para saber quién añade al carrito
 
   // --- COLORES DEL TEMA ---
   const theme = {
@@ -17,17 +20,14 @@ export default function Catalogo({ isDarkMode }) {
   };
 
   // --- EFECTO: CARGAR DATOS AL ENTRAR A LA PÁGINA ---
-useEffect(() => {
+  useEffect(() => {
     const cargarDatos = async () => {
       setCargando(true);
       try {
         const data = await obtenerProductos();
-        
-        // EL CHALECO ANTIBALAS: Si "data" no es un arreglo válido, forzamos a que sea un arreglo vacío []
         if (Array.isArray(data)) {
           setProductos(data);
         } else {
-          console.warn("El backend no devolvió una lista válida. Devolvió:", data);
           setProductos([]); 
         }
       } catch (error) {
@@ -40,6 +40,27 @@ useEffect(() => {
 
     cargarDatos();
   }, []);
+
+  const handleAnadir = async (producto) => {
+    if (!isLoggedIn) {
+      alert("Debes iniciar sesión para añadir productos al carrito.");
+      return;
+    }
+
+    try {
+      const item = {
+        customerRut: user.name, // Usamos el nombre (username) como identificador por ahora
+        productId: producto.id,
+        quantity: 1,
+        unitPrice: producto.price
+      };
+      await agregarAlCarrito(item);
+      alert(`¡${producto.name} añadido al carrito!`);
+    } catch (error) {
+      console.error("Error al añadir al carrito:", error);
+      alert("Hubo un error al añadir al carrito.");
+    }
+  };
 
   return (
     <div style={{ padding: '40px 10%', backgroundColor: theme.background, minHeight: '80vh' }}>
@@ -82,15 +103,18 @@ useEffect(() => {
                 <span style={{ color: '#e63946', fontWeight: 'bold', fontSize: '1.3rem' }}>
                   ${producto.price?.toLocaleString('es-CL')}
                 </span>
-                <button style={{ 
-                  backgroundColor: '#111', 
-                  color: 'white', 
-                  border: 'none', 
-                  padding: '8px 15px', 
-                  borderRadius: '4px', 
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}>
+                <button 
+                  onClick={() => handleAnadir(producto)}
+                  style={{ 
+                    backgroundColor: '#111', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '8px 15px', 
+                    borderRadius: '4px', 
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
                   Añadir 🛒
                 </button>
               </div>

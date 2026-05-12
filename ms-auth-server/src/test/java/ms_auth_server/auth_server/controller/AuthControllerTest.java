@@ -102,7 +102,7 @@ class AuthControllerTest {
         // Preparación
         User existingUser = new User();
         existingUser.setUsername("existing");
-        
+
         when(userRepository.findByUsername("existing")).thenReturn(Optional.of(existingUser));
 
         // Ejecución

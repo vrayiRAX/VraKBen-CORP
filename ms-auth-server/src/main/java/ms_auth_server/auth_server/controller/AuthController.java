@@ -41,12 +41,11 @@ public class AuthController {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Usuario ya existe");
         }
-        
+
         // Encriptar la contraseña antes de guardar
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
+
         userRepository.save(user);
         return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 }
-

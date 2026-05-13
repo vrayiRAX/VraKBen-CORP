@@ -2,7 +2,7 @@
 import apiClient from './apiClient';
 
 /**
- * Llama al endpoint POST /api/auth/login del BFF.
+ * Llama al endpoint POST /api/auth/login del BFF (API Gateway -> auth-server).
  * Espera recibir { token, username, message } desde el backend.
  */
 export const loginUser = async (username, password) => {

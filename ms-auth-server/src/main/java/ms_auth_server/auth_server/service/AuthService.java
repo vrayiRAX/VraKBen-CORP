@@ -50,4 +50,16 @@ public class AuthService {
         userRepository.save(user);
         return true;
     }
+
+    public UserRegisterDTO getUserByUsername(String username) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            UserRegisterDTO dto = new UserRegisterDTO();
+            dto.setUsername(user.getUsername());
+            dto.setRoles(user.getRoles());
+            return dto;
+        }
+        return null;
+    }
 }

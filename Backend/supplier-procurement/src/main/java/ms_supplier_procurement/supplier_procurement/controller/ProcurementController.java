@@ -21,4 +21,9 @@ public class ProcurementController {
     public SupplierOrder updateStatus(@PathVariable Long id, @RequestParam String status) {
         return service.updateOrderStatus(id, status);
     }
+
+    @GetMapping("/all")
+    public List<SupplierOrder> getAllOrders() {
+        return service.getAllOrders();
+    }
 }

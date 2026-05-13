@@ -58,6 +58,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
             <Link to="/admin/metricas" style={{ color: 'white', textDecoration: 'none' }}>Métricas</Link>
             <Link to="/admin/inventario" style={{ color: 'white', textDecoration: 'none' }}>Bodega</Link>
             <Link to="/admin/usuarios" style={{ color: 'white', textDecoration: 'none' }}>Usuarios</Link>
+            <Link to="/admin/solicitudes" style={{ color: 'white', textDecoration: 'none' }}>Solicitudes</Link>
           </>
         )}
       </div>
@@ -77,14 +78,9 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
         {/* CONTROLES DE SESIÓN */}
         {isLoggedIn ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            {role === 'CLIENTE' && (
-              <Link to="/perfil" style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <UserIcon size={18} /> {user?.name || 'Perfil'}
-              </Link>
-            )}
-            {(role === 'MECANICO' || role === 'ADMIN') && (
-              <span style={{ fontSize: '14px', color: '#ccc' }}>Hola, {user?.name || role}</span>
-            )}
+            <Link to="/perfil" style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <UserIcon size={18} /> {user?.name || 'Perfil'}
+            </Link>
             <button 
               onClick={handleLogout}
               style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '8px 16px', backgroundColor: '#e63946', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>

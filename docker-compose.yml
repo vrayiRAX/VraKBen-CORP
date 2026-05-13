@@ -42,6 +42,8 @@ services:
   auth-server:
     build: ./ms-auth-server
     container_name: auth-server
+    ports:
+      - "8083:8083"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
@@ -148,6 +150,8 @@ services:
   ms-supplier-procurement:
     build: ./Backend/supplier-procurement
     container_name: ms-supplier-procurement
+    ports:
+      - "8088:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/

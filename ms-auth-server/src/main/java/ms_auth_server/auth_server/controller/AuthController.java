@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -34,5 +33,14 @@ public class AuthController {
             return ResponseEntity.ok("Usuario registrado exitosamente");
         }
         return ResponseEntity.badRequest().body("Usuario ya existe");
+    }
+
+    @GetMapping("/users/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        UserRegisterDTO user = authService.getUserByUsername(username);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
     }
 }

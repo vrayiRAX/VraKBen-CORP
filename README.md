@@ -1,226 +1,112 @@
-# 🔧 VraKBen-CORP — Plataforma Digital de Microservicios
+# VraKBen-CORP 🔧
 
-### Proyecto Semestral — Arquitectura de Software / Ingeniería de Software
+Sistema de gestión integral para taller mecánico, construido con arquitectura de microservicios Spring Boot y frontend React moderno.
 
-> VraKBen es una plataforma digital unificada para la automotriz **VraKBen**, desarrollada con una arquitectura moderna de microservicios. El sistema integra en un solo ecosistema la gestión de inventario, ventas online, agendamiento de citas y control del taller mecánico.
-
----
-
-## 📋 Contexto del Caso — El Problema Operativo
-
-A pesar del éxito comercial de la automotriz VraKBen, la empresa enfrenta una **grave crisis de gestión interna**. Opera con sistemas descentralizados que no se comunican entre sí, generando los siguientes puntos críticos:
-
-| Problema | Descripción |
-| --- | --- |
-| 👻 **Inventario Fantasma** | El taller retira materiales sin descontarlos en tiempo real, generando quiebres de stock |
-| 📅 **Caos de Agendamiento** | Los clientes llegan al taller y los repuestos no fueron apartados |
-| 🧩 **Falta de Trazabilidad** | Ventas y taller manejan la información del cliente por separado |
-| 💥 **Cuello de Botella Monolítico** | El sistema actual colapsa ante picos de tráfico |
-
----
-
-## ✅ Solución — Arquitectura de Microservicios
-
-VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que separa responsabilidades en módulos independientes y escalables.
-
----
-
-## 🌐 Flujo de la Aplicación
+## 🏗️ Arquitectura
 
 ```
-                     [Frontend React :5173]
-                              |
-                    [BFF / API Gateway :8080]  ← Valida JWT + CORS
-                              |
-                    [Eureka Server :8761] ← Registro de servicios
-                              |
-    ┌─────────────────────────┼──────────────────────────┐
-    │             │           │            │              │
-[ms-auth-server] [ms-catalog] [ms-stock] [ms-cart]  [ms-orders]
-    │
-[PostgreSQL :5432 — vrakben_db]
+Frontend React (Vite :5173)
+        ↓
+API Gateway / BFF (:8080)  ← Punto único de entrada + Validación JWT
+        ↓
+Microservicios Spring Boot (registrados en Eureka :8761)
+        ↓
+PostgreSQL 15 (:5432)
 ```
 
----
+## 🚀 Cómo Levantar el Proyecto
 
-## 🗂️ Estructura del Repositorio
+### Requisitos
+- Docker Desktop
+- Node.js 18+
+- Git
 
-```
-VraKBen-CORP/
-├── bff/                    # Puerto 8080 — API Gateway con filtro JWT y CORS
-├── ms-auth-server/         # Autenticación: login, registro y generación de JWT
-├── ms-catalog/             # Catálogo público de repuestos
-├── ms-stock/               # Control de bodega e inventario
-├── ms-shopping-cart/       # Microservicio del Carrito de Compras
-├── frontend/               # Portal web en React (Vite)
-├── docs/                   # Documentación y guías de evaluación
-├── Backend/                # Microservicios secundarios (eureka-server, order-management, etc.)
-├── docker-compose.yml      # Orquestación completa del ecosistema
-└── README.md
-```
-
----
-
-## 📦 Stack Tecnológico
-
-### ⚙️ Backend (Microservicios)
-
-| Tecnología | Uso |
-| --- | --- |
-| **Java 17** | Lenguaje base de todos los microservicios |
-| **Spring Boot 4.0.3** | Framework principal de cada servicio |
-| **Spring Cloud Gateway** | BFF reactivo con filtros JWT y CORS global |
-| **Spring Security (BCrypt)** | Encriptación de contraseñas de usuarios |
-| **Netflix Eureka** | Registro y descubrimiento de servicios |
-| **Spring Data JPA + Hibernate** | Persistencia con PostgreSQL |
-| **JJWT 0.11.5** | Generación y validación de tokens JWT |
-| **Lombok** | Reducción de código boilerplate |
-| **PostgreSQL 15** | Base de datos relacional centralizada |
-| **Docker + Docker Compose** | Containerización y orquestación |
-| **JUnit 5 + Mockito** | Pruebas Unitarias e Integración |
-
-### 🖌️ Frontend
-
-| Tecnología | Uso |
-| --- | --- |
-| **React + Vite** | SPA del portal web |
-| **Axios** | Cliente HTTP con interceptores JWT automáticos |
-| **Context API + localStorage** | Gestión global del token JWT y sesión |
-| **React Router DOM** | Navegación y rutas protegidas por rol |
-
----
-
-## 🚀 Instalación y Ejecución
-
-### Requisitos Previos
-
-- **Docker Desktop** instalado y en ejecución
-- **JDK 17** instalado (para desarrollo local)
-- **Node.js 18+** (para el frontend)
-
-### Levantar todo el Backend con Docker
-
+### Backend (Docker)
 ```bash
-# 1. Clonar el repositorio
+# Clonar el repositorio
 git clone https://github.com/vrayiRAX/VraKBen-CORP.git
 cd VraKBen-CORP
 
-# 2. Construir y levantar todos los servicios
-docker-compose down -v  # Para reiniciar DB si existen credenciales previas a BCrypt
-docker-compose build
-docker-compose up -d
-
-# 3. Verificar que todos los contenedores estén corriendo
-docker-compose ps
+# Levantar todo el stack de backend
+docker-compose up --build -d
 ```
 
-### Levantar el Frontend
-
+### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
-# Disponible en http://localhost:5173
 ```
 
-### Verificar el Sistema
+### URLs
+| Servicio | URL |
+|---|---|
+| App Web | http://localhost:5173 |
+| API Gateway | http://localhost:8080 |
+| Eureka Dashboard | http://localhost:8761 |
 
-- **Eureka Dashboard**: http://localhost:8761
-- **BFF / API Gateway**: http://localhost:8080
-- **Frontend**: http://localhost:5173
+## 📦 Microservicios
 
----
+| Servicio | Puerto | Descripción |
+|---|---|---|
+| `bff` (API Gateway) | 8080 | Punto de entrada único, enrutamiento y validación JWT |
+| `eureka-server` | 8761 | Service Discovery |
+| `ms-auth-server` | 8083 | Autenticación, usuarios y roles (JWT) |
+| `ms-catalog` | 8084 | Catálogo de repuestos |
+| `ms-shopping-cart` | — | Carrito de compras |
+| `ms-stock-engine` | — | Motor de inventario físico |
+| `ms-supplier-procurement` | 8088 | Solicitudes de material (mecánicos → proveedor) |
+| `ms-job-orders` | — | Órdenes de trabajo de mecánicos |
+| `ms-appointment-scheduler` | — | Agendamiento de citas |
+| `ms-vehicle-history` | — | Historial de vehículos |
+| `ms-order-management` | — | Gestión de órdenes/ventas |
 
-## 🧪 Pruebas de la API (Postman)
+## 👥 Roles de Usuario
 
-### Flujo de autenticación:
+| Rol | Descripción | Acceso |
+|---|---|---|
+| `CLIENTE` | Cliente del taller | Tienda, carrito, agendar, perfil |
+| `MECANICO` | Mecánico del taller | Panel de trabajo, inventario, solicitudes |
+| `ADMIN` | Administrador | Todo lo anterior + métricas, gestión usuarios/inventario |
+
+## 🔐 Autenticación
+
+Basada en **JWT (JSON Web Tokens)**. El flujo es:
+1. `POST /api/auth/login` → recibe `{username, password}` → retorna `{token, username, roles, name}`
+2. El frontend almacena el token en `localStorage`
+3. Todas las peticiones protegidas incluyen el header `Authorization: Bearer {token}`
+4. El API Gateway valida el token antes de enrutar al microservicio destino
+
+## 🛠️ Comandos Docker Útiles
 
 ```bash
-# 1. Registrar un usuario
-POST http://localhost:8080/api/auth/register
-Body (JSON):
-{
-  "username": "admin",
-  "password": "123456",
-  "roles": ["ADMIN"]
-}
+# Ver estado de los contenedores
+docker-compose ps
 
-# 2. Iniciar sesión y obtener el JWT
-POST http://localhost:8080/api/auth/login
-Body (JSON):
-{
-  "username": "admin",
-  "password": "123456"
-}
-# Response: { "token": "eyJ...", "username": "admin", "message": "Login exitoso" }
+# Ver logs de un servicio
+docker-compose logs -f api-gateway
 
-# 3. Usar el token en rutas protegidas
-GET http://localhost:8080/api/catalog/all
-Header: Authorization: Bearer <token_obtenido>
+# Reconstruir un servicio específico
+docker-compose build auth-server && docker-compose up -d auth-server
+
+# Parar todo
+docker-compose down
+
+# Parar y borrar datos (⚠️ borra la BD)
+docker-compose down -v
 ```
 
----
+## 📋 Tecnologías
 
-## 📊 Bitácora de Avance del Proyecto
+**Backend:** Java 17, Spring Boot 3.x/4.x, Spring Cloud Gateway, Spring Security, JPA/Hibernate, PostgreSQL, Eureka (Netflix OSS), JWT (jjwt 0.11.5), Docker, Maven
 
-| Sesión | Tema | Estado |
-| --- | --- | --- |
-| 1 | Diseño de arquitectura y plan de microservicios | ✅ Completado |
-| 2 | Eureka Server y API Gateway base | ✅ Completado |
-| 3 | Microservicio de Catálogo (`ms-catalog`) | ✅ Completado |
-| 4 | Seguridad JWT: filtro global en el Gateway | ✅ Completado |
-| 5 | Corrección de errores de compilación | ✅ Completado |
-| 6 | Limpieza de microservicios innecesarios | ✅ Completado |
-| 7 | Integración en `docker-compose.yml` | ✅ Completado |
-| 8 | Reestructuración multimódulo + DTOs + CORS | ✅ Completado |
-| 9 | Conexión Frontend ↔ Backend real (JWT + Axios) | ✅ Completado |
-| 10 | Conectar catálogo real con frontend | ✅ Completado |
-| 11 | Seguridad BCrypt y Pruebas Unitarias (ms-auth-server) | ✅ Completado |
-| 12 | Integración Carrito de Compras (ms-shopping-cart) | ✅ Completado |
+**Frontend:** React 18, Vite, React Router v6, Axios, Recharts, Lucide React, CSS Puro
 
----
+## 🌿 Ramas
 
-## 🐛 Bugs Conocidos y Correcciones Aplicadas
+- `main` — Código estable
+- `feature/frontend-improvements` — Mejoras activas de UI e integración
 
-| Error | Causa | Solución |
-| --- | --- | --- |
-| `auth-server` crasheaba al iniciar | Intentaba conectar a BD `db_auth` inexistente | Corregido a `vrakben_db` en `docker-compose.yml` |
-| `containsKey()` no existe en `HttpHeaders` | API cambiada en Spring Boot 3+ | Reemplazado por `.getFirst(HttpHeaders.AUTHORIZATION)` |
-| Login devolvía 400 desde el frontend | El endpoint usaba `@RequestParam` en lugar de `@RequestBody` | Refactorizado a `@RequestBody LoginRequestDTO` |
-| Frontend bloqueado por CORS | BFF sin configuración CORS | Creado `CorsConfig.java` con `CorsWebFilter` |
-| Versiones no gestionadas de Testcontainers | Falta del BOM | Añadido `testcontainers-bom v1.20.6` |
+## 👨‍💻 Equipo
 
----
-
-## 👥 Equipo de Desarrollo
-
-### 👤 Vicente Placencia
-**Rol:** Frontend Developer, DB Designer & Documentation Manager
-- Diseño y creación del Frontend en React
-- Diseño de la base de datos
-- Documentación del proyecto
-- Corrección de errores de compilación
-
-### 👤 Ian Badilla
-**Rol:** Backend Developer & Tester
-- Desarrollo del backend y estructura de microservicios
-- Creación de endpoints de negocio
-- Integración completa en docker-compose.yml
-
----
-
-## 📝 Notas Técnicas
-
-- **Clave secreta JWT**: Compartida entre `ms-auth-server` y `bff`. En producción debe externalizarse a variables de entorno.
-- **Contraseñas**: Almacenadas de forma segura con `BCryptPasswordEncoder` en la base de datos PostgreSQL.
-- **Base de datos**: Todos los microservicios comparten `vrakben_db`. En producción se recomienda una BD por servicio.
-
----
-
-## 📁 Documentación
-
-Ver la carpeta [`docs/`](./docs/) para la guía de evaluación del Parcial 2 y el informe del Parcial 1.
-
----
-
-_Proyecto Semestral — Arquitectura de Software — 2026_
+Proyecto desarrollado por el equipo VraKBen como sistema de gestión para taller mecánico chileno.

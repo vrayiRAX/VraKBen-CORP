@@ -27,6 +27,7 @@ import Solicitud from './pages/mechanic/Solicitud';
 import Metricas from './pages/admin/Metricas';
 import GestInv from './pages/admin/GestInv';
 import GestUser from './pages/admin/GestUser';
+import GestSolicitudes from './pages/admin/GestSolicitudes';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -48,7 +49,7 @@ function App() {
             <Route path="/carrito" element={<ProtectedRoute allowedRoles={['CLIENTE', 'ADMIN']}><Carrito isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/pago" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Pago isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/agendar" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Agendar isDarkMode={isDarkMode} /></ProtectedRoute>} />
-            <Route path="/perfil" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Perfil isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/perfil" element={<ProtectedRoute allowedRoles={['CLIENTE', 'MECANICO', 'ADMIN']}><Perfil isDarkMode={isDarkMode} /></ProtectedRoute>} />
 
             {/* RUTAS DE MECÁNICO */}
             <Route path="/mecanico" element={<ProtectedRoute allowedRoles={['MECANICO']}><Navigate to="/mecanico/dashboard" replace /></ProtectedRoute>} />
@@ -61,6 +62,7 @@ function App() {
             <Route path="/admin/metricas" element={<ProtectedRoute allowedRoles={['ADMIN']}><Metricas isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/inventario" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestInv isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/usuarios" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestUser isDarkMode={isDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/solicitudes" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestSolicitudes isDarkMode={isDarkMode} /></ProtectedRoute>} />
           </Routes>
           
           <Footer isDarkMode={isDarkMode} />

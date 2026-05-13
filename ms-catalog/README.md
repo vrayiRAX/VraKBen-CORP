@@ -1,11 +1,54 @@
-# Microservicio de Catálogo (ms-catalog)
+# ms-catalog — Catálogo de Repuestos
 
-Este microservicio gestiona el catálogo de repuestos de VraKBen-CORP. Es un servicio independiente que se comunica con la base de datos para exponer la información de los productos.
+Microservicio encargado del catálogo de productos/repuestos del taller. Gestiona los metadatos de cada producto (nombre, precio, imagen, descripción). El stock físico lo maneja `ms-stock-engine`.
 
-## Endpoints Principales
+## Stack
 
-- `GET /api/catalog/products`: Obtiene la lista de todos los productos disponibles en el catálogo.
-- `GET /api/catalog/products/{id}`: Obtiene los detalles de un producto específico.
-- `POST /api/catalog/products`: (Admin) Crea un nuevo producto en el catálogo.
-- `PUT /api/catalog/products/{id}`: (Admin) Actualiza la información de un producto.
-- `DELETE /api/catalog/products/{id}`: (Admin) Elimina un producto del catálogo.
+- **Spring Boot**
+- **Spring Data JPA** + **PostgreSQL**
+- **Puerto:** `8084`
+- **Eureka Name:** `ms-catalog`
+
+## Endpoints
+
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| `GET` | `/api/catalog/all` | Lista todos los productos del catálogo | ✅ JWT |
+| `GET` | `/api/catalog/{sku}` | Obtiene un producto por su SKU | ✅ JWT |
+| `POST` | `/api/catalog/create` | Crea un nuevo producto | ✅ JWT |
+
+## Modelo de Datos — `ProductCatalog`
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `id` | Long | ID autogenerado |
+| `sku` | String | Código único del producto (ej: `TOY-OIL-001`) |
+| `name` | String | Nombre del producto |
+| `brand` | String | Marca |
+| `category` | String | Categoría |
+| `description` | String | Descripción |
+| `price` | Double | Precio en CLP |
+| `imageUrl` | String | URL de la imagen del producto |
+
+## Ejemplo: Crear Producto
+
+```json
+POST /api/catalog/create
+{
+  "sku": "TOY-OIL-001",
+  "name": "Filtro de Aceite Toyota",
+  "brand": "Toyota",
+  "category": "Filtros",
+  "description": "Filtro original para motores 1NZ-FE",
+  "price": 12990,
+  "imageUrl": "https://ejemplo.com/filtro.jpg"
+}
+```
+
+## Docker
+
+```bash
+docker-compose build ms-catalog
+docker-compose up -d ms-catalog
+docker-compose logs -f ms-catalog
+```

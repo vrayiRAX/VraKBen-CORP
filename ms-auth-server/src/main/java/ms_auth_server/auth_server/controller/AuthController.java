@@ -35,4 +35,13 @@ public class AuthController {
         }
         return ResponseEntity.badRequest().body("Usuario ya existe");
     }
+
+    @GetMapping("/users/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        UserRegisterDTO user = authService.getUserByUsername(username);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+    }
 }

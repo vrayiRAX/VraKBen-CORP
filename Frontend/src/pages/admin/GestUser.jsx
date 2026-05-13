@@ -1,6 +1,7 @@
 // src/pages/admin/GestUser.jsx
 import { useState } from 'react';
 import apiClient from '../../services/apiClient';
+import axios from 'axios';
 
 export default function GestUser({ isDarkMode }) {
   const [search, setSearch] = useState('');
@@ -23,7 +24,7 @@ export default function GestUser({ isDarkMode }) {
     if (!search.trim()) return;
     setLoading(true); setError(''); setResult(null);
     try {
-      const response = await apiClient.get(`/api/auth/users/${search.trim()}`);
+      const response = await axios.get(`http://localhost:8083/api/auth/users/${search.trim()}`);
       setResult(response.data);
     } catch (err) {
       if (err.response?.status === 404) setError('Usuario no encontrado.');

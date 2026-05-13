@@ -1,20 +1,18 @@
 // src/services/catalogoService.js
 import apiClient from './apiClient';
+import axios from 'axios';
 
-// GET /api/catalog/all — no requiere JWT (ruta pública según el BFF)
 export const obtenerProductos = async () => {
-  const response = await apiClient.get('/api/catalog/all');
+  const response = await axios.get('http://localhost:8084/api/catalog/all');
   return response.data; // Array de ProductCatalog
 };
 
-// GET /api/catalog/{sku}
 export const obtenerProductoPorSku = async (sku) => {
-  const response = await apiClient.get(`/api/catalog/${sku}`);
+  const response = await axios.get(`http://localhost:8084/api/catalog/${sku}`);
   return response.data;
 };
 
-// POST /api/catalog/create — solo Admin
 export const crearProducto = async (producto) => {
-  const response = await apiClient.post('/api/catalog/create', producto);
+  const response = await axios.post('http://localhost:8084/api/catalog/create', producto);
   return response.data;
 };

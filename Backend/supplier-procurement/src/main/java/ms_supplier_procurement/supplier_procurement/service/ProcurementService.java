@@ -23,4 +23,8 @@ public class ProcurementService {
         order.setStatus(newStatus);
         return repository.save(order);
     }
+
+    public java.util.List<SupplierOrder> getAllOrders() {
+        return repository.findAll();
+    }
 }

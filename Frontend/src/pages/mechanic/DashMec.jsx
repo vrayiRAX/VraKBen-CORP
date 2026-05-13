@@ -11,9 +11,9 @@ export default function DashMec({ isDarkMode }) {
   };
 
   const jobs = [
-    { id: 'OT-1001', vehicle: 'Toyota Corolla 2018', status: 'En Progreso', time: '2h', icon: <Clock color="#fb5607" /> },
-    { id: 'OT-1002', vehicle: 'Ford Ranger 2021', status: 'Completado', time: 'Ayer', icon: <CheckCircle color="#38b000" /> },
-    { id: 'OT-1003', vehicle: 'Nissan Sentra 2015', status: 'Pendiente', time: 'En espera', icon: <ClipboardList color="#3a86ff" /> },
+    { id: 'OT-1001', vehicle: 'Toyota Corolla 2018', patente: 'BB-CC-12', status: 'En Progreso', time: '2h', icon: <Clock color="#fb5607" /> },
+    { id: 'OT-1002', vehicle: 'Ford Ranger 2021', patente: 'LW-XR-99', status: 'Completado', time: 'Ayer', icon: <CheckCircle color="#38b000" /> },
+    { id: 'OT-1003', vehicle: 'Nissan Sentra 2015', patente: 'ABCD-34', status: 'Pendiente', time: 'En espera', icon: <ClipboardList color="#3a86ff" /> },
   ];
 
   return (
@@ -42,9 +42,15 @@ export default function DashMec({ isDarkMode }) {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{job.id}</span>
+              <span style={{ 
+                padding: '4px 8px', backgroundColor: '#f8961e22', color: '#f8961e', 
+                borderRadius: '6px', fontWeight: 'bold', fontFamily: 'monospace', border: '1px solid #f8961e44'
+              }}>{job.patente}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+              <div style={{ fontSize: '1.1rem' }}>{job.vehicle}</div>
               {job.icon}
             </div>
-            <div style={{ fontSize: '1.1rem' }}>{job.vehicle}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', color: theme.textMuted, fontSize: '0.9rem' }}>
               <span>{job.status}</span>
               <span>{job.time}</span>

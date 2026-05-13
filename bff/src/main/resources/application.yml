@@ -12,13 +12,13 @@ spring:
       routes:
         # Ruta para el Auth Server (Pública, sin filtro JWT)
         - id: auth-server-route
-          uri: lb://ms-auth-server
+          uri: http://auth-server:8083
           predicates:
             - Path=/api/auth/**
 
         # Ruta para el Catálogo (Se requiere token, a menos que el GET sea público, por ahora proteger todo)
         - id: catalog-route
-          uri: lb://ms-catalog
+          uri: http://ms-catalog:8084
           predicates:
             - Path=/api/catalog/**
           filters:
@@ -26,7 +26,7 @@ spring:
 
         # Ruta para el Stock Engine (Protegida)
         - id: stock-engine-route
-          uri: lb://ms-stock-engine
+          uri: http://ms-stock-engine:8080
           predicates:
             - Path=/api/stock/**
           filters:
@@ -34,7 +34,7 @@ spring:
 
         # Ruta para el Agendamiento (Protegida)
         - id: appointment-route
-          uri: lb://ms-appointment-scheduler
+          uri: http://ms-appointment-scheduler:8080
           predicates:
             - Path=/api/appointments/**
           filters:
@@ -42,7 +42,7 @@ spring:
 
         # Ruta para el Historial (Protegida)
         - id: vehicle-history-route
-          uri: lb://ms-vehicle-history
+          uri: http://ms-vehicle-history:8080
           predicates:
             - Path=/api/history/**
           filters:
@@ -50,7 +50,7 @@ spring:
 
         # Ruta para el Carrito (Protegida)
         - id: shopping-cart-route
-          uri: lb://ms-shopping-cart
+          uri: http://ms-shopping-cart:8091
           predicates:
             - Path=/api/cart/**
           filters:
@@ -58,7 +58,7 @@ spring:
 
         # Ruta para Órdenes y Checkout (Protegida)
         - id: order-management-route
-          uri: lb://ms-order-management
+          uri: http://ms-order-management:8080
           predicates:
             - Path=/api/orders/**
           filters:
@@ -66,7 +66,7 @@ spring:
 
         # Ruta para Órdenes de Trabajo de Mecánicos (Protegida)
         - id: job-orders-route
-          uri: lb://ms-job-orders
+          uri: http://ms-job-orders:8080
           predicates:
             - Path=/api/jobs/**
           filters:
@@ -74,7 +74,7 @@ spring:
 
         # Ruta para Solicitud de Materiales (Protegida)
         - id: supplier-procurement-route
-          uri: lb://ms-supplier-procurement
+          uri: http://ms-supplier-procurement:8080
           predicates:
             - Path=/api/procurement/**
           filters:
@@ -84,3 +84,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE

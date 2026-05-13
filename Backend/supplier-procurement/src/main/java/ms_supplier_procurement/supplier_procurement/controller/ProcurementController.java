@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/procurement")
+@CrossOrigin(origins = "*")
 public class ProcurementController {
     @Autowired
     private ProcurementService service;
@@ -20,5 +21,10 @@ public class ProcurementController {
     @PutMapping("/status/{id}")
     public SupplierOrder updateStatus(@PathVariable Long id, @RequestParam String status) {
         return service.updateOrderStatus(id, status);
+    }
+
+    @GetMapping("/all")
+    public List<SupplierOrder> getAllOrders() {
+        return service.getAllOrders();
     }
 }

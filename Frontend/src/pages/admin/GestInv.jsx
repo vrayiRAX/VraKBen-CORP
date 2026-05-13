@@ -43,7 +43,7 @@ export default function GestInv({ isDarkMode }) {
     e.preventDefault();
     setSaving(true); setMsg('');
     try {
-      await crearProducto({ ...form, price: parseFloat(form.price), stock: parseInt(form.stock) });
+      await crearProducto({ name: form.name, description: form.description, price: parseFloat(form.price), sku: form.sku });
       setMsg('✅ Producto creado exitosamente');
       setForm({ name: '', description: '', price: '', stock: '', sku: '' });
       setShowForm(false);

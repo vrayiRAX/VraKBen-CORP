@@ -1,6 +1,6 @@
 # VraKBen-CORP 🔧
 
-Sistema de gestión integral para taller mecánico, implementado con Spring Boot y arquitectura orientada a microservicios en Docker.
+Sistema de gestión integral para taller mecánico, implementado con Spring Boot y arquitectura orientada a microservicios en Docker. Enfocado en eficiencia operacional y experiencia del cliente.
 
 ## 🏗️ Arquitectura
 

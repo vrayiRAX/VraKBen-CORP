@@ -66,7 +66,7 @@ export default function Login({ isDarkMode }) {
       // Redirige según rol (diagrama de flujo UML)
       if (role === 'ADMIN') navigate('/admin');
       else if (role === 'MECANICO') navigate('/mecanico');
-      else navigate('/');
+      else navigate('/perfil');
     } catch (err) {
       if (err.response?.status === 401) {
         setError('Usuario o contraseña incorrectos.');

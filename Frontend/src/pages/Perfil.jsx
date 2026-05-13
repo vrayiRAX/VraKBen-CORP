@@ -14,12 +14,8 @@ export default function Perfil({ isDarkMode }) {
   // Estado para foto de perfil simulada con localStorage
   const [profilePic, setProfilePic] = useState(null);
 
-  // Autos de prueba
-  const [autos] = useState([
-    { id: 1, marca: 'Toyota', modelo: 'Yaris', anio: 2018, patente: 'BB-CC-12' },
-    { id: 2, marca: 'Chevrolet', modelo: 'Spark', anio: 2020, patente: 'ABCD-34' },
-    { id: 3, marca: 'Ford', modelo: 'Ranger', anio: 2022, patente: 'XW-YZ-99' },
-  ]);
+  // Autos del usuario (cargados dinámicamente)
+  const [autos, setAutos] = useState([]);
 
   const theme = {
     bg: isDarkMode ? '#121212' : '#f4f7f6',
@@ -55,6 +51,21 @@ export default function Perfil({ isDarkMode }) {
         name: user?.name || '',
         email: user?.sub || '',
       });
+    }
+
+    // Cargar autos específicos del usuario (Simulado)
+    const savedAutosStr = localStorage.getItem(`profile_autos_${user.sub}`);
+    if (savedAutosStr) {
+      setAutos(JSON.parse(savedAutosStr));
+    } else {
+      // Data de relleno inicial solo para dar el ejemplo, luego se vaciaría o se traería de DB
+      if (user.sub === 'vicente.placet@gmail.com') {
+        const adminCars = [{ id: 1, marca: 'Audi', modelo: 'A4', anio: 2021, patente: 'XX-YY-88' }];
+        setAutos(adminCars);
+        localStorage.setItem(`profile_autos_${user.sub}`, JSON.stringify(adminCars));
+      } else {
+        setAutos([]); // Los demás usuarios inician sin autos en este simulacro
+      }
     }
   }, [user]);
 
@@ -179,16 +190,24 @@ export default function Perfil({ isDarkMode }) {
               </tr>
             </thead>
             <tbody>
-              {autos.map(auto => (
-                <tr key={auto.id} style={{ borderBottom: theme.border }}>
-                  <td style={{ padding: '12px', fontWeight: 'bold', color: '#f8961e', fontFamily: 'monospace', fontSize: '1.1rem' }}>
-                    {formatPatente(auto.patente)}
+              {autos.length > 0 ? (
+                autos.map(auto => (
+                  <tr key={auto.id} style={{ borderBottom: theme.border }}>
+                    <td style={{ padding: '12px', fontWeight: 'bold', color: '#f8961e', fontFamily: 'monospace', fontSize: '1.1rem' }}>
+                      {formatPatente(auto.patente)}
+                    </td>
+                    <td style={{ padding: '12px' }}>{auto.marca}</td>
+                    <td style={{ padding: '12px' }}>{auto.modelo}</td>
+                    <td style={{ padding: '12px' }}>{auto.anio}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ padding: '20px', textAlign: 'center', color: theme.textMuted }}>
+                    No tienes vehículos registrados a tu nombre.
                   </td>
-                  <td style={{ padding: '12px' }}>{auto.marca}</td>
-                  <td style={{ padding: '12px' }}>{auto.modelo}</td>
-                  <td style={{ padding: '12px' }}>{auto.anio}</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

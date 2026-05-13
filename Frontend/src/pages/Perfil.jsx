@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+// src/pages/Perfil.jsx
 import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Perfil({ isDarkMode }) {
   const { user } = useAuth();

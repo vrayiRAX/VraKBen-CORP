@@ -1,6 +1,6 @@
 # VraKBen-CORP 🔧
 
-Sistema de gestión integral para taller mecánico, construido con arquitectura de microservicios Spring Boot y frontend React moderno.
+Sistema de gestión integral para taller mecánico, enfocado en eficiencia operacional y experiencia del cliente.
 
 ## 🏗️ Arquitectura
 

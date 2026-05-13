@@ -6,7 +6,7 @@ export default function GestInv({ isDarkMode }) {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '', price: '', stock: '', sku: '' });
+  const [form, setForm] = useState({ name: '', description: '', price: '', stock: '', sku: '', imageUrl: '' });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -43,9 +43,9 @@ export default function GestInv({ isDarkMode }) {
     e.preventDefault();
     setSaving(true); setMsg('');
     try {
-      await crearProducto({ name: form.name, description: form.description, price: parseFloat(form.price), sku: form.sku });
+      await crearProducto({ name: form.name, description: form.description, price: parseFloat(form.price), sku: form.sku, imageUrl: form.imageUrl });
       setMsg('✅ Producto creado exitosamente');
-      setForm({ name: '', description: '', price: '', stock: '', sku: '' });
+      setForm({ name: '', description: '', price: '', stock: '', sku: '', imageUrl: '' });
       setShowForm(false);
       cargar();
     } catch { setMsg('❌ Error al crear el producto'); }
@@ -91,6 +91,10 @@ export default function GestInv({ isDarkMode }) {
           <div>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Descripción</label>
             <input name="description" value={form.description} onChange={handleChange} placeholder="Descripción del producto" style={inputStyle} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>URL de Imagen</label>
+            <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="https://ejemplo.com/foto.jpg" style={inputStyle} />
           </div>
           {msg && <p style={{ gridColumn: '1 / -1', margin: 0, textAlign: 'center' }}>{msg}</p>}
           <button type="submit" disabled={saving} style={{

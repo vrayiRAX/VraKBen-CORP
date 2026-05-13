@@ -26,8 +26,9 @@ public class AuthService {
     public LoginResponseDTO login(LoginRequestDTO request) {
         Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
         if (userOpt.isPresent() && passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
-            String token = jwtService.generateToken(request.getUsername());
-            return new LoginResponseDTO(token, request.getUsername(), "Login exitoso");
+            User user = userOpt.get();
+            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
+            return new LoginResponseDTO(token, user.getUsername(), "Login exitoso");
         }
         return null;
     }

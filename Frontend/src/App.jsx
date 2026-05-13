@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -51,11 +51,13 @@ function App() {
             <Route path="/perfil" element={<ProtectedRoute allowedRoles={['CLIENTE']}><Perfil isDarkMode={isDarkMode} /></ProtectedRoute>} />
 
             {/* RUTAS DE MECÁNICO */}
+            <Route path="/mecanico" element={<ProtectedRoute allowedRoles={['MECANICO']}><Navigate to="/mecanico/dashboard" replace /></ProtectedRoute>} />
             <Route path="/mecanico/dashboard" element={<ProtectedRoute allowedRoles={['MECANICO']}><DashMec isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/mecanico/inventario" element={<ProtectedRoute allowedRoles={['MECANICO']}><InvMec isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/mecanico/solicitud" element={<ProtectedRoute allowedRoles={['MECANICO']}><Solicitud isDarkMode={isDarkMode} /></ProtectedRoute>} />
 
             {/* RUTAS DE ADMIN */}
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><Navigate to="/admin/metricas" replace /></ProtectedRoute>} />
             <Route path="/admin/metricas" element={<ProtectedRoute allowedRoles={['ADMIN']}><Metricas isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/inventario" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestInv isDarkMode={isDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/usuarios" element={<ProtectedRoute allowedRoles={['ADMIN']}><GestUser isDarkMode={isDarkMode} /></ProtectedRoute>} />

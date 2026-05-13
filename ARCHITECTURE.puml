@@ -1,0 +1,130 @@
+@startuml ARCHITECTURE — VraKBen-CORP Connections
+
+title Arquitectura de Conexiones — VraKBen-CORP
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #e0e0e0
+skinparam defaultFontName Arial
+skinparam ArrowColor #64b5f6
+skinparam PackageBorderColor #64b5f6
+skinparam PackageBackgroundColor #16213e
+skinparam NoteBackgroundColor #0f3460
+skinparam NoteBorderColor #64b5f6
+skinparam NoteFontColor #e0e0e0
+
+actor "Usuario\n(CLIENTE / MECANICO / ADMIN)" as User
+
+package "Capa de Presentación" #1a237e {
+    node "Frontend\nReact 18 + Vite\n:5173" as FE {
+        component "AuthContext" as AC
+        component "apiClient\n(Axios)" as APC
+        component "ProtectedRoute" as PR
+    }
+}
+
+package "Capa de Infraestructura" #1b5e20 {
+    node "API Gateway / BFF\nSpring Cloud Gateway\n:8080" as GW {
+        component "JwtAuthFilter" as JWT
+        component "CorsConfig" as CORS
+        component "RouteConfig\n(lb:// routes)" as RC
+    }
+
+    node "Eureka Server\nService Discovery\n:8761" as EUR
+}
+
+package "Capa de Negocio (Microservicios)" #4a148c {
+    node "ms-auth-server\n:8083" as AUTH {
+        component "AuthController"
+        component "AuthService"
+        component "UserRepository"
+    }
+
+    node "ms-catalog\n:8084" as CAT {
+        component "CatalogController"
+        component "CatalogService"
+        component "CatalogRepository"
+    }
+
+    node "ms-supplier-\nprocurement\n:8088" as PROC {
+        component "ProcurementController"
+        component "ProcurementService"
+        component "ProcurementRepository"
+    }
+
+    node "ms-shopping-cart" as CART
+    node "ms-stock-engine" as STOCK
+    node "ms-job-orders" as JOBS
+    node "ms-appointment-\nscheduler" as APPT
+    node "ms-vehicle-history" as HIST
+}
+
+package "Capa de Datos" #b71c1c {
+    database "PostgreSQL 15\n:5432\nvrakben_db" as DB
+}
+
+' ─── Conexiones ────────────────────────────────────────
+
+User --> FE : HTTP/HTTPS\n:5173
+
+FE --> GW : HTTP :8080\nAuthorization: Bearer {token}
+
+note on link
+  Todas las peticiones van
+  SIEMPRE por el Gateway.
+  Nunca directo a los microservicios.
+end note
+
+GW --> EUR : Registro\n& Resolución de\nservicios lb://
+EUR --> GW : IP:Puerto\ndel servicio
+
+GW --> AUTH : /api/auth/**\n(SIN JWT)
+GW --> CAT : /api/catalog/**\n(CON JWT)
+GW --> PROC : /api/procurement/**\n(CON JWT)
+GW --> CART : /api/cart/**\n(CON JWT)
+GW --> STOCK : /api/stock/**\n(CON JWT)
+GW --> JOBS : /api/jobs/**\n(CON JWT)
+GW --> APPT : /api/appointments/**\n(CON JWT)
+GW --> HIST : /api/history/**\n(CON JWT)
+
+AUTH --> DB : JPA/Hibernate\nTabla: users
+CAT --> DB : JPA/Hibernate\nTabla: product_catalog
+PROC --> DB : JPA/Hibernate\nTabla: supplier_orders
+CART --> DB : JPA/Hibernate
+STOCK --> DB : JPA/Hibernate
+JOBS --> DB : JPA/Hibernate
+APPT --> DB : JPA/Hibernate
+HIST --> DB : JPA/Hibernate
+
+AUTH ..> EUR : Se registra como\nms-auth-server
+CAT ..> EUR : Se registra como\nms-catalog
+PROC ..> EUR : Se registra como\nms-supplier-procurement
+CART ..> EUR : Se registra
+STOCK ..> EUR : Se registra
+JOBS ..> EUR : Se registra
+APPT ..> EUR : Se registra
+HIST ..> EUR : Se registra
+
+note bottom of DB
+  Un solo servidor PostgreSQL 15.
+  Cada microservicio gestiona
+  sus propias tablas via JPA.
+  ddl-auto: update
+end note
+
+note right of GW
+  Spring Boot 3.4.0
+  Spring Cloud 2024.0.0
+  WebFlux (reactivo)
+  — JwtAuthFilter valida Bearer token
+  — CORS global (localhost:5173)
+  — lb:// rutas vía Eureka
+end note
+
+legend right
+  |= Color |= Significado |
+  |<#1a237e> Azul oscuro | Capa de presentación |
+  |<#1b5e20> Verde oscuro | Capa de infraestructura |
+  |<#4a148c> Púrpura | Microservicios de negocio |
+  |<#b71c1c> Rojo oscuro | Capa de datos |
+endlegend
+
+@enduml

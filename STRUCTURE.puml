@@ -1,0 +1,175 @@
+@startuml STRUCTURE — VraKBen-CORP
+
+title Estructura del Repositorio — VraKBen-CORP
+
+package "VraKBen-CORP (Raíz)" {
+
+    package "bff/" <<API Gateway>> {
+        class ApiGatewayApplication
+        class JwtAuthenticationGatewayFilterFactory
+        class JwtUtil
+        class CorsConfig
+        note right of bff/ : Spring Boot 3.4.0\nSpring Cloud Gateway 2024.0.0\nPuerto: 8080
+    }
+
+    package "ms-auth-server/" <<Microservicio>> {
+        package "controller" {
+            class AuthController
+        }
+        package "service" {
+            class AuthService
+        }
+        package "repository" {
+            interface UserRepository
+        }
+        package "model" {
+            class User
+        }
+        package "dto" {
+            class LoginRequestDTO
+            class LoginResponseDTO
+            class UserRegisterDTO
+        }
+        package "test/service" {
+            class AuthServiceTest <<JUnit5 + Mockito>>
+        }
+        note right of ms-auth-server/ : Spring Boot 4.0.3\nPuerto: 8083\n4 tests unitarios ✅
+    }
+
+    package "ms-catalog/" <<Microservicio>> {
+        package "controller " {
+            class CatalogController
+        }
+        package "service " {
+            class CatalogService
+        }
+        package "repository " {
+            interface CatalogRepository
+        }
+        package "model " {
+            class ProductCatalog
+        }
+        package "test/service " {
+            class CatalogServiceTest <<JUnit5 + Mockito>>
+        }
+        note right of ms-catalog/ : Puerto: 8084\n4 tests unitarios ✅
+    }
+
+    package "Backend/" {
+        package "eureka-server/" <<Service Discovery>> {
+            class EurekaServerApplication
+            note right : Puerto: 8761
+        }
+
+        package "supplier-procurement/" <<Microservicio>> {
+            package "controller  " {
+                class ProcurementController
+            }
+            package "service  " {
+                class ProcurementService
+            }
+            package "repository  " {
+                interface ProcurementRepository
+            }
+            package "model  " {
+                class SupplierOrder
+            }
+            package "dto  " {
+                class SupplierOrderResponseDTO
+            }
+            package "test/service  " {
+                class ProcurementServiceTest <<JUnit5 + Mockito>>
+            }
+            note right of supplier-procurement/ : Puerto expuesto: 8088\n5 tests unitarios ✅
+        }
+
+        package "job-orders/" <<Microservicio>> {
+            note : Estructura preparada\nPendiente integración
+        }
+        package "appointment-scheduler/" <<Microservicio>> {
+            note : Estructura preparada\nPendiente integración
+        }
+        package "vehicle-history/" <<Microservicio>> {
+            note : Estructura preparada\nPendiente integración
+        }
+        package "order-management/" <<Microservicio>> {
+            note : Estructura preparada\nPendiente integración
+        }
+    }
+
+    package "ms-shopping-cart/" <<Microservicio>> {
+        note : Estructura preparada\nPendiente integración
+    }
+
+    package "ms-stock/" <<Microservicio>> {
+        note : Estructura preparada\nPendiente integración
+    }
+
+    package "frontend/" <<React App>> {
+        package "src/context" {
+            class AuthContext
+        }
+        package "src/components" {
+            class Navbar
+            class ProtectedRoute
+            class Footer
+        }
+        package "src/services" {
+            class apiClient <<Axios baseURL:8080>>
+            class authService
+            class catalogoService
+            class carritoService
+        }
+        package "src/pages" {
+            package "public" {
+                class Home
+                class Login
+                class Register
+                class Catalogo
+            }
+            package "cliente" {
+                class Perfil
+                class Carrito
+                class Agendar
+                class Pago
+            }
+            package "admin" {
+                class Metricas
+                class GestInv
+                class GestUser
+                class GestSolicitudes
+            }
+            package "mechanic" {
+                class DashMec
+                class InvMec
+                class Solicitud
+            }
+        }
+        note right of frontend/ : React 18 + Vite\nPuerto: 5173
+    }
+
+    file "docker-compose.yml" <<Orchestration>>
+    file "ARCHITECTURE.puml" <<Diagrama>>
+    file "STRUCTURE.puml" <<Diagrama>>
+}
+
+' Relaciones dentro de microservicios (patrón Repository)
+AuthController --> AuthService
+AuthService --> UserRepository
+UserRepository --> User
+AuthService ..> LoginRequestDTO : usa
+AuthService ..> LoginResponseDTO : retorna
+AuthServiceTest --> AuthService : @InjectMocks
+
+CatalogController --> CatalogService
+CatalogService --> CatalogRepository
+CatalogRepository --> ProductCatalog
+CatalogServiceTest --> CatalogService : @InjectMocks
+
+ProcurementController --> ProcurementService
+ProcurementService --> ProcurementRepository
+ProcurementRepository --> SupplierOrder
+ProcurementController ..> SupplierOrderResponseDTO : retorna
+ProcurementServiceTest --> ProcurementService : @InjectMocks
+
+@enduml

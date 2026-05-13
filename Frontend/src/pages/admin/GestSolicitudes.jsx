@@ -1,6 +1,6 @@
 // src/pages/admin/GestSolicitudes.jsx
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../../services/apiClient';
 
 export default function GestSolicitudes({ isDarkMode }) {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -18,8 +18,7 @@ export default function GestSolicitudes({ isDarkMode }) {
   const cargar = async () => {
     setCargando(true);
     try {
-      // Hacemos llamada directa al microservicio de procurement
-      const response = await axios.get('http://localhost:8088/api/procurement/all');
+      const response = await apiClient.get('/api/procurement/all');
       setSolicitudes(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Error al cargar solicitudes', err);
@@ -33,7 +32,7 @@ export default function GestSolicitudes({ isDarkMode }) {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:8088/api/procurement/status/${id}?status=${newStatus}`);
+      await apiClient.put(`/api/procurement/status/${id}?status=${newStatus}`);
       setMsg(`✅ Solicitud #${id} actualizada a ${newStatus}`);
       cargar(); // Recargar la tabla
     } catch (err) {

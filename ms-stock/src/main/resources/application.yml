@@ -5,7 +5,7 @@ spring:
   application:
     name: ms-stock-engine
   datasource:
-    url: jdbc:postgresql://localhost:5432/vrakben_stock
+    url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben
     password: password_vrakben
   jpa:
@@ -16,4 +16,4 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/

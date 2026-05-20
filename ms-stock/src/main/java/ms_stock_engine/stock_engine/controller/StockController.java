@@ -17,10 +17,20 @@ public class StockController {
     public ResponseEntity<?> reduce(@PathVariable Long id, @RequestParam Integer quantity) {
         try {
             Product updatedProduct = stockService.reduceStock(id, quantity);
-            return ResponseEntity.ok(updatedProduct);
+            return ResponseEntity.ok(convertToDTO(updatedProduct));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    
+    private ms_stock_engine.stock_engine.dto.ProductResponseDTO convertToDTO(Product product) {
+        return new ms_stock_engine.stock_engine.dto.ProductResponseDTO(
+                product.getId(),
+                product.getName(),
+                product.getSku(),
+                product.getStock(),
+                product.getMinThreshold()
+        );
     }
 
     // Endpoint para que Actuator y Eureka vean que está vivito

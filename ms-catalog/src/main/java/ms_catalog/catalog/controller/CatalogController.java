@@ -40,6 +40,7 @@ public class CatalogController {
         product.setCategory(request.getCategory());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setStock(request.getStock());
         product.setImageUrl(request.getImageUrl());
         
         ProductCatalog savedProduct = service.saveProduct(product);
@@ -55,6 +56,7 @@ public class CatalogController {
                 product.getCategory(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getStock(),
                 product.getImageUrl()
         );
     }

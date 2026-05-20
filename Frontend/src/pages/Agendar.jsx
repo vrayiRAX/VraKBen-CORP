@@ -54,7 +54,7 @@ export default function Agendar({ isDarkMode }) {
     setLoading(true);
     try {
       // Enviamos al microservicio de agendamiento via Gateway
-      await apiClient.post('/api/appointments', {
+      await apiClient.post('/api/appointments/create', {
         customerUsername: user?.name,
         serviceType: form.serviceType,
         vehicleBrand: form.brand,

@@ -134,7 +134,7 @@ export default function Perfil({ isDarkMode }) {
           <h2 style={{ margin: '0 0 10px 0' }}>{profileData.name || 'Usuario VrakBen'}</h2>
           <p style={{ margin: '0 0 20px 0', color: theme.textMuted }}>{profileData.email}</p>
           <div style={{ display: 'inline-block', padding: '5px 15px', borderRadius: '20px', backgroundColor: '#3a86ff22', color: '#3a86ff', fontWeight: 'bold' }}>
-            Rol: {user?.roles?.[0] || 'Desconocido'}
+            Rol: {user?.role || 'Desconocido'}
           </div>
         </div>
 

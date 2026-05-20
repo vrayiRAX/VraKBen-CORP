@@ -22,6 +22,7 @@ public class ProductCatalog {
     private String description;
 
     private Double price;
+    private Integer stock;
 
     // --- NUEVO CAMPO PARA LA IMAGEN ---
     private String imageUrl;

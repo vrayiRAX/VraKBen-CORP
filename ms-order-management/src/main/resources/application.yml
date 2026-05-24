@@ -2,7 +2,7 @@ server:
   port: 8088
 spring:
   application:
-    name: ms-order-management
+    name: order-management
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

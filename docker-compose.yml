@@ -151,7 +151,7 @@ services:
     build: ./ms-supplier-procurement
     container_name: ms-supplier-procurement
     ports:
-      - "8088:8080"
+      - "8088:8092"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ms-stock-engine
+    name: stock-engine
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

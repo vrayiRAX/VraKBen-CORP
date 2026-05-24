@@ -2,7 +2,7 @@ server:
   port: 8084
 spring:
   application:
-    name: ms-catalog
+    name: catalog
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

@@ -2,7 +2,7 @@ server:
   port: 8091
 spring:
   application:
-    name: ms-shopping-cart
+    name: shopping-cart
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

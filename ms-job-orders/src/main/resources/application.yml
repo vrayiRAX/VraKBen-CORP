@@ -2,7 +2,7 @@ server:
   port: 8086
 spring:
   application:
-    name: ms-job-orders
+    name: job-orders
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

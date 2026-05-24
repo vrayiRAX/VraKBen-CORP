@@ -4,7 +4,6 @@ import ms_job_orders.job_orders.model.JobOrder;
 import ms_job_orders.job_orders.service.JobOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 import ms_job_orders.job_orders.dto.JobOrderRequestDTO;
 import ms_job_orders.job_orders.dto.JobOrderResponseDTO;

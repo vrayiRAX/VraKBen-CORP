@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ms-vehicle-history
+    name: vehicle-history
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

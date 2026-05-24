@@ -2,7 +2,7 @@ server:
   port: 8092
 spring:
   application:
-    name: ms-supplier-procurement
+    name: supplier-procurement
   datasource:
     url: jdbc:postgresql://vrakben-db:5432/vrakben_db
     username: user_vrakben

@@ -30,8 +30,10 @@ class CatalogServiceTest {
     @Test
     void testGetAllProducts() {
         // Arrange
-        ProductCatalog p1 = new ProductCatalog(1L, "SKU1", "Bujía", "Bosch", "Motor", "Bujía platino", 5000.0, "url1");
-        ProductCatalog p2 = new ProductCatalog(2L, "SKU2", "Filtro", "Mann", "Motor", "Filtro aceite", 8000.0, "url2");
+        ProductCatalog p1 = new ProductCatalog(1L, "SKU1", "Bujía", "Bosch", "Motor", "Bujía platino", 5000.0, 100,
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAyFAxKaZMecIDLvL9v4u2BTzmnrYDmNdWAA&s.jpg");
+        ProductCatalog p2 = new ProductCatalog(2L, "SKU2", "Filtro", "Mann", "Motor", "Filtro aceite", 8000.0, 100,
+                "https://cdnx.jumpseller.com/oilpro/image/57361570/D_670026-MLC80824747717_112024-O.jpg?1744675651.jpg");
         when(catalogRepository.findAll()).thenReturn(Arrays.asList(p1, p2));
 
         // Act
@@ -46,7 +48,7 @@ class CatalogServiceTest {
     @Test
     void testGetProductBySku() {
         // Arrange
-        ProductCatalog p1 = new ProductCatalog(1L, "SKU1", "Bujía", "Bosch", "Motor", "Bujía platino", 5000.0, "url1");
+        ProductCatalog p1 = new ProductCatalog(1L, "SKU1", "Bujía", "Bosch", "Motor", "Bujía platino", 5000.0, 100, "url1");
         when(catalogRepository.findBySku("SKU1")).thenReturn(java.util.Optional.of(p1));
 
         // Act
@@ -67,7 +69,7 @@ class CatalogServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             catalogService.getProductBySku("NOT_FOUND");
         });
-        
+
         assertEquals("Producto no encontrado en catálogo", exception.getMessage());
         verify(catalogRepository, times(1)).findBySku("NOT_FOUND");
     }
@@ -75,8 +77,10 @@ class CatalogServiceTest {
     @Test
     void testSaveProduct() {
         // Arrange
-        ProductCatalog p1 = new ProductCatalog(null, "SKU3", "Llanta", "Michelin", "Ruedas", "Llanta aro 15", 50000.0, "url3");
-        ProductCatalog savedProduct = new ProductCatalog(3L, "SKU3", "Llanta", "Michelin", "Ruedas", "Llanta aro 15", 50000.0, "url3");
+        ProductCatalog p1 = new ProductCatalog(null, "SKU3", "Llanta", "Michelin", "Ruedas", "Llanta aro 15", 50000.0, 100,
+                "url3");
+        ProductCatalog savedProduct = new ProductCatalog(3L, "SKU3", "Llanta", "Michelin", "Ruedas", "Llanta aro 15",
+                50000.0, 100, "url3");
         when(catalogRepository.save(p1)).thenReturn(savedProduct);
 
         // Act

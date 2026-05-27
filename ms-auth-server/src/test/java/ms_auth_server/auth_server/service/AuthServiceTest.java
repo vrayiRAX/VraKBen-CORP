@@ -75,9 +75,9 @@ class AuthServiceTest {
         when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongpassword", "hashedPassword")).thenReturn(false);
 
-        LoginResponseDTO response = authService.login(request);
-
-        assertNull(response);
+        assertThrows(ms_auth_server.auth_server.exception.InvalidCredentialsException.class, () -> {
+            authService.login(request);
+        });
     }
 
     @Test
@@ -100,9 +100,9 @@ class AuthServiceTest {
         
         when(userRepository.findByUsername("existing")).thenReturn(Optional.of(existingUser));
 
-        boolean result = authService.register(dto);
-
-        assertFalse(result);
+        assertThrows(ms_auth_server.auth_server.exception.UserAlreadyExistsException.class, () -> {
+            authService.register(dto);
+        });
         verify(userRepository, never()).save(any());
     }
 }

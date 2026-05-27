@@ -25,17 +25,17 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO request) {
         Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
-        if (userOpt.isPresent() && passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
-            User user = userOpt.get();
-            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
-            return new LoginResponseDTO(token, user.getUsername(), "Login exitoso");
+        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
+            throw new ms_auth_server.auth_server.exception.InvalidCredentialsException("Credenciales inválidas");
         }
-        return null;
+        User user = userOpt.get();
+        String token = jwtService.generateToken(user.getUsername(), user.getRoles());
+        return new LoginResponseDTO(token, user.getUsername(), "Login exitoso");
     }
 
     public boolean register(UserRegisterDTO request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return false;
+            throw new ms_auth_server.auth_server.exception.UserAlreadyExistsException("Usuario ya existe");
         }
         User user = new User();
         user.setUsername(request.getUsername());
@@ -53,13 +53,13 @@ public class AuthService {
 
     public UserRegisterDTO getUserByUsername(String username) {
         Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            UserRegisterDTO dto = new UserRegisterDTO();
-            dto.setUsername(user.getUsername());
-            dto.setRoles(user.getRoles());
-            return dto;
+        if (userOpt.isEmpty()) {
+            throw new ms_auth_server.auth_server.exception.UserNotFoundException("Usuario no encontrado");
         }
-        return null;
+        User user = userOpt.get();
+        UserRegisterDTO dto = new UserRegisterDTO();
+        dto.setUsername(user.getUsername());
+        dto.setRoles(user.getRoles());
+        return dto;
     }
 }

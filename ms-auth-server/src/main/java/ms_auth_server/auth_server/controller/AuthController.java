@@ -18,29 +18,20 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         LoginResponseDTO response = authService.login(request);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO request) {
-        boolean success = authService.register(request);
-        if (success) {
-            return ResponseEntity.ok("Usuario registrado exitosamente");
-        }
-        return ResponseEntity.badRequest().body("Usuario ya existe");
+    public ResponseEntity<String> register(@Valid @RequestBody UserRegisterDTO request) {
+        authService.register(request);
+        return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 
     @GetMapping("/users/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserRegisterDTO> getUserByUsername(@PathVariable String username) {
         UserRegisterDTO user = authService.getUserByUsername(username);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        return ResponseEntity.ok(user);
     }
 }

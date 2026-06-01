@@ -18,7 +18,7 @@ services:
 
   # 2. Service Discovery (Eureka)
   eureka-server:
-    build: ./Backend/eureka-server
+    build: ./ms-eureka-server
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -96,7 +96,7 @@ services:
 
   # 8. Gestión de Órdenes / Ventas
   ms-order-management:
-    build: ./Backend/order-management
+    build: ./ms-order-management
     container_name: ms-order-management
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -109,7 +109,7 @@ services:
 
   # 9. Agendamiento de Citas
   ms-appointment-scheduler:
-    build: ./Backend/appointment-scheduler
+    build: ./ms-appointment-scheduler
     container_name: ms-appointment-scheduler
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -122,7 +122,7 @@ services:
 
   # 10. Historial de Vehículos
   ms-vehicle-history:
-    build: ./Backend/vehicle-history
+    build: ./ms-vehicle-history
     container_name: ms-vehicle-history
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -135,7 +135,7 @@ services:
 
   # 11. Órdenes de Trabajo para Mecánicos
   ms-job-orders:
-    build: ./Backend/job-orders
+    build: ./ms-job-orders
     container_name: ms-job-orders
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
@@ -148,10 +148,10 @@ services:
 
   # 12. Solicitudes de Material
   ms-supplier-procurement:
-    build: ./Backend/supplier-procurement
+    build: ./ms-supplier-procurement
     container_name: ms-supplier-procurement
     ports:
-      - "8088:8080"
+      - "8088:8092"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/

@@ -31,7 +31,7 @@ export default function Solicitud({ isDarkMode }) {
     e.preventDefault();
     setLoading(true); setMsg({ text: '', type: '' });
     try {
-      await apiClient.post('/api/procurement', {
+      await apiClient.post('/api/procurement/order', {
         mechanicUsername: user?.name,
         workOrderId: form.workOrderId,
         partName: form.partName,

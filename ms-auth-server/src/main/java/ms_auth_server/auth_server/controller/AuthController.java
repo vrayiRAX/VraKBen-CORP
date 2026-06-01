@@ -10,37 +10,42 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "API de autenticación de usuarios")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
+    @Operation(summary = "Login de usuario", description = "Autentica a un usuario y retorna un token JWT")
+    @ApiResponse(responseCode = "200", description = "Login exitoso")
+    @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         LoginResponseDTO response = authService.login(request);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Registro de usuario", description = "Registra un nuevo usuario en el sistema")
+    @ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente")
+    @ApiResponse(responseCode = "400", description = "El usuario ya existe o datos inválidos")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO request) {
-        boolean success = authService.register(request);
-        if (success) {
-            return ResponseEntity.ok("Usuario registrado exitosamente");
-        }
-        return ResponseEntity.badRequest().body("Usuario ya existe");
+    public ResponseEntity<String> register(@Valid @RequestBody UserRegisterDTO request) {
+        authService.register(request);
+        return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 
+    @Operation(summary = "Obtener usuario por nombre", description = "Obtiene los detalles de un usuario registrado")
+    @ApiResponse(responseCode = "200", description = "Usuario encontrado")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @GetMapping("/users/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserRegisterDTO> getUserByUsername(@PathVariable String username) {
         UserRegisterDTO user = authService.getUserByUsername(username);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        return ResponseEntity.ok(user);
     }
 }

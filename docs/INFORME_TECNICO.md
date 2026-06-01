@@ -344,9 +344,15 @@ Se implementaron **tests unitarios** con JUnit 5 y Mockito. La capa de base de d
 | Microservicio | Clase | Tests | Casos |
 |---|---|---|---|
 | ms-auth-server | `AuthServiceTest` | 4 | Login OK, Login incorrecto, Registro OK, Usuario ya existe |
-| ms-catalog | `CatalogServiceTest` | 4 | Listar todo, Buscar SKU OK, SKU no encontrado (exception), Guardar |
-| ms-supplier-procurement | `ProcurementServiceTest` | 5 | Crear orden (PENDING), Aprobar, Rechazar, No encontrada (exception), Listar |
-| **TOTAL** | | **13** | ✅ **0 fallos** |
+| ms-catalog | `CatalogServiceTest` | 4 | Listar todo, Buscar SKU OK, SKU no encontrado, Guardar |
+| ms-supplier-procurement | `ProcurementServiceTest` | 4 | Crear orden, Aprobar, Rechazar (No encontrada), Listar |
+| ms-stock | `StockServiceTest` | 3 | Reducir stock OK, Producto no encontrado, Stock insuficiente |
+| ms-order-management | `OrderServiceTest` | 2 | Orden exitosa (stock OK), Orden fallida (Sin stock) |
+| ms-job-orders | `JobOrderServiceTest` | 3 | Crear orden (IN_PROGRESS), Completar orden OK, Orden no encontrada |
+| ms-vehicle-history | `VehicleHistoryServiceTest` | 2 | Agregar entrada al historial, Obtener historial completo |
+| ms-appointment-scheduler | `AppointmentServiceTest` | 3 | Agendar con descuento de stock, Agendar sin descuento, Rechazo por falta de stock |
+| ms-shopping-cart | `CartServiceTest` | 2 | (Pruebas unitarias de manipulación de carrito) |
+| **TOTAL** | | **27** | ✅ **0 fallos en validación de DTOs y lógica** |
 
 ### Ejemplo de Test (Happy Path + Error Path)
 
@@ -429,17 +435,17 @@ SELECT * FROM product_catalog LIMIT 5;
 | Contenedor | Imagen / Build | Puerto | Depende de |
 |---|---|---|---|
 | `vrakben-db` | `postgres:15` | 5432 | — |
-| `eureka-server` | `./Backend/eureka-server` | 8761 | — |
+| `eureka-server` | `./eureka-server` | 8761 | — |
 | `api-gateway` | `./bff` | 8080 | eureka-server |
 | `auth-server` | `./ms-auth-server` | 8083 | vrakben-db, eureka |
 | `ms-catalog` | `./ms-catalog` | 8084 | vrakben-db, eureka |
-| `ms-supplier-procurement` | `./Backend/supplier-procurement` | 8088 | vrakben-db, eureka |
+| `ms-supplier-procurement` | `./ms-supplier-procurement` | 8088 | vrakben-db, eureka |
 | `ms-shopping-cart` | `./ms-shopping-cart` | — | vrakben-db, eureka |
 | `ms-stock-engine` | `./ms-stock` | — | vrakben-db, eureka |
-| `ms-job-orders` | `./Backend/job-orders` | — | vrakben-db, eureka |
-| `ms-appointment-scheduler` | `./Backend/appointment-scheduler` | — | vrakben-db, eureka |
-| `ms-vehicle-history` | `./Backend/vehicle-history` | — | vrakben-db, eureka |
-| `ms-order-management` | `./Backend/order-management` | — | vrakben-db, eureka |
+| `ms-job-orders` | `./ms-job-orders` | — | vrakben-db, eureka |
+| `ms-appointment-scheduler` | `./ms-appointment-scheduler` | — | vrakben-db, eureka |
+| `ms-vehicle-history` | `./ms-vehicle-history` | — | vrakben-db, eureka |
+| `ms-order-management` | `./ms-order-management` | — | vrakben-db, eureka |
 
 **Red:** `vrakben-net` (bridge) — todos los contenedores se comunican por nombre de servicio.
 **Volumen:** `vrakben-db-data` — persiste la BD entre reinicios.
@@ -499,6 +505,10 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 | `feature/testing-and-dtos` | Tests JUnit + DTOs | ✅ Mergeado |
 | `feature/readme-update` | Documentación completa | ✅ Mergeado |
 | `feature/conflict-demo` | Demostración de conflicto Git | ✅ Resuelto |
+| `feature/microservices-backend` | Tests unitarios, rutas gateway, limpieza Eureka y refactor DTOs | 🟡 En progreso |
+
+> [!NOTE]
+> Se ha creado la guía `.github/GITHUB_FLOW_GUIDE.md` como estándar oficial del equipo para creación de ramas y Pull Requests, asegurando que `main` siempre esté en estado desplegable.
 
 ### Flujo de Trabajo (GitHub Flow)
 
@@ -539,9 +549,12 @@ eficiencia operacional y experiencia del cliente.
 | Microservicios no resolvían | URIs usaban `http://auth-server:8083` en vez de nombre Eureka | Cambiado a `lb://ms-auth-server` |
 | No se podía crear productos | Frontend enviaba campo `stock` que ms-catalog no acepta | Removido del payload del formulario |
 | Foto de perfil compartida entre usuarios | `localStorage` sin clave diferenciada por usuario | Clave: `profile_pic_{username}` |
-| Tests fallaban en Docker build | `contextLoads` intentaba Docker-in-Docker | `@Disabled` en `*ApplicationTests.java` |
+| Tests fallaban en Docker build | `contextLoads` intentaba Docker-in-Docker | `@Disabled` en `*ApplicationTests.java` y usar tests unitarios aislados |
 | Procurement exponía entidad JPA | Faltaba DTO de respuesta | Creado `SupplierOrderResponseDTO` + `toDTO()` |
 | `containsKey()` en `HttpHeaders` | API cambiada en Spring Boot 3+ | `.getFirst(HttpHeaders.AUTHORIZATION)` |
+| Conflicto de nombres en Eureka | Valores duplicados en `.properties` y `.yml` | Se unificaron nombres en `.yml` eliminando el prefijo `ms-` |
+| Rutas Gateway rotas (jobs/orders) | Desincronización con Controladores y rutas faltantes | Corregido path `/api/job-orders/**` y agregado `/api/orders/**` |
+| Puerto incorrecto (Procurement) | `docker-compose.yml` mapeaba al 8080 internamente | Actualizado mapeo interno al `8092` |
 
 ---
 
@@ -569,7 +582,7 @@ VraKBen-CORP representa una solución de software empresarial completa que abord
 - ✅ **API Gateway / BFF** con validación JWT centralizada y CORS global
 - ✅ **Service Discovery** dinámico vía Netflix Eureka
 - ✅ **Frontend React moderno** con roles, rutas protegidas e interceptores JWT
-- ✅ **13 tests unitarios** (JUnit 5 + Mockito) con 0 fallos en 3 microservicios
+- ✅ **27 tests unitarios** (JUnit 5 + Mockito) con 0 fallos cubriendo 9 microservicios
 - ✅ **DTOs** en todos los controladores (nunca se expone la entidad JPA)
 - ✅ **Git Flow** con múltiples PRs, branches y resolución de conflictos documentada
 - ✅ **Documentación completa** (READMEs por microservicio, diagramas UML PlantUML)

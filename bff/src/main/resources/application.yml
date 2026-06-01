@@ -16,51 +16,58 @@ spring:
             - Path=/api/auth/**
 
         - id: catalog-route
-          uri: lb://ms-catalog
+          uri: lb://catalog
           predicates:
             - Path=/api/catalog/**
           filters:
             - JwtAuthentication
 
         - id: stock-engine-route
-          uri: lb://ms-stock-engine
+          uri: lb://stock-engine
           predicates:
             - Path=/api/stock/**
           filters:
             - JwtAuthentication
 
         - id: supplier-procurement-route
-          uri: lb://ms-supplier-procurement
+          uri: lb://supplier-procurement
           predicates:
             - Path=/api/procurement/**
           filters:
             - JwtAuthentication
 
         - id: job-orders-route
-          uri: lb://ms-job-orders
+          uri: lb://job-orders
           predicates:
-            - Path=/api/jobs/**
+            - Path=/api/job-orders/**
           filters:
             - JwtAuthentication
 
         - id: shopping-cart-route
-          uri: lb://ms-shopping-cart
+          uri: lb://shopping-cart
           predicates:
             - Path=/api/cart/**
           filters:
             - JwtAuthentication
 
         - id: appointment-route
-          uri: lb://ms-appointment-scheduler
+          uri: lb://appointment-scheduler
           predicates:
             - Path=/api/appointments/**
           filters:
             - JwtAuthentication
 
         - id: vehicle-history-route
-          uri: lb://ms-vehicle-history
+          uri: lb://vehicle-history
           predicates:
             - Path=/api/history/**
+          filters:
+            - JwtAuthentication
+
+        - id: order-management-route
+          uri: lb://order-management
+          predicates:
+            - Path=/api/orders/**
           filters:
             - JwtAuthentication
 

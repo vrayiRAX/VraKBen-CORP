@@ -7,3 +7,7 @@ target/
 *.class
 .DS_Store
 *.log
+
+node-installer.msi
+node-portable.zip
+node-v20.11.0-win-x64/

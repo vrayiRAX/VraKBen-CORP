@@ -35,7 +35,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div style={{ backgroundColor: isDarkMode ? '#121212' : '#ffffff', minHeight: '100vh', transition: 'background-color 0.3s' }}>
+        <div data-theme={isDarkMode ? 'dark' : 'light'} style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', transition: 'background-color 0.3s' }}>
           <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           
           <Routes>

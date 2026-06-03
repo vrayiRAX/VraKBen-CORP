@@ -105,4 +105,28 @@ class AuthServiceTest {
         });
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    void testGetUserByUsernameSuccess() {
+        User user = new User();
+        user.setUsername("testuser");
+        user.setRoles(Set.of("USER"));
+
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+
+        UserRegisterDTO result = authService.getUserByUsername("testuser");
+
+        assertNotNull(result);
+        assertEquals("testuser", result.getUsername());
+        assertTrue(result.getRoles().contains("USER"));
+    }
+
+    @Test
+    void testGetUserByUsernameNotFound() {
+        when(userRepository.findByUsername("unknown")).thenReturn(Optional.empty());
+
+        assertThrows(ms_auth_server.auth_server.exception.UserNotFoundException.class, () -> {
+            authService.getUserByUsername("unknown");
+        });
+    }
 }

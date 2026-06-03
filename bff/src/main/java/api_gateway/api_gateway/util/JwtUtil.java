@@ -11,8 +11,8 @@ import java.security.Key;
 @Component
 public class JwtUtil {
     
-    // Misma clave que en ms-auth-server
-    private static final String SECRET_KEY = "VraKBen_Super_Secret_Key_Secure_2024_Security_Key_Long_Enough";
+    // Clave robusta para HMAC-SHA256 (mínimo 256 bits / 32 caracteres)
+    private static final String SECRET_KEY = "VraKBen_Corporate_Secure_Key_256_Bits_HMAC_SHA256_2026_Secret";
 
     private Key getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);

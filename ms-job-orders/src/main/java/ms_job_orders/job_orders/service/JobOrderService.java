@@ -24,4 +24,9 @@ public class JobOrderService {
         order.setStatus("COMPLETED");
         return repository.save(order);
     }
+
+    /** Devuelve todas las órdenes de trabajo registradas */
+    public java.util.List<JobOrder> getAllOrders() {
+        return repository.findAll();
+    }
 }

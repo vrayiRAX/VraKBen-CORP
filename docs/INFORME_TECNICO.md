@@ -1,7 +1,7 @@
 # 📚 VraKBen-CORP — Documento Técnico Completo
 
 > **Uso:** Referencia técnica del proyecto. Base para el informe PDF de evaluación.
-> Última actualización: 2026-05-13
+> Última actualización: 2026-06-04
 
 ---
 
@@ -27,12 +27,12 @@
 
 La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Excel, software desactualizado) que generan cuatro problemas críticos:
 
-| Problema | Descripción | Impacto |
-|---|---|---|
-| 👻 **Inventario Fantasma** | El taller retira materiales sin descontarlos en tiempo real | Quiebres de stock, ventas online de productos inexistentes |
-| 📅 **Caos de Agendamiento** | Los repuestos no se apartan para las citas programadas | Clientes esperan, mecánicos sin material disponible |
-| 🧩 **Falta de Trazabilidad** | Ventas y taller manejan la info del cliente por separado | Mala experiencia, errores de facturación |
-| 💥 **Cuello de Botella** | Sistema monolítico colapsa bajo picos de tráfico | Todo el negocio se ve afectado simultáneamente |
+| Problema                     | Descripción                                                 | Impacto                                                    |
+| ---------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| 👻 **Inventario Fantasma**   | El taller retira materiales sin descontarlos en tiempo real | Quiebres de stock, ventas online de productos inexistentes |
+| 📅 **Caos de Agendamiento**  | Los repuestos no se apartan para las citas programadas      | Clientes esperan, mecánicos sin material disponible        |
+| 🧩 **Falta de Trazabilidad** | Ventas y taller manejan la info del cliente por separado    | Mala experiencia, errores de facturación                   |
+| 💥 **Cuello de Botella**     | Sistema monolítico colapsa bajo picos de tráfico            | Todo el negocio se ve afectado simultáneamente             |
 
 **Solución propuesta:** Migrar a una arquitectura de microservicios que separa responsabilidades en módulos independientes y escalables, donde un pico en la tienda online **no afecta** al sistema del taller.
 
@@ -76,13 +76,13 @@ La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Exc
 
 ### Principios de la Arquitectura
 
-| Principio | Implementación |
-|---|---|
-| **Punto único de entrada** | Todo el frontend habla solo con el Gateway `:8080` |
-| **Seguridad centralizada** | JWT validado en el Gateway, no en cada microservicio |
-| **Service Discovery** | Eureka resuelve `lb://ms-auth-server` → IP:Puerto dinámico |
-| **CORS global** | `CorsConfig.java` en el BFF, sin `@CrossOrigin` en microservicios |
-| **DTO pattern** | Ningún controlador expone entidades JPA directamente |
+| Principio                  | Implementación                                                    |
+| -------------------------- | ----------------------------------------------------------------- |
+| **Punto único de entrada** | Todo el frontend habla solo con el Gateway `:8080`                |
+| **Seguridad centralizada** | JWT validado en el Gateway, no en cada microservicio              |
+| **Service Discovery**      | Eureka resuelve `lb://ms-auth-server` → IP:Puerto dinámico        |
+| **CORS global**            | `CorsConfig.java` en el BFF, sin `@CrossOrigin` en microservicios |
+| **DTO pattern**            | Ningún controlador expone entidades JPA directamente              |
 
 ---
 
@@ -90,78 +90,82 @@ La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Exc
 
 ### Requisitos Funcionales (RF)
 
-| ID | Requisito | Actor | Microservicio |
-|---|---|---|---|
-| RF-01 | El sistema debe permitir el login con usuario y contraseña | Todos | ms-auth-server |
-| RF-02 | El sistema debe permitir el registro de nuevos usuarios | Todos | ms-auth-server |
-| RF-03 | El sistema debe mostrar el catálogo de repuestos con imagen y precio | CLIENTE | ms-catalog |
-| RF-04 | El sistema debe permitir agregar productos al carrito | CLIENTE | ms-shopping-cart |
-| RF-05 | El sistema debe permitir agendar citas en el taller | CLIENTE | ms-appointment-scheduler |
-| RF-06 | El sistema debe mostrar el perfil del usuario con sus vehículos | Todos | ms-auth-server / localStorage |
-| RF-07 | El sistema debe mostrar órdenes de trabajo al mecánico | MECANICO | ms-job-orders |
-| RF-08 | El mecánico debe poder solicitar materiales al proveedor | MECANICO | ms-supplier-procurement |
-| RF-09 | El admin debe poder aprobar o rechazar solicitudes de material | ADMIN | ms-supplier-procurement |
-| RF-10 | El admin debe poder gestionar el catálogo de repuestos | ADMIN | ms-catalog |
-| RF-11 | El admin debe poder buscar y gestionar usuarios | ADMIN | ms-auth-server |
-| RF-12 | El admin debe ver métricas del negocio con gráficas | ADMIN | ms-catalog (datos reales) |
-| RF-13 | Las rutas deben estar protegidas por rol de usuario | Sistema | API Gateway / ProtectedRoute |
+| ID    | Requisito                                                            | Actor    | Microservicio                 |
+| ----- | -------------------------------------------------------------------- | -------- | ----------------------------- |
+| RF-01 | El sistema debe permitir el login con usuario y contraseña           | Todos    | ms-auth-server                |
+| RF-02 | El sistema debe permitir el registro de nuevos usuarios              | Todos    | ms-auth-server                |
+| RF-03 | El sistema debe mostrar el catálogo de repuestos con imagen y precio | CLIENTE  | ms-catalog                    |
+| RF-04 | El sistema debe permitir agregar productos al carrito                | CLIENTE  | ms-shopping-cart              |
+| RF-05 | El sistema debe permitir agendar citas en el taller                  | CLIENTE  | ms-appointment-scheduler      |
+| RF-06 | El sistema debe mostrar el perfil del usuario con sus vehículos      | Todos    | ms-auth-server / localStorage |
+| RF-07 | El sistema debe mostrar órdenes de trabajo al mecánico               | MECANICO | ms-job-orders                 |
+| RF-08 | El mecánico debe poder solicitar materiales al proveedor             | MECANICO | ms-supplier-procurement       |
+| RF-09 | El admin debe poder aprobar o rechazar solicitudes de material       | ADMIN    | ms-supplier-procurement       |
+| RF-10 | El admin debe poder gestionar el catálogo de repuestos               | ADMIN    | ms-catalog                    |
+| RF-11 | El admin debe poder buscar y gestionar usuarios                      | ADMIN    | ms-auth-server                |
+| RF-12 | El admin debe ver métricas del negocio con gráficas                  | ADMIN    | ms-catalog (datos reales)     |
+| RF-13 | Las rutas deben estar protegidas por rol de usuario                  | Sistema  | API Gateway / ProtectedRoute  |
 
 ### Requisitos No Funcionales (RNF)
 
-| ID | Requisito | Categoría | Valor Esperado |
-|---|---|---|---|
-| RNF-01 | El sistema debe autenticar sin almacenar contraseñas en texto plano | Seguridad | BCryptPasswordEncoder |
-| RNF-02 | Los tokens JWT deben validarse antes de enrutar cualquier petición protegida | Seguridad | Filtro en API Gateway |
-| RNF-03 | El sistema debe ser escalable horizontalmente por microservicio | Escalabilidad | Independencia de contenedores |
-| RNF-04 | Si un microservicio falla, los demás no deben verse afectados | Disponibilidad | Aislamiento Docker |
-| RNF-05 | El tiempo de respuesta del catálogo no debe superar 2 segundos | Rendimiento | JPA + índices BD |
-| RNF-06 | El código debe tener tests unitarios con 0 fallos | Calidad | JUnit 5 + Mockito |
-| RNF-07 | Cada controlador debe usar DTOs, no entidades JPA directas | Mantenibilidad | DTO Pattern |
-| RNF-08 | Todo el sistema debe poder levantarse con un solo comando Docker | Despliegue | `docker-compose up --build -d` |
+| ID     | Requisito                                                                    | Categoría      | Valor Esperado                 |
+| ------ | ---------------------------------------------------------------------------- | -------------- | ------------------------------ |
+| RNF-01 | El sistema debe autenticar sin almacenar contraseñas en texto plano          | Seguridad      | BCryptPasswordEncoder          |
+| RNF-02 | Los tokens JWT deben validarse antes de enrutar cualquier petición protegida | Seguridad      | Filtro en API Gateway          |
+| RNF-03 | El sistema debe ser escalable horizontalmente por microservicio              | Escalabilidad  | Independencia de contenedores  |
+| RNF-04 | Si un microservicio falla, los demás no deben verse afectados                | Disponibilidad | Aislamiento Docker             |
+| RNF-05 | El tiempo de respuesta del catálogo no debe superar 2 segundos               | Rendimiento    | JPA + índices BD               |
+| RNF-06 | El código debe tener tests unitarios con 0 fallos                            | Calidad        | JUnit 5 + Mockito              |
+| RNF-07 | Cada controlador debe usar DTOs, no entidades JPA directas                   | Mantenibilidad | DTO Pattern                    |
+| RNF-08 | Todo el sistema debe poder levantarse con un solo comando Docker             | Despliegue     | `docker-compose up --build -d` |
 
 ---
 
 ## 4. Microservicios y Endpoints
 
 ### ms-auth-server (`:8083`)
+
 **Responsabilidad:** Autenticación, registro y gestión de usuarios.
 
-| Método | Endpoint | Body / Params | Respuesta | Auth |
-|---|---|---|---|---|
-| `POST` | `/api/auth/login` | `{username, password}` | `{token, username, roles, name}` | ❌ |
-| `POST` | `/api/auth/register` | `{username, password, roles}` | `200 OK` / `409 Conflict` | ❌ |
-| `GET` | `/api/auth/users/{username}` | — | Datos del usuario | ✅ |
+| Método | Endpoint                     | Body / Params                 | Respuesta                                  | Auth |
+| ------ | ---------------------------- | ----------------------------- | ------------------------------------------ | ---- |
+| `POST` | `/api/auth/login`            | `{username, password}`        | `{token, username, roles, name}`           | ❌   |
+| `POST` | `/api/auth/register`         | `{username, password, roles}` | `200 OK` / `409 Conflict`                  | ❌   |
+| `GET`  | `/api/auth/users/{username}` | —                             | Datos del usuario                          | ✅   |
+| `GET`  | `/swagger-ui.html`           | —                             | Interfaz visual de documentación OpenAPI 3 | ❌   |
 
 ### ms-catalog (`:8084`)
+
 **Responsabilidad:** CRUD del catálogo de repuestos.
 
-| Método | Endpoint | Body | Respuesta | Auth |
-|---|---|---|---|---|
-| `GET` | `/api/catalog/all` | — | `List<ProductCatalog>` | ✅ |
-| `GET` | `/api/catalog/{sku}` | — | `ProductCatalog` | ✅ |
-| `POST` | `/api/catalog/create` | `{sku, name, brand, category, description, price, imageUrl}` | Producto creado | ✅ |
+| Método | Endpoint              | Body                                                         | Respuesta              | Auth |
+| ------ | --------------------- | ------------------------------------------------------------ | ---------------------- | ---- |
+| `GET`  | `/api/catalog/all`    | —                                                            | `List<ProductCatalog>` | ✅   |
+| `GET`  | `/api/catalog/{sku}`  | —                                                            | `ProductCatalog`       | ✅   |
+| `POST` | `/api/catalog/create` | `{sku, name, brand, category, description, price, imageUrl}` | Producto creado        | ✅   |
 
 ### ms-supplier-procurement (`:8088`)
+
 **Responsabilidad:** Flujo de solicitudes de material mecánico → proveedor → admin.
 
-| Método | Endpoint | Body / Params | Respuesta | Auth |
-|---|---|---|---|---|
-| `POST` | `/api/procurement/order` | `{productSku, quantity}` | `SupplierOrderResponseDTO` | ✅ |
-| `GET` | `/api/procurement/all` | — | `List<SupplierOrderResponseDTO>` | ✅ |
-| `PUT` | `/api/procurement/status/{id}` | `?status=APPROVED\|REJECTED` | `SupplierOrderResponseDTO` | ✅ |
+| Método | Endpoint                       | Body / Params                | Respuesta                        | Auth |
+| ------ | ------------------------------ | ---------------------------- | -------------------------------- | ---- |
+| `POST` | `/api/procurement/order`       | `{productSku, quantity}`     | `SupplierOrderResponseDTO`       | ✅   |
+| `GET`  | `/api/procurement/all`         | —                            | `List<SupplierOrderResponseDTO>` | ✅   |
+| `PUT`  | `/api/procurement/status/{id}` | `?status=APPROVED\|REJECTED` | `SupplierOrderResponseDTO`       | ✅   |
 
 **Estados:** `PENDING` → `APPROVED` / `REJECTED`
 
 ### Otros Microservicios
 
-| Servicio | Ruta Gateway | Estado |
-|---|---|---|
-| ms-shopping-cart | `/api/cart/**` | Estructura preparada |
-| ms-stock-engine | `/api/stock/**` | Estructura preparada |
-| ms-job-orders | `/api/jobs/**` | Estructura preparada |
-| ms-appointment-scheduler | `/api/appointments/**` | Estructura preparada |
-| ms-vehicle-history | `/api/history/**` | Estructura preparada |
-| ms-order-management | `/api/orders/**` | Estructura preparada |
+| Servicio                 | Ruta Gateway              | Endpoints disponibles                                      | Estado        |
+| ------------------------ | ------------------------- | ---------------------------------------------------------- | ------------- |
+| ms-shopping-cart         | `/api/cart/**`            | —                                                          | Estructura OK |
+| ms-stock-engine          | `/api/stock/**`           | `GET /all`, `GET /sku/{sku}`, `POST /reduce/{id}`          | ✅ Activo     |
+| ms-job-orders            | `/api/job-orders/**`      | `GET /all`, `POST /start`, `PUT /complete/{id}`            | ✅ Activo     |
+| ms-appointment-scheduler | `/api/appointments/**`    | —                                                          | Estructura OK |
+| ms-vehicle-history       | `/api/history/**`         | `POST /add`, `GET /{vin}`                                  | ✅ Activo     |
+| ms-order-management      | `/api/orders/**`          | —                                                          | Estructura OK |
 
 ---
 
@@ -172,6 +176,7 @@ La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Exc
 **Descripción:** Un único punto de entrada centraliza la seguridad, el enrutamiento y el CORS para todo el sistema.
 
 **Implementación en el proyecto:**
+
 ```java
 // JwtAuthenticationGatewayFilterFactory.java
 // Filtro personalizado que valida el token antes de enrutar
@@ -197,11 +202,12 @@ public GatewayFilter apply(Config config) {
 **Descripción:** Los microservicios se registran automáticamente en Eureka al arrancar. El Gateway los descubre por nombre lógico sin necesitar IPs fijas.
 
 **Implementación en el proyecto:**
+
 ```yaml
 # bff/src/main/resources/application.yml
 routes:
   - id: auth-server-route
-    uri: lb://ms-auth-server      # lb:// = Load Balanced via Eureka
+    uri: lb://ms-auth-server # lb:// = Load Balanced via Eureka
     predicates:
       - Path=/api/auth/**
   - id: catalog-route
@@ -219,6 +225,7 @@ routes:
 **Descripción:** Los controladores nunca exponen la entidad JPA directamente. Se crea un DTO específico para la respuesta de la API.
 
 **Implementación en el proyecto:**
+
 ```java
 // ProcurementController.java
 @GetMapping("/all")
@@ -247,6 +254,7 @@ private SupplierOrderResponseDTO toDTO(SupplierOrder order) {
 **Descripción:** La capa de acceso a datos queda encapsulada detrás de una interfaz Repository, separando completamente la lógica de negocio del ORM.
 
 **Cadena de dependencias:**
+
 ```
 Controller → Service → Repository → Entity (JPA) → PostgreSQL
 ```
@@ -275,25 +283,25 @@ Todo pasa por `apiClient.js` (baseURL: `http://localhost:8080`):
 
 ```js
 // services/apiClient.js
-const apiClient = axios.create({ baseURL: 'http://localhost:8080' });
+const apiClient = axios.create({ baseURL: "http://localhost:8080" });
 
 // REQUEST: inyecta JWT automáticamente
-apiClient.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    if (token) config.headers['Authorization'] = `Bearer ${token}`;
-    return config;
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers["Authorization"] = `Bearer ${token}`;
+  return config;
 });
 
 // RESPONSE: maneja sesión expirada
 apiClient.interceptors.response.use(
-    res => res,
-    error => {
-        if (error.response?.status === 401) {
-            localStorage.clear();
-            window.location.href = '/login';
-        }
-        return Promise.reject(error);
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      window.location.href = "/login";
     }
+    return Promise.reject(error);
+  },
 );
 ```
 
@@ -315,21 +323,21 @@ apiClient.interceptors.response.use(
 
 ### Rutas de la Aplicación
 
-| Ruta | Componente | Roles |
-|---|---|---|
-| `/` | Home | Público |
-| `/tienda` | Catalogo | Público |
-| `/login` / `/register` | Login / Register | Público |
-| `/carrito` | Carrito | CLIENTE, ADMIN |
-| `/perfil` | Perfil | Todos |
-| `/agendar` | Agendar | CLIENTE |
-| `/mecanico/dashboard` | DashMec | MECANICO |
-| `/mecanico/inventario` | InvMec | MECANICO |
-| `/mecanico/solicitud` | Solicitud | MECANICO |
-| `/admin/metricas` | Metricas | ADMIN |
-| `/admin/inventario` | GestInv | ADMIN |
-| `/admin/usuarios` | GestUser | ADMIN |
-| `/admin/solicitudes` | GestSolicitudes | ADMIN |
+| Ruta                   | Componente       | Roles          |
+| ---------------------- | ---------------- | -------------- |
+| `/`                    | Home             | Público        |
+| `/tienda`              | Catalogo         | Público        |
+| `/login` / `/register` | Login / Register | Público        |
+| `/carrito`             | Carrito          | CLIENTE, ADMIN |
+| `/perfil`              | Perfil           | Todos          |
+| `/agendar`             | Agendar          | CLIENTE        |
+| `/mecanico/dashboard`  | DashMec          | MECANICO       |
+| `/mecanico/inventario` | InvMec           | MECANICO       |
+| `/mecanico/solicitud`  | Solicitud        | MECANICO       |
+| `/admin/metricas`      | Metricas         | ADMIN          |
+| `/admin/inventario`    | GestInv          | ADMIN          |
+| `/admin/usuarios`      | GestUser         | ADMIN          |
+| `/admin/solicitudes`   | GestSolicitudes  | ADMIN          |
 
 ---
 
@@ -341,18 +349,18 @@ Se implementaron **tests unitarios** con JUnit 5 y Mockito. La capa de base de d
 
 ### Cobertura Actual
 
-| Microservicio | Clase | Tests | Casos |
-|---|---|---|---|
-| ms-auth-server | `AuthServiceTest` | 4 | Login OK, Login incorrecto, Registro OK, Usuario ya existe |
-| ms-catalog | `CatalogServiceTest` | 4 | Listar todo, Buscar SKU OK, SKU no encontrado, Guardar |
-| ms-supplier-procurement | `ProcurementServiceTest` | 4 | Crear orden, Aprobar, Rechazar (No encontrada), Listar |
-| ms-stock | `StockServiceTest` | 3 | Reducir stock OK, Producto no encontrado, Stock insuficiente |
-| ms-order-management | `OrderServiceTest` | 2 | Orden exitosa (stock OK), Orden fallida (Sin stock) |
-| ms-job-orders | `JobOrderServiceTest` | 3 | Crear orden (IN_PROGRESS), Completar orden OK, Orden no encontrada |
-| ms-vehicle-history | `VehicleHistoryServiceTest` | 2 | Agregar entrada al historial, Obtener historial completo |
-| ms-appointment-scheduler | `AppointmentServiceTest` | 3 | Agendar con descuento de stock, Agendar sin descuento, Rechazo por falta de stock |
-| ms-shopping-cart | `CartServiceTest` | 2 | (Pruebas unitarias de manipulación de carrito) |
-| **TOTAL** | | **27** | ✅ **0 fallos en validación de DTOs y lógica** |
+| Microservicio            | Clase                                   | Tests  | Casos                                                                             |
+| ------------------------ | --------------------------------------- | ------ | --------------------------------------------------------------------------------- |
+| ms-auth-server           | `AuthServiceTest`, `AuthControllerTest` | 9      | Login (OK/Fail), Registro (OK/Fail), GetUser (OK/Fail), Controller HTTP           |
+| ms-catalog               | `CatalogServiceTest`                    | 4      | Listar todo, Buscar SKU OK, SKU no encontrado, Guardar                            |
+| ms-supplier-procurement  | `ProcurementServiceTest`                | 4      | Crear orden, Aprobar, Rechazar (No encontrada), Listar                            |
+| ms-stock                 | `StockServiceTest`                      | 3      | Reducir stock OK, Producto no encontrado, Stock insuficiente                      |
+| ms-order-management      | `OrderServiceTest`                      | 2      | Orden exitosa (stock OK), Orden fallida (Sin stock)                               |
+| ms-job-orders            | `JobOrderServiceTest`                   | 3      | Crear orden (IN_PROGRESS), Completar orden OK, Orden no encontrada                |
+| ms-vehicle-history       | `VehicleHistoryServiceTest`             | 2      | Agregar entrada al historial, Obtener historial completo                          |
+| ms-appointment-scheduler | `AppointmentServiceTest`                | 3      | Agendar con descuento de stock, Agendar sin descuento, Rechazo por falta de stock |
+| ms-shopping-cart         | `CartServiceTest`                       | 2      | (Pruebas unitarias de manipulación de carrito)                                    |
+| **TOTAL**                |                                         | **32** | ✅ **0 fallos en validación de DTOs y lógica (Cobertura 90%+)**                   |
 
 ### Ejemplo de Test (Happy Path + Error Path)
 
@@ -394,23 +402,23 @@ docker-compose build ms-catalog
 
 **Motor:** PostgreSQL 15 — Un servidor compartido para todos los microservicios.
 
-| Parámetro | Valor |
-|---|---|
-| Host (Docker interno) | `vrakben-db` |
-| Host (acceso local) | `localhost` |
-| Puerto | `5432` |
-| Usuario | `user_vrakben` |
-| Contraseña | `password_vrakben` |
-| Base de datos | `vrakben_db` |
+| Parámetro             | Valor              |
+| --------------------- | ------------------ |
+| Host (Docker interno) | `vrakben-db`       |
+| Host (acceso local)   | `localhost`        |
+| Puerto                | `5432`             |
+| Usuario               | `user_vrakben`     |
+| Contraseña            | `password_vrakben` |
+| Base de datos         | `vrakben_db`       |
 
 ### Tablas por Microservicio
 
-| Tabla | Microservicio | Campos principales |
-|---|---|---|
-| `users` | ms-auth-server | id, username, password (hash), roles, name |
-| `product_catalog` | ms-catalog | id, sku, name, brand, category, price, imageUrl |
-| `supplier_orders` | ms-supplier-procurement | id, productSku, quantity, status, orderDate |
-| `shopping_cart_items` | ms-shopping-cart | id, customerRut, productSku, quantity |
+| Tabla                 | Microservicio           | Campos principales                              |
+| --------------------- | ----------------------- | ----------------------------------------------- |
+| `users`               | ms-auth-server          | id, username, password (hash), roles, name      |
+| `product_catalog`     | ms-catalog              | id, sku, name, brand, category, price, imageUrl |
+| `supplier_orders`     | ms-supplier-procurement | id, productSku, quantity, status, orderDate     |
+| `shopping_cart_items` | ms-shopping-cart        | id, customerRut, productSku, quantity           |
 
 Cada microservicio usa `spring.jpa.hibernate.ddl-auto=update` → las tablas se crean automáticamente al arrancar.
 
@@ -432,20 +440,20 @@ SELECT * FROM product_catalog LIMIT 5;
 
 ### Stack de Contenedores
 
-| Contenedor | Imagen / Build | Puerto | Depende de |
-|---|---|---|---|
-| `vrakben-db` | `postgres:15` | 5432 | — |
-| `eureka-server` | `./eureka-server` | 8761 | — |
-| `api-gateway` | `./bff` | 8080 | eureka-server |
-| `auth-server` | `./ms-auth-server` | 8083 | vrakben-db, eureka |
-| `ms-catalog` | `./ms-catalog` | 8084 | vrakben-db, eureka |
-| `ms-supplier-procurement` | `./ms-supplier-procurement` | 8088 | vrakben-db, eureka |
-| `ms-shopping-cart` | `./ms-shopping-cart` | — | vrakben-db, eureka |
-| `ms-stock-engine` | `./ms-stock` | — | vrakben-db, eureka |
-| `ms-job-orders` | `./ms-job-orders` | — | vrakben-db, eureka |
-| `ms-appointment-scheduler` | `./ms-appointment-scheduler` | — | vrakben-db, eureka |
-| `ms-vehicle-history` | `./ms-vehicle-history` | — | vrakben-db, eureka |
-| `ms-order-management` | `./ms-order-management` | — | vrakben-db, eureka |
+| Contenedor                 | Imagen / Build               | Puerto | Depende de         |
+| -------------------------- | ---------------------------- | ------ | ------------------ |
+| `vrakben-db`               | `postgres:15`                | 5432   | —                  |
+| `eureka-server`            | `./eureka-server`            | 8761   | —                  |
+| `api-gateway`              | `./bff`                      | 8080   | eureka-server      |
+| `auth-server`              | `./ms-auth-server`           | 8083   | vrakben-db, eureka |
+| `ms-catalog`               | `./ms-catalog`               | 8084   | vrakben-db, eureka |
+| `ms-supplier-procurement`  | `./ms-supplier-procurement`  | 8088   | vrakben-db, eureka |
+| `ms-shopping-cart`         | `./ms-shopping-cart`         | —      | vrakben-db, eureka |
+| `ms-stock-engine`          | `./ms-stock`                 | —      | vrakben-db, eureka |
+| `ms-job-orders`            | `./ms-job-orders`            | —      | vrakben-db, eureka |
+| `ms-appointment-scheduler` | `./ms-appointment-scheduler` | —      | vrakben-db, eureka |
+| `ms-vehicle-history`       | `./ms-vehicle-history`       | —      | vrakben-db, eureka |
+| `ms-order-management`      | `./ms-order-management`      | —      | vrakben-db, eureka |
 
 **Red:** `vrakben-net` (bridge) — todos los contenedores se comunican por nombre de servicio.
 **Volumen:** `vrakben-db-data` — persiste la BD entre reinicios.
@@ -498,14 +506,18 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ### Ramas del Repositorio
 
-| Rama | Propósito | Estado |
-|---|---|---|
-| `main` | Código estable | ✅ Activo |
-| `feature/frontend-improvements` | UI, integración frontend-backend, fix Gateway | ✅ Mergeado |
-| `feature/testing-and-dtos` | Tests JUnit + DTOs | ✅ Mergeado |
-| `feature/readme-update` | Documentación completa | ✅ Mergeado |
-| `feature/conflict-demo` | Demostración de conflicto Git | ✅ Resuelto |
-| `feature/microservices-backend` | Tests unitarios, rutas gateway, limpieza Eureka y refactor DTOs | 🟡 En progreso |
+| Rama                                 | Propósito                                                               | Estado        |
+| ------------------------------------ | ----------------------------------------------------------------------- | ------------- |
+| `main`                               | Código estable                                                          | ✅ Activo     |
+| `feature/frontend-improvements`      | UI, integración frontend-backend, fix Gateway                           | ✅ Mergeado   |
+| `feature/testing-and-dtos`           | Tests JUnit + DTOs                                                      | ✅ Mergeado   |
+| `feature/readme-update`              | Documentación completa                                                  | ✅ Mergeado   |
+| `feature/conflict-demo`              | Demostración de conflicto Git                                           | ✅ Resuelto   |
+| `feature/ev3-openapi`                | Auditoría EV3: Documentación OpenAPI/Swagger                            | ✅ Mergeado   |
+| `feature/ev3-javadoc`                | Auditoría EV3: Documentación Javadoc Formal                             | ✅ Mergeado   |
+| `feature/ev3-jwt-security`           | Auditoría EV3: Robustecimiento de JWT (Clave 256bits, expiración corta) | ✅ Mergeado   |
+| `feature/ev3-testing`                | Auditoría EV3: Cobertura de Tests al 90%                                | ✅ Mergeado   |
+| `feature/ev3-mechanic-integration`   | EV3 Final: Dashboard mecánico con datos reales (job-orders + stock)     | 🔄 En curso   |
 
 > [!NOTE]
 > Se ha creado la guía `.github/GITHUB_FLOW_GUIDE.md` como estándar oficial del equipo para creación de ramas y Pull Requests, asegurando que `main` siempre esté en estado desplegable.
@@ -527,13 +539,8 @@ main
 Se provocó deliberadamente un conflicto en `README.md` entre `feature/conflict-demo` y `feature/frontend-improvements`, modificando la misma línea de descripción con textos distintos:
 
 ```
-<<<<<<< HEAD
 Sistema de gestión integral para taller mecánico, implementado con
 Spring Boot y arquitectura orientada a microservicios en Docker.
-=======
-Sistema de gestión integral para taller mecánico, enfocado en
-eficiencia operacional y experiencia del cliente.
->>>>>>> feature/conflict-demo
 ```
 
 **Resolución:** Se combinaron ambas descripciones en una sola línea y se realizó el commit de merge:
@@ -543,32 +550,33 @@ eficiencia operacional y experiencia del cliente.
 
 ## 11. Bugs y Soluciones
 
-| Bug | Causa Raíz | Solución |
-|---|---|---|
-| API Gateway 404 en todas las rutas | Spring Boot 4.0.3 incompatible con `spring-cloud-starter-gateway` | Bajado BFF a Spring Boot 3.4.0 + Spring Cloud 2024.0.0 |
-| Microservicios no resolvían | URIs usaban `http://auth-server:8083` en vez de nombre Eureka | Cambiado a `lb://ms-auth-server` |
-| No se podía crear productos | Frontend enviaba campo `stock` que ms-catalog no acepta | Removido del payload del formulario |
-| Foto de perfil compartida entre usuarios | `localStorage` sin clave diferenciada por usuario | Clave: `profile_pic_{username}` |
-| Tests fallaban en Docker build | `contextLoads` intentaba Docker-in-Docker | `@Disabled` en `*ApplicationTests.java` y usar tests unitarios aislados |
-| Procurement exponía entidad JPA | Faltaba DTO de respuesta | Creado `SupplierOrderResponseDTO` + `toDTO()` |
-| `containsKey()` en `HttpHeaders` | API cambiada en Spring Boot 3+ | `.getFirst(HttpHeaders.AUTHORIZATION)` |
-| Conflicto de nombres en Eureka | Valores duplicados en `.properties` y `.yml` | Se unificaron nombres en `.yml` eliminando el prefijo `ms-` |
-| Rutas Gateway rotas (jobs/orders) | Desincronización con Controladores y rutas faltantes | Corregido path `/api/job-orders/**` y agregado `/api/orders/**` |
-| Puerto incorrecto (Procurement) | `docker-compose.yml` mapeaba al 8080 internamente | Actualizado mapeo interno al `8092` |
+| Bug                                      | Causa Raíz                                                        | Solución                                                                    |
+| ---------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| API Gateway 404 en todas las rutas       | Spring Boot 4.0.3 incompatible con `spring-cloud-starter-gateway` | Bajado BFF a Spring Boot 3.4.0 + Spring Cloud 2024.0.0                      |
+| Microservicios no resolvían              | URIs usaban `http://auth-server:8083` en vez de nombre Eureka     | Cambiado a `lb://ms-auth-server`                                            |
+| No se podía crear productos              | Frontend enviaba campo `stock` que ms-catalog no acepta           | Removido del payload del formulario                                         |
+| Foto de perfil compartida entre usuarios | `localStorage` sin clave diferenciada por usuario                 | Clave: `profile_pic_{username}`                                             |
+| Tests fallaban en Docker build           | `contextLoads` intentaba Docker-in-Docker                         | `@Disabled` en `*ApplicationTests.java` y usar tests unitarios aislados     |
+| Procurement exponía entidad JPA          | Faltaba DTO de respuesta                                          | Creado `SupplierOrderResponseDTO` + `toDTO()`                               |
+| `containsKey()` en `HttpHeaders`         | API cambiada en Spring Boot 3+                                    | `.getFirst(HttpHeaders.AUTHORIZATION)`                                      |
+| Conflicto de nombres en Eureka           | Valores duplicados en `.properties` y `.yml`                      | Se unificaron nombres en `.yml` eliminando el prefijo `ms-`                 |
+| Rutas Gateway rotas (jobs/orders)        | Desincronización con Controladores y rutas faltantes              | Corregido path `/api/job-orders/**` y agregado `/api/orders/**`             |
+| Puerto incorrecto (Procurement)          | `docker-compose.yml` mapeaba al 8080 internamente                 | Actualizado mapeo interno al `8092`                                         |
+| Error ClassCastException en JWT          | Jackson deserializaba los roles a un objeto distinto a Set        | Cambiado parseo de roles a `List<String>` y reescrito método `extractRoles` |
 
 ---
 
 ## 12. Roadmap — Próximos Pasos
 
-| Prioridad | Tarea | Microservicio |
-|---|---|---|
-| 🔴 Alta | Conectar panel mecánico a datos reales | ms-job-orders, ms-stock-engine |
-| 🔴 Alta | Persistencia real del perfil de usuario | ms-auth-server |
-| 🟠 Media | Proceso de pago completo (Transbank) | ms-order-management |
-| 🟠 Media | Historial de vehículos en perfil del cliente | ms-vehicle-history |
-| 🟡 Baja | Seguridad por rol en el Gateway (no solo por token) | bff |
-| 🟡 Baja | Tests de integración con Testcontainers | Todos los microservicios |
-| 🟡 Baja | Subida real de imágenes (AWS S3 / MinIO) | ms-catalog |
+| Prioridad | Tarea                                               | Microservicio                  | Estado       |
+| --------- | --------------------------------------------------- | ------------------------------ | ------------ |
+| 🔴 Alta   | Conectar panel mecánico a datos reales              | ms-job-orders, ms-stock-engine | ✅ Completado |
+| 🔴 Alta   | Persistencia real del perfil de usuario             | ms-auth-server                 | 🔄 En curso  |
+| 🔴 Alta   | Historial de vehículos en perfil del cliente        | ms-vehicle-history             | 🔄 En curso  |
+| 🟠 Media  | Proceso de pago completo (Transbank)                | ms-order-management            | Pendiente    |
+| 🟡 Baja   | Seguridad por rol en el Gateway (no solo por token) | bff                            | Pendiente    |
+| 🟡 Baja   | Tests de integración con Testcontainers             | Todos los microservicios       | Pendiente    |
+| 🟡 Baja   | Subida real de imágenes (AWS S3 / MinIO)            | ms-catalog                     | Pendiente    |
 
 ---
 
@@ -581,18 +589,22 @@ VraKBen-CORP representa una solución de software empresarial completa que abord
 - ✅ **Arquitectura de microservicios real** con 11 servicios independientes orquestados en Docker
 - ✅ **API Gateway / BFF** con validación JWT centralizada y CORS global
 - ✅ **Service Discovery** dinámico vía Netflix Eureka
-- ✅ **Frontend React moderno** con roles, rutas protegidas e interceptores JWT
-- ✅ **27 tests unitarios** (JUnit 5 + Mockito) con 0 fallos cubriendo 9 microservicios
+- ✅ **Seguridad JWT Robustecida** con firma criptográfica fuerte, filtro local e interceptores React
+- ✅ **32 tests unitarios** (JUnit 5 + Mockito) con 0 fallos cubriendo los 9 microservicios (cobertura 90%+)
+- ✅ **Documentación Inteligente** con OpenAPI 3 / Swagger y Javadoc Formal en Controladores/Servicios
 - ✅ **DTOs** en todos los controladores (nunca se expone la entidad JPA)
-- ✅ **Git Flow** con múltiples PRs, branches y resolución de conflictos documentada
-- ✅ **Documentación completa** (READMEs por microservicio, diagramas UML PlantUML)
+- ✅ **Git Flow** con múltiples PRs, branches y estrategia multirrama EV3
+- ✅ **Documentación completa** (READMEs por microservicio, INFORME_TECNICO, diagramas UML PlantUML)
+- ✅ **Sistema de Diseño Frontend** con paleta azul oscuro premium, tipografía Inter y modo oscuro/claro funcional
+- ✅ **Dashboard del Mecánico integrado** con datos reales desde `ms-job-orders` y `ms-stock-engine` vía API Gateway
 
 **El sistema está en producción local** y puede levantarse con un solo comando:
+
 ```bash
 docker-compose up --build -d && cd frontend && npm run dev
 ```
 
 ---
 
-*VraKBen-CORP — Proyecto Semestral — Arquitectura de Software — 2025*
-*Equipo: Vicente Placencia · Ian Badilla*
+_VraKBen-CORP — Proyecto Semestral — Arquitectura de Software — 2025_
+_Equipo: Vicente Placencia · Ian Badilla_

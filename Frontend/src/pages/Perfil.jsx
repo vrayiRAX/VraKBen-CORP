@@ -1,220 +1,217 @@
 import React, { useState, useEffect } from 'react';
-// src/pages/Perfil.jsx
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import apiClient from '../services/apiClient';
 
-export default function Perfil({ isDarkMode }) {
+export default function Perfil() {
   const { user } = useAuth();
   
-  // Estados para datos del usuario
-  const [profileData, setProfileData] = useState({
-    name: user?.name || '',
-    email: user?.sub || '',
-  });
-  const [isEditing, setIsEditing] = useState(false);
+  const [profileData, setProfileData] = useState({ name: '', username: '', roles: [] });
+  const [loadingProfile, setLoadingProfile] = useState(true);
   
-  // Estado para foto de perfil simulada con localStorage
-  const [profilePic, setProfilePic] = useState(null);
+  // Para el historial de vehículos
+  const [vinSearch, setVinSearch] = useState('');
+  const [historyRecords, setHistoryRecords] = useState([]);
+  const [searchedVin, setSearchedVin] = useState(null);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
-  // Autos del usuario (cargados dinámicamente)
-  const [autos, setAutos] = useState([]);
-
-  const theme = {
-    bg: isDarkMode ? '#121212' : '#f4f7f6',
-    card: isDarkMode ? '#1e1e1e' : '#ffffff',
-    text: isDarkMode ? '#f8f9fa' : '#212529',
-    textMuted: isDarkMode ? '#adb5bd' : '#6c757d',
-    border: isDarkMode ? '1px solid #333' : '1px solid #e9ecef',
-    inputBg: isDarkMode ? '#2b2b2b' : '#fff',
-    inputBorder: isDarkMode ? '1px solid #444' : '1px solid #ccc',
-  };
+  // Formulario para nuevo historial
+  const [newEntry, setNewEntry] = useState({ description: '', mileage: '', technicianName: '' });
+  const [isAddingEntry, setIsAddingEntry] = useState(false);
 
   useEffect(() => {
     if (!user?.sub) return;
 
-    // Cargar foto guardada
-    const savedPic = localStorage.getItem(`profile_pic_${user.sub}`);
-    setProfilePic(savedPic || null);
-
-    // Cargar datos guardados
-    const savedDataStr = localStorage.getItem(`profile_data_${user.sub}`);
-    if (savedDataStr) {
-      try {
-        const savedData = JSON.parse(savedDataStr);
-        setProfileData({
-          name: savedData.name || user?.name || '',
-          email: savedData.email || user?.sub || '',
-        });
-      } catch (e) {
-        console.error("Error al parsear datos de perfil", e);
-      }
-    } else {
-      setProfileData({
-        name: user?.name || '',
-        email: user?.sub || '',
-      });
-    }
-
-    // Cargar autos específicos del usuario (Simulado)
-    const savedAutosStr = localStorage.getItem(`profile_autos_${user.sub}`);
-    if (savedAutosStr) {
-      setAutos(JSON.parse(savedAutosStr));
-    } else {
-      // Data de relleno inicial solo para dar el ejemplo, luego se vaciaría o se traería de DB
-      if (user.sub === 'vicente.placet@gmail.com') {
-        const adminCars = [{ id: 1, marca: 'Audi', modelo: 'A4', anio: 2021, patente: 'XX-YY-88' }];
-        setAutos(adminCars);
-        localStorage.setItem(`profile_autos_${user.sub}`, JSON.stringify(adminCars));
-      } else {
-        setAutos([]); // Los demás usuarios inician sin autos en este simulacro
-      }
-    }
+    // Obtener datos reales del usuario desde ms-auth-server
+    apiClient.get(`/api/auth/users/${user.sub}`)
+      .then(res => {
+        setProfileData(res.data);
+      })
+      .catch(err => console.error("Error al cargar el perfil:", err))
+      .finally(() => setLoadingProfile(false));
   }, [user]);
 
-  const handlePicUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result);
-        localStorage.setItem(`profile_pic_${user?.sub}`, reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSaveProfile = (e) => {
+  const handleSearchHistory = async (e) => {
     e.preventDefault();
-    if (user?.sub) {
-      localStorage.setItem(`profile_data_${user.sub}`, JSON.stringify(profileData));
+    if (!vinSearch) return;
+    
+    setLoadingHistory(true);
+    try {
+      const res = await apiClient.get(`/api/history/${vinSearch}`);
+      setHistoryRecords(res.data);
+      setSearchedVin(vinSearch);
+    } catch (err) {
+      console.error("Error buscando historial:", err);
+      alert("No se pudo cargar el historial para este VIN.");
+    } finally {
+      setLoadingHistory(false);
     }
-    setIsEditing(false);
-    alert('Datos guardados correctamente en el navegador.');
   };
 
-  // Función para formatear patente chilena (AAAA-11 o AA-1111)
-  const formatPatente = (patente) => {
-    const clean = patente.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-    if (clean.length === 6) {
-      // Formato viejo AA-1111 o nuevo AAAA-11
-      const isNewFormat = /^[A-Z]{4}[0-9]{2}$/.test(clean);
-      if (isNewFormat) {
-        return `${clean.substring(0, 4)}-${clean.substring(4, 6)}`;
-      } else {
-        return `${clean.substring(0, 2)}-${clean.substring(2, 6)}`;
-      }
+  const handleAddEntry = async (e) => {
+    e.preventDefault();
+    if (!searchedVin) return;
+
+    try {
+      const payload = {
+        vin: searchedVin,
+        description: newEntry.description,
+        mileage: parseInt(newEntry.mileage, 10),
+        technicianName: newEntry.technicianName || profileData.name
+      };
+      const res = await apiClient.post('/api/history/add', payload);
+      setHistoryRecords([...historyRecords, res.data]);
+      setIsAddingEntry(false);
+      setNewEntry({ description: '', mileage: '', technicianName: '' });
+    } catch (err) {
+      console.error("Error al agregar registro:", err);
+      alert("Error al guardar el nuevo registro en el historial.");
     }
-    return patente; // fallback
   };
 
   return (
-    <div style={{ padding: '40px', backgroundColor: theme.bg, color: theme.text, minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ padding: '40px 6%', minHeight: '80vh', background: 'var(--bg)', color: 'var(--text-h)' }}>
       
-      <div style={{ maxWidth: '900px', width: '100%', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+      {/* ── ENCABEZADO PERFIL ── */}
+      <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', marginBottom: '40px' }}>
         
-        {/* Tarjeta de Perfil */}
-        <div style={{ flex: '1 1 300px', backgroundColor: theme.card, border: theme.border, borderRadius: '12px', padding: '30px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-          <div style={{ position: 'relative', width: '150px', height: '150px', margin: '0 auto 20px auto' }}>
-            {profilePic ? (
-              <img src={profilePic} alt="Perfil" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: `3px solid #3a86ff` }} />
-            ) : (
-              <div style={{ width: '100%', height: '100%', borderRadius: '50%', backgroundColor: '#3a86ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', border: `3px solid #3a86ff` }}>
-                👤
-              </div>
-            )}
-            <label style={{
-              position: 'absolute', bottom: '0', right: '0', backgroundColor: '#e63946', color: 'white',
-              width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-            }}>
-              📷
-              <input type="file" accept="image/*" onChange={handlePicUpload} style={{ display: 'none' }} />
-            </label>
-          </div>
-          <h2 style={{ margin: '0 0 10px 0' }}>{profileData.name || 'Usuario VrakBen'}</h2>
-          <p style={{ margin: '0 0 20px 0', color: theme.textMuted }}>{profileData.email}</p>
-          <div style={{ display: 'inline-block', padding: '5px 15px', borderRadius: '20px', backgroundColor: '#3a86ff22', color: '#3a86ff', fontWeight: 'bold' }}>
-            Rol: {user?.role || 'Desconocido'}
-          </div>
-        </div>
-
-        {/* Tarjeta de Datos y Edición */}
-        <div style={{ flex: '2 1 500px', backgroundColor: theme.card, border: theme.border, borderRadius: '12px', padding: '30px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ margin: 0 }}>Mis Datos Personales</h3>
-            <button onClick={() => setIsEditing(!isEditing)} style={{ padding: '8px 15px', backgroundColor: isEditing ? '#e63946' : '#3a86ff', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-              {isEditing ? 'Cancelar' : '✏️ Editar Datos'}
-            </button>
+        {/* Tarjeta de Usuario */}
+        <div className="card" style={{ flex: '1 1 300px', padding: '30px', textAlign: 'center' }}>
+          <div style={{ 
+            width: '120px', height: '120px', margin: '0 auto 20px auto',
+            borderRadius: '50%', backgroundColor: 'var(--accent)', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center', 
+            fontSize: '3.5rem', color: '#fff', boxShadow: '0 8px 20px rgba(58, 134, 255, 0.3)'
+          }}>
+            👤
           </div>
           
-          <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: theme.textMuted }}>Nombre Completo</label>
-              <input 
-                type="text" 
-                value={profileData.name} 
-                onChange={(e) => setProfileData({...profileData, name: e.target.value})} 
-                disabled={!isEditing}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme.inputBorder, backgroundColor: isEditing ? theme.inputBg : 'transparent', color: theme.text }}
-              />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: theme.textMuted }}>Correo Electrónico (Username)</label>
-              <input 
-                type="email" 
-                value={profileData.email} 
-                onChange={(e) => setProfileData({...profileData, email: e.target.value})} 
-                disabled={!isEditing}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme.inputBorder, backgroundColor: isEditing ? theme.inputBg : 'transparent', color: theme.text }}
-              />
-            </div>
-            {isEditing && (
-              <button type="submit" style={{ padding: '12px', backgroundColor: '#38b000', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
-                💾 Guardar Cambios
-              </button>
-            )}
+          {loadingProfile ? (
+            <p style={{ color: 'var(--text-muted)' }}>Cargando perfil...</p>
+          ) : (
+            <>
+              <h2 style={{ margin: '0 0 10px 0', fontSize: '1.5rem', fontWeight: 800 }}>{profileData.name || 'Sin Nombre'}</h2>
+              <p style={{ margin: '0 0 20px 0', color: 'var(--text-muted)' }}>{profileData.username}</p>
+              
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {profileData.roles && profileData.roles.map(role => (
+                  <span key={role} style={{ 
+                    padding: '6px 14px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700,
+                    backgroundColor: 'rgba(58, 134, 255, 0.15)', color: 'var(--accent)'
+                  }}>
+                    {role.replace('ROLE_', '')}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Tarjeta de Historial del Vehículo */}
+        <div className="card" style={{ flex: '2 1 500px', padding: '30px' }}>
+          <h3 style={{ margin: '0 0 20px 0', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ width: 4, height: 22, background: 'var(--accent)', borderRadius: 4, display: 'inline-block' }} />
+            Consultar Historial del Vehículo
+          </h3>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '20px', fontSize: '0.9rem' }}>
+            Ingresa el VIN de tu vehículo para ver el historial de atenciones en VraKBen.
+          </p>
+
+          <form onSubmit={handleSearchHistory} style={{ display: 'flex', gap: '10px', marginBottom: '30px' }}>
+            <input 
+              type="text" 
+              placeholder="Ej: WBA0000000000"
+              value={vinSearch}
+              onChange={e => setVinSearch(e.target.value.toUpperCase())}
+              className="form-control"
+              style={{ flex: 1, textTransform: 'uppercase' }}
+              required
+            />
+            <button type="submit" className="btn btn-primary" disabled={loadingHistory}>
+              {loadingHistory ? 'Buscando...' : '🔍 Buscar VIN'}
+            </button>
           </form>
-        </div>
 
-      </div>
+          {searchedVin && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h4 style={{ margin: 0, color: 'var(--accent)', fontFamily: 'monospace', fontSize: '1.1rem' }}>
+                  Resultados para: {searchedVin}
+                </h4>
+                {profileData.roles?.includes('ROLE_MECANICO') && (
+                  <button 
+                    onClick={() => setIsAddingEntry(!isAddingEntry)}
+                    className="btn btn-primary"
+                    style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                  >
+                    {isAddingEntry ? 'Cancelar' : '➕ Agregar Registro'}
+                  </button>
+                )}
+              </div>
 
-      {/* Tarjeta de Vehículos */}
-      <div style={{ maxWidth: '900px', width: '100%', marginTop: '30px', backgroundColor: theme.card, border: theme.border, borderRadius: '12px', padding: '30px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-        <h3 style={{ margin: '0 0 20px 0' }}>🚗 Mis Vehículos Registrados</h3>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ backgroundColor: isDarkMode ? '#2b2b2b' : '#f8f9fa' }}>
-                <th style={{ padding: '12px', borderBottom: theme.border, color: theme.textMuted }}>Patente</th>
-                <th style={{ padding: '12px', borderBottom: theme.border, color: theme.textMuted }}>Marca</th>
-                <th style={{ padding: '12px', borderBottom: theme.border, color: theme.textMuted }}>Modelo</th>
-                <th style={{ padding: '12px', borderBottom: theme.border, color: theme.textMuted }}>Año</th>
-              </tr>
-            </thead>
-            <tbody>
-              {autos.length > 0 ? (
-                autos.map(auto => (
-                  <tr key={auto.id} style={{ borderBottom: theme.border }}>
-                    <td style={{ padding: '12px', fontWeight: 'bold', color: '#f8961e', fontFamily: 'monospace', fontSize: '1.1rem' }}>
-                      {formatPatente(auto.patente)}
-                    </td>
-                    <td style={{ padding: '12px' }}>{auto.marca}</td>
-                    <td style={{ padding: '12px' }}>{auto.modelo}</td>
-                    <td style={{ padding: '12px' }}>{auto.anio}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" style={{ padding: '20px', textAlign: 'center', color: theme.textMuted }}>
-                    No tienes vehículos registrados a tu nombre.
-                  </td>
-                </tr>
+              {isAddingEntry && (
+                <form onSubmit={handleAddEntry} style={{ 
+                  background: 'var(--bg-secondary)', padding: '20px', borderRadius: '8px', 
+                  marginBottom: '20px', border: '1px solid var(--border)' 
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Descripción del Servicio</label>
+                      <input 
+                        type="text" className="form-control" required
+                        value={newEntry.description} onChange={e => setNewEntry({...newEntry, description: e.target.value})}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', gap: '15px' }}>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Kilometraje</label>
+                        <input 
+                          type="number" className="form-control" required
+                          value={newEntry.mileage} onChange={e => setNewEntry({...newEntry, mileage: e.target.value})}
+                        />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Técnico (Opcional)</label>
+                        <input 
+                          type="text" className="form-control" placeholder={profileData.name}
+                          value={newEntry.technicianName} onChange={e => setNewEntry({...newEntry, technicianName: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Guardar Registro</button>
+                  </div>
+                </form>
               )}
-            </tbody>
-          </table>
+
+              {historyRecords.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px dashed var(--border)', color: 'var(--text-muted)' }}>
+                  No se encontraron atenciones previas para este vehículo.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  {historyRecords.map((record, index) => (
+                    <div key={record.id || index} style={{ 
+                      padding: '15px 20px', background: 'var(--bg)', border: '1px solid var(--border)', 
+                      borderRadius: '8px', borderLeft: '4px solid var(--accent)'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <strong style={{ fontSize: '1.05rem' }}>{record.description}</strong>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                          {new Date(record.serviceDate).toLocaleDateString('es-CL')}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '20px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                        <span>🚗 {record.mileage.toLocaleString()} km</span>
+                        <span>🔧 {record.technicianName}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       </div>
-
     </div>
   );
 }

@@ -501,9 +501,10 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 | Rama | Propósito | Estado |
 |---|---|---|
 | `main` | Código estable | ✅ Activo |
-| `feature/frontend-improvements` | UI, integración frontend-backend, fix Gateway | ✅ Mergeado |
-| `feature/testing-and-dtos` | Tests JUnit + DTOs | ✅ Mergeado |
-| `feature/readme-update` | Documentación completa | ✅ Mergeado |
+| `feature/ev3-jwt-security`           | Auditoría EV3: Robustecimiento de JWT (Clave 256bits, expiración corta) | ✅ Mergeado   |
+| `feature/ev3-testing`                | Auditoría EV3: Cobertura de Tests al 90%                                | ✅ Mergeado   |
+| `feature/ev3-mechanic-integration`   | EV3 Final: Dashboard mecánico con datos reales (job-orders + stock)     | ✅ Mergeado   |
+| `feature/ev3-user-profile`           | EV3 Final: Perfil cliente conectado con Auth y Vehicle History          | ✅ Mergeado   |
 | `feature/conflict-demo` | Demostración de conflicto Git | ✅ Resuelto |
 | `feature/microservices-backend` | Tests unitarios, rutas gateway, limpieza Eureka y refactor DTOs | 🟡 En progreso |
 
@@ -562,10 +563,10 @@ eficiencia operacional y experiencia del cliente.
 
 | Prioridad | Tarea | Microservicio |
 |---|---|---|
-| 🔴 Alta | Conectar panel mecánico a datos reales | ms-job-orders, ms-stock-engine |
-| 🔴 Alta | Persistencia real del perfil de usuario | ms-auth-server |
+| 🔴 Alta | Conectar panel mecánico a datos reales | ms-job-orders, ms-stock-engine | ✅ Completado |
+| 🔴 Alta | Persistencia real del perfil de usuario | ms-auth-server | ✅ Completado |
+| 🔴 Alta | Historial de vehículos en perfil del cliente | ms-vehicle-history | ✅ Completado |
 | 🟠 Media | Proceso de pago completo (Transbank) | ms-order-management |
-| 🟠 Media | Historial de vehículos en perfil del cliente | ms-vehicle-history |
 | 🟡 Baja | Seguridad por rol en el Gateway (no solo por token) | bff |
 | 🟡 Baja | Tests de integración con Testcontainers | Todos los microservicios |
 | 🟡 Baja | Subida real de imágenes (AWS S3 / MinIO) | ms-catalog |

@@ -4,7 +4,8 @@ import ms_job_orders.job_orders.model.JobOrder;
 import ms_job_orders.job_orders.service.JobOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import ms_job_orders.job_orders.dto.JobOrderRequestDTO;
 import ms_job_orders.job_orders.dto.JobOrderResponseDTO;
 
@@ -13,6 +14,14 @@ import ms_job_orders.job_orders.dto.JobOrderResponseDTO;
 public class JobOrderController {
     @Autowired
     private JobOrderService service;
+
+    /** Lista todas las órdenes de trabajo registradas en la BD */
+    @GetMapping("/all")
+    public List<JobOrderResponseDTO> getAllOrders() {
+        return service.getAllOrders().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     @PostMapping("/start")
     public JobOrderResponseDTO startJob(@RequestBody JobOrderRequestDTO request) {

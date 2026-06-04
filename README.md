@@ -373,6 +373,8 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 | `main` | Código estable |
 | `feature/frontend-improvements` | Mejoras UI, fix Gateway, integración frontend-backend |
 | `feature/testing-and-dtos` | Tests unitarios + DTOs (PR hacia main) |
+| `feature/ev3-mechanic-integration` | EV3 Final: Dashboard mecánico con datos reales (`job-orders` + `stock`) |
+| `feature/ev3-user-profile` | EV3 Final: Perfil cliente conectado con PostgreSQL (Auth y Vehicle History) |
 | `feature/conflict-demo` | Demostración de resolución de conflictos Git |
 
 ---
@@ -392,8 +394,8 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 | 9 | Integración Frontend ↔ Backend vía API Gateway (eliminación de bypasses) | ✅ Completado |
 | 10 | Tests JUnit 5 + Mockito en 3 microservicios (13 tests, 0 fallos) | ✅ Completado |
 | 11 | DTOs en controladores (Entity → DTO explícito con `toDTO()`) | ✅ Completado |
-| 12 | Conexión de paneles del Mecánico a datos reales | 🔄 En progreso |
-| 13 | Persistencia real del perfil de usuario en BD | 🔄 Pendiente |
+| 12 | Conexión de paneles del Mecánico a datos reales (job-orders, stock) | ✅ Completado |
+| 13 | Persistencia real del perfil de usuario y vehículos en BD | ✅ Completado |
 | 14 | Proceso de pago completo (integración Transbank) | 🔄 Pendiente |
 
 ---
@@ -420,7 +422,7 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 - **Base de datos compartida**: Todos los microservicios comparten `vrakben_db`. En producción se recomienda una BD por servicio (*Database per Service pattern*).
 - **`POSTGRES_DB`**: La base de datos `vrakben_db` se crea automáticamente al levantar el contenedor de PostgreSQL.
 - **Tests en Docker**: Los Dockerfiles de `ms-auth-server`, `ms-catalog` y `ms-supplier-procurement` corren los tests unitarios en el proceso de build (sin `-DskipTests`). Los `contextLoads` de integración están `@Disabled` ya que requieren Docker-in-Docker.
-- **Persistencia del perfil**: Los datos editables del perfil de usuario (foto, nombre, vehículos) se guardan en `localStorage` del navegador, aislados por username. Pendiente migración a endpoint REST en `ms-auth-server`.
+- **Persistencia del perfil**: Los datos del perfil de usuario y su historial de vehículos ahora se obtienen en tiempo real mediante integraciones con `ms-auth-server` y `ms-vehicle-history` hacia la BD PostgreSQL.
 
 ---
 

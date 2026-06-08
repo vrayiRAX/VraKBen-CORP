@@ -27,14 +27,14 @@ spring:
           predicates:
             - Path=/api/stock/**
           filters:
-            - JwtAuthentication
+            - JwtAuthentication=ROLE_ADMIN
 
         - id: supplier-procurement-route
           uri: lb://supplier-procurement
           predicates:
             - Path=/api/procurement/**
           filters:
-            - JwtAuthentication
+            - JwtAuthentication=ROLE_ADMIN
 
         - id: job-orders-route
           uri: lb://job-orders

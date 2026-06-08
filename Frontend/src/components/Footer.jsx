@@ -12,21 +12,12 @@ export default function Footer({ isDarkMode }) {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Degradado decorativo superior */}
+      {/* Línea superior de acento */}
       <div style={{
         position: 'absolute',
         top: 0, left: 0, right: 0,
         height: 3,
-        background: 'linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%)',
-      }} />
-
-      {/* Glow decorativo de fondo */}
-      <div style={{
-        position: 'absolute',
-        top: -80, left: '10%',
-        width: 300, height: 300,
-        background: 'radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)',
-        pointerEvents: 'none',
+        background: 'linear-gradient(90deg, #1D4ED8, var(--accent), #60A5FA)',
       }} />
 
       {/* CONTENIDO PRINCIPAL */}
@@ -43,19 +34,19 @@ export default function Footer({ isDarkMode }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
             <div style={{
               width: 36, height: 36,
-              background: 'linear-gradient(135deg, var(--primary-light), var(--accent))',
+              background: 'linear-gradient(135deg, #1D4ED8, #60A5FA)',
               borderRadius: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 18,
             }}>
               🔧
             </div>
-            <span style={{ color: '#fff', fontWeight: 800, fontSize: '1.2rem', letterSpacing: '-0.3px' }}>
+            <span style={{ color: 'var(--navbar-text)', fontWeight: 800, fontSize: '1.2rem', letterSpacing: '-0.3px' }}>
               Vrak<span style={{ color: 'var(--accent)' }}>Ben</span>
             </span>
           </div>
           <p style={{
-            color: 'rgba(148,163,184,0.8)',
+            color: 'rgba(255,255,255,0.5)',
             lineHeight: 1.7,
             fontSize: '0.9rem',
             marginBottom: 24,
@@ -80,7 +71,7 @@ export default function Footer({ isDarkMode }) {
                 color: '#fff',
                 transition: 'all 0.2s',
               }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(37,99,235,0.3)'; e.currentTarget.style.borderColor = 'var(--primary-light)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(37,99,235,0.35)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
               >
                 {icon}
@@ -93,7 +84,7 @@ export default function Footer({ isDarkMode }) {
         <div>
           <h4 style={{
             color: '#fff',
-            fontSize: '0.85rem',
+            fontSize: '0.83rem',
             fontWeight: 700,
             letterSpacing: '1px',
             textTransform: 'uppercase',
@@ -113,7 +104,7 @@ export default function Footer({ isDarkMode }) {
             ].map(({ label, path }) => (
               <li key={label}>
                 <Link to={path} style={{
-                  color: 'rgba(148,163,184,0.8)',
+                  color: 'rgba(255,255,255,0.55)',
                   fontSize: '0.9rem',
                   textDecoration: 'none',
                   display: 'flex',
@@ -122,9 +113,9 @@ export default function Footer({ isDarkMode }) {
                   transition: 'all 0.2s',
                 }}
                   onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.paddingLeft = '4px'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(148,163,184,0.8)'; e.currentTarget.style.paddingLeft = '0'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; e.currentTarget.style.paddingLeft = '0'; }}
                 >
-                  <span style={{ color: 'var(--primary-light)', fontSize: 10 }}>▶</span>
+                  <span style={{ color: 'var(--accent)', fontSize: 10 }}>▶</span>
                   {label}
                 </Link>
               </li>
@@ -136,7 +127,7 @@ export default function Footer({ isDarkMode }) {
         <div>
           <h4 style={{
             color: '#fff',
-            fontSize: '0.85rem',
+            fontSize: '0.83rem',
             fontWeight: 700,
             letterSpacing: '1px',
             textTransform: 'uppercase',
@@ -157,15 +148,10 @@ export default function Footer({ isDarkMode }) {
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: 12,
-                color: 'rgba(148,163,184,0.8)',
+                color: 'rgba(255,255,255,0.55)',
                 fontSize: '0.9rem',
               }}>
-                <span style={{
-                  fontSize: 16,
-                  flexShrink: 0,
-                  marginTop: 1,
-                  filter: 'grayscale(0.2)',
-                }}>{icon}</span>
+                <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>{icon}</span>
                 <span>{text}</span>
               </li>
             ))}
@@ -175,7 +161,7 @@ export default function Footer({ isDarkMode }) {
 
       {/* BARRA DE COPYRIGHT */}
       <div style={{
-        borderTop: '1px solid rgba(255,255,255,0.07)',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
         padding: '20px 8%',
         display: 'flex',
         justifyContent: 'space-between',
@@ -183,10 +169,10 @@ export default function Footer({ isDarkMode }) {
         flexWrap: 'wrap',
         gap: 12,
       }}>
-        <p style={{ color: 'rgba(148,163,184,0.6)', fontSize: '0.82rem', margin: 0 }}>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', margin: 0 }}>
           © {year} VrakBen. Todos los derechos reservados.
         </p>
-        <p style={{ color: 'rgba(148,163,184,0.4)', fontSize: '0.82rem', margin: 0 }}>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.82rem', margin: 0 }}>
           Diseñado por Vicente, Ian y Benjamín 🚗
         </p>
       </div>

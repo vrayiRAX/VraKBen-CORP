@@ -10,14 +10,12 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Detectar scroll para sombra dinámica
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Cerrar menú al cambiar de ruta
   useEffect(() => setMenuOpen(false), [location]);
 
   const handleLogout = () => {
@@ -25,7 +23,6 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
     navigate('/login');
   };
 
-  // Helper para saber si un link está activo
   const isActive = (path) => location.pathname === path;
 
   const navLinkStyle = (path) => ({
@@ -43,21 +40,23 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
     <>
       {/* ── BARRA SUPERIOR DE ANUNCIOS ── */}
       <div style={{
-        background: 'linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%)',
-        color: '#fff',
+        background: 'var(--navbar-bg)',
+        color: 'var(--navbar-text)',
         fontSize: '0.78rem',
         fontWeight: 500,
-        padding: '8px 8%',
+        padding: '7px 8%',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         gap: 16,
         letterSpacing: '0.2px',
+        borderBottom: '1px solid var(--navbar-border)',
+        opacity: 0.9,
       }}>
         <span>🔧 Técnicos certificados — Agendamiento rápido en línea</span>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <span>📞 +56 9 1234 5678</span>
-          <span style={{ opacity: 0.6 }}>|</span>
+          <span style={{ opacity: 0.4 }}>|</span>
           <span>🕒 Lun - Vie: 09:00 - 18:00</span>
         </div>
       </div>
@@ -73,7 +72,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.4)' : '0 1px 0 rgba(255,255,255,0.06)',
+        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.35)' : '0 1px 0 var(--navbar-border)',
         transition: 'box-shadow 0.3s ease',
       }}>
 
@@ -81,7 +80,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 34, height: 34,
-            background: 'linear-gradient(135deg, var(--primary-light), var(--accent))',
+            background: 'linear-gradient(135deg, #1D4ED8, #60A5FA)',
             borderRadius: 8,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 18, flexShrink: 0,
@@ -90,7 +89,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
             🔧
           </div>
           <span style={{
-            color: '#fff',
+            color: 'var(--navbar-text)',
             fontWeight: 800,
             fontSize: '1.15rem',
             letterSpacing: '-0.3px',
@@ -140,12 +139,13 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
 
           {/* Toggle modo claro/oscuro */}
           <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            title={isDarkMode ? 'Modo claro' : 'Modo oscuro'}
+            id="dark-mode-toggle"
+            onClick={() => setIsDarkMode(prev => !prev)}
+            title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             style={{
               background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              color: '#fff',
+              border: '1px solid rgba(255,255,255,0.15)',
+              color: 'var(--navbar-text)',
               width: 36, height: 36,
               borderRadius: 8,
               cursor: 'pointer',
@@ -153,7 +153,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'var(--transition)',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.16)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
           >
             {isDarkMode ? '☀️' : '🌙'}
@@ -167,7 +167,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
                 color: 'var(--navbar-text)', textDecoration: 'none',
                 padding: '6px 12px',
                 borderRadius: 8,
-                border: '1px solid rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255,255,255,0.15)',
                 fontSize: '0.88rem', fontWeight: 500,
                 transition: 'var(--transition)',
               }}
@@ -176,7 +176,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
               >
                 <span style={{
                   width: 26, height: 26,
-                  background: 'linear-gradient(135deg, var(--primary-light), var(--accent))',
+                  background: 'linear-gradient(135deg, #1D4ED8, #60A5FA)',
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 12, color: '#fff', fontWeight: 700,
@@ -222,7 +222,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
               display: 'none',
               background: 'rgba(255,255,255,0.08)',
               border: '1px solid rgba(255,255,255,0.12)',
-              color: '#fff',
+              color: 'var(--navbar-text)',
               width: 36, height: 36,
               borderRadius: 8,
               cursor: 'pointer',
@@ -243,13 +243,12 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
           top: 106,
           left: 0, right: 0,
           backgroundColor: 'var(--navbar-bg)',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--navbar-border)',
           padding: '20px 8%',
           display: 'flex',
           flexDirection: 'column',
           gap: 16,
           zIndex: 999,
-          animation: 'fadeIn 0.2s ease',
         }}>
           <Link to="/tienda" style={{ color: 'var(--navbar-text)', fontWeight: 500 }}>Catálogo</Link>
           {(role === 'CLIENTE' || role === 'ADMIN') && (
@@ -266,14 +265,14 @@ export default function Navbar({ isDarkMode, setIsDarkMode }) {
           )}
           {!isLoggedIn && (
             <div style={{ display: 'flex', gap: 10, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              <Link to="/login" style={{ color: '#fff', fontWeight: 600 }}>Ingresar</Link>
+              <Link to="/login" style={{ color: 'var(--navbar-text)', fontWeight: 600 }}>Ingresar</Link>
               <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600 }}>Registrarse →</Link>
             </div>
           )}
         </div>
       )}
 
-      {/* ── ESTILOS RESPONSIVE (inyectados inline) ── */}
+      {/* ── ESTILOS RESPONSIVE ── */}
       <style>{`
         @media (max-width: 768px) {
           .nav-links-desktop { display: none !important; }

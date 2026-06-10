@@ -11,18 +11,18 @@ function ServiceCard({ icon, title, desc, delay = 0 }) {
       minWidth: 240,
       maxWidth: 340,
       animationDelay: `${delay}ms`,
-      borderTop: '3px solid var(--primary-light)',
+      borderTop: '3px solid var(--accent)',
       display: 'flex',
       flexDirection: 'column',
       gap: 14,
     }}>
       <div style={{
         width: 52, height: 52,
-        background: 'linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.08))',
+        background: 'var(--accent-glow)',
         borderRadius: 12,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 26,
-        border: '1px solid rgba(59,130,246,0.2)',
+        border: '1px solid rgba(37,99,235,0.2)',
       }}>
         {icon}
       </div>
@@ -59,18 +59,18 @@ function StatCard({ value, label, icon }) {
   }, [target]);
 
   return (
-    <div ref={ref} style={{ textAlign: 'center', padding: '32px 20px' }}>
+    <div ref={ref} style={{ textAlign: 'center', padding: '36px 20px' }}>
       <div style={{ fontSize: 32, marginBottom: 8 }}>{icon}</div>
       <div style={{
         fontSize: 'clamp(2rem, 4vw, 3rem)',
         fontWeight: 900,
-        color: '#fff',
+        color: 'var(--stats-text)',
         letterSpacing: '-1px',
         lineHeight: 1,
       }}>
         {count.toLocaleString()}+
       </div>
-      <div style={{ color: 'rgba(148,163,184,0.8)', fontSize: '0.9rem', marginTop: 8, fontWeight: 500 }}>
+      <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.88rem', marginTop: 8, fontWeight: 500 }}>
         {label}
       </div>
     </div>
@@ -114,12 +114,12 @@ function TeamCard({ img, name, role, delay = 0 }) {
           }}
         />
       </div>
-      <div style={{ padding: '20px 24px 24px' }}>
+      <div style={{ padding: '20px 24px 24px', background: 'var(--card-bg)' }}>
         <h3 style={{ color: 'var(--text-h)', fontWeight: 700, fontSize: '1rem', margin: '0 0 4px' }}>{name}</h3>
         <p style={{
-          color: 'var(--primary-light)',
+          color: 'var(--accent)',
           fontWeight: 600,
-          fontSize: '0.82rem',
+          fontSize: '0.8rem',
           textTransform: 'uppercase',
           letterSpacing: '0.5px',
           margin: 0,
@@ -137,10 +137,10 @@ export default function Home({ isDarkMode, isLoggedIn }) {
   const handleCatalogo = () => navigate('/tienda');
 
   return (
-    <div style={{ fontFamily: 'var(--font)' }}>
+    <div>
 
       {/* ════════════════════════════════
-          1. HERO
+          1. HERO — fondo pastel/carbón según modo
       ════════════════════════════════ */}
       <section style={{
         position: 'relative',
@@ -149,30 +149,23 @@ export default function Home({ isDarkMode, isLoggedIn }) {
         alignItems: 'center',
         padding: '0 8%',
         overflow: 'hidden',
-        background: 'linear-gradient(135deg, #0a1628 0%, #0F172A 50%, #0d1f3a 100%)',
+        background: 'var(--hero-bg)',
       }}>
-        {/* Imagen de fondo con overlay */}
+        {/* Imagen de fondo con overlay suave */}
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(https://images.unsplash.com/photo-1613214149922-f1809c99b414?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
-          opacity: 0.12,
+          opacity: 0.18,
         }} />
 
-        {/* Glow decorativo */}
+        {/* Glow azul decorativo */}
         <div style={{
           position: 'absolute',
           top: '20%', left: '5%',
           width: 500, height: 500,
-          background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: '10%', right: '10%',
-          width: 300, height: 300,
-          background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
 
@@ -183,14 +176,14 @@ export default function Home({ isDarkMode, isLoggedIn }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            background: 'rgba(37,99,235,0.15)',
-            border: '1px solid rgba(59,130,246,0.3)',
+            background: 'var(--accent-glow)',
+            border: '1px solid rgba(37,99,235,0.3)',
             borderRadius: 9999,
             padding: '6px 16px',
             marginBottom: 28,
-            fontSize: '0.8rem',
+            fontSize: '0.78rem',
             color: 'var(--accent)',
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '0.5px',
             textTransform: 'uppercase',
           }}>
@@ -207,14 +200,14 @@ export default function Home({ isDarkMode, isLoggedIn }) {
           <h1 style={{
             fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
             fontWeight: 900,
-            color: '#fff',
+            color: 'var(--text-h)',
             lineHeight: 1.1,
             letterSpacing: '-1.5px',
             margin: '0 0 24px',
           }}>
             Mantén tu auto{' '}
             <span style={{
-              background: 'linear-gradient(135deg, var(--primary-light), var(--accent))',
+              background: 'linear-gradient(135deg, var(--accent), #60A5FA)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -225,8 +218,8 @@ export default function Home({ isDarkMode, isLoggedIn }) {
           </h1>
 
           <p style={{
-            fontSize: '1.1rem',
-            color: 'rgba(148,163,184,0.9)',
+            fontSize: '1.05rem',
+            color: 'var(--text-muted)',
             lineHeight: 1.7,
             marginBottom: 40,
             maxWidth: 520,
@@ -244,8 +237,13 @@ export default function Home({ isDarkMode, isLoggedIn }) {
             </button>
             <button
               onClick={handleCatalogo}
-              className="btn btn-outline"
-              style={{ padding: '14px 28px', fontSize: '0.95rem' }}
+              className="btn"
+              style={{
+                padding: '14px 28px', fontSize: '0.95rem',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-h)',
+                border: '1px solid var(--border)',
+              }}
             >
               Ver Repuestos →
             </button>
@@ -257,7 +255,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
             gap: 24,
             marginTop: 48,
             paddingTop: 32,
-            borderTop: '1px solid rgba(255,255,255,0.08)',
+            borderTop: '1px solid var(--border)',
             flexWrap: 'wrap',
           }}>
             {[
@@ -267,7 +265,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
             ].map(({ icon, text }) => (
               <div key={text} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                color: 'rgba(148,163,184,0.7)',
+                color: 'var(--text-muted)',
                 fontSize: '0.85rem', fontWeight: 500,
               }}>
                 <span>{icon}</span> {text}
@@ -278,18 +276,13 @@ export default function Home({ isDarkMode, isLoggedIn }) {
       </section>
 
       {/* ════════════════════════════════
-          2. ESTADÍSTICAS
+          2. ESTADÍSTICAS — gris carbón siempre
       ════════════════════════════════ */}
       <section style={{
-        background: 'linear-gradient(135deg, var(--primary) 0%, #1a3560 100%)',
+        background: 'var(--stats-bg)',
         position: 'relative',
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(37,99,235,0.1) 0%, transparent 50%)',
-          pointerEvents: 'none',
-        }} />
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
@@ -311,9 +304,9 @@ export default function Home({ isDarkMode, isLoggedIn }) {
       <section className="section" style={{ backgroundColor: 'var(--bg)' }}>
         <div className="section-title">
           <div className="badge badge-blue" style={{ marginBottom: 16 }}>Lo que hacemos</div>
-          <h2>Nuestros <span style={{ color: 'var(--primary-light)' }}>Servicios</span></h2>
+          <h2>Nuestros <span style={{ color: 'var(--accent)' }}>Servicios</span></h2>
           <div className="accent-line" />
-          <p style={{ marginTop: 16 }}>Trabajamos con el compromiso y calidad que nos caracteriza. Tus mantenciones bajo estrictos estándares.</p>
+          <p style={{ marginTop: 16 }}>Trabajamos con el compromiso y calidad que nos caracteriza.</p>
         </div>
 
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -324,7 +317,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
       </section>
 
       {/* ════════════════════════════════
-          4. SERVICIOS RÁPIDOS
+          4. SERVICIOS ADICIONALES
       ════════════════════════════════ */}
       <section style={{ padding: 'var(--section-pad)', backgroundColor: 'var(--bg-secondary)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -339,7 +332,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
             <span style={{
               display: 'inline-block',
               width: 5, height: 32,
-              background: 'linear-gradient(180deg, var(--primary-light), var(--accent))',
+              background: 'linear-gradient(180deg, var(--accent), #60A5FA)',
               borderRadius: 4, flexShrink: 0,
             }} />
             Servicios Adicionales
@@ -392,10 +385,10 @@ export default function Home({ isDarkMode, isLoggedIn }) {
         }}>
           <div>
             <div className="badge badge-blue" style={{ marginBottom: 16 }}>¿Por qué elegirnos?</div>
-            <h2 style={{ marginBottom: 16 }}>La confianza que tu auto <span style={{ color: 'var(--primary-light)' }}>merece</span></h2>
+            <h2 style={{ marginBottom: 16 }}>La confianza que tu auto <span style={{ color: 'var(--accent)' }}>merece</span></h2>
             <div className="accent-line" style={{ margin: '0 0 24px' }} />
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 32 }}>
-              Somos un equipo comprometido con la calidad, la transparencia y la tecnología. Tu vehículo está en las mejores manos.
+              Somos un equipo comprometido con la calidad, la transparencia y la tecnología.
             </p>
             <button onClick={handleAgendar} className="btn btn-primary">
               Agenda tu cita ahora →
@@ -417,7 +410,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
                 border: '1px solid var(--border)',
                 transition: 'var(--transition)',
               }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--border-light)'}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
                 onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
               >
                 <span style={{ color: 'var(--success)', fontSize: 18, flexShrink: 0, marginTop: 2 }}>{icon}</span>
@@ -437,7 +430,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
       <section className="section" style={{ backgroundColor: 'var(--bg-secondary)' }}>
         <div className="section-title">
           <div className="badge badge-blue" style={{ marginBottom: 16 }}>Quiénes somos</div>
-          <h2>Conoce a Nuestro <span style={{ color: 'var(--primary-light)' }}>Equipo</span></h2>
+          <h2>Conoce a Nuestro <span style={{ color: 'var(--accent)' }}>Equipo</span></h2>
           <div className="accent-line" />
           <p style={{ marginTop: 16 }}>Los profesionales detrás de cada mantención. Comprometidos con la excelencia.</p>
         </div>
@@ -450,18 +443,18 @@ export default function Home({ isDarkMode, isLoggedIn }) {
       </section>
 
       {/* ════════════════════════════════
-          7. CTA FINAL
+          7. CTA FINAL — azul premium
       ════════════════════════════════ */}
       <section style={{
         padding: '80px 8%',
-        background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)',
+        background: 'linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)',
+          backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 50%)',
           pointerEvents: 'none',
         }} />
         <div style={{ position: 'relative' }}>
@@ -474,7 +467,7 @@ export default function Home({ isDarkMode, isLoggedIn }) {
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={handleAgendar} className="btn" style={{
               background: '#fff',
-              color: 'var(--primary)',
+              color: '#1E3A5F',
               padding: '14px 32px',
               fontSize: '0.95rem',
               fontWeight: 700,

@@ -27,4 +27,9 @@ public class JwtUtil {
         Claims claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
+
+    public java.util.List<String> extractRoles(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        return claims.get("roles", java.util.List.class);
+    }
 }

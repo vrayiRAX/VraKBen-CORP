@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -32,10 +32,14 @@ import GestSolicitudes from './pages/admin/GestSolicitudes';
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   return (
     <AuthProvider>
       <Router>
-        <div data-theme={isDarkMode ? 'dark' : 'light'} style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', transition: 'background-color 0.3s' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           
           <Routes>

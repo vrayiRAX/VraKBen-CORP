@@ -11,6 +11,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import java.util.List;
+import java.util.Arrays;
 
 @Component
 public class JwtAuthenticationGatewayFilterFactory
@@ -24,7 +26,20 @@ public class JwtAuthenticationGatewayFilterFactory
     }
 
     public static class Config {
-        // Configuraciones adicionales si se requieren
+        private String requiredRole;
+
+        public String getRequiredRole() {
+            return requiredRole;
+        }
+
+        public void setRequiredRole(String requiredRole) {
+            this.requiredRole = requiredRole;
+        }
+    }
+
+    @Override
+    public List<String> shortcutFieldOrder() {
+        return Arrays.asList("requiredRole");
     }
 
     @Override
@@ -47,6 +62,14 @@ public class JwtAuthenticationGatewayFilterFactory
             try {
                 // Validar el token
                 jwtUtil.validateToken(authHeader);
+
+                // Validar el rol si está configurado en la ruta
+                if (config.getRequiredRole() != null && !config.getRequiredRole().isEmpty()) {
+                    List<String> userRoles = jwtUtil.extractRoles(authHeader);
+                    if (userRoles == null || !userRoles.contains(config.getRequiredRole())) {
+                        return onError(exchange, "Acceso denegado: Se requiere rol " + config.getRequiredRole(), HttpStatus.FORBIDDEN);
+                    }
+                }
 
                 // Opcionalmente, agregar info del usuario al request para servicios downstream
                 String username = jwtUtil.extractUsername(authHeader);

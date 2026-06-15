@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    // Método útil para buscar todas las compras de un cliente específico (usando su RUT)
+    /** Busca órdenes por el RUT del cliente (legacy) */
     List<Order> findByCustomerRut(String customerRut);
-}
+
+    /** Busca todas las órdenes por username (email del login) */
+    List<Order> findByUsernameOrderByOrderDateDesc(String username);
+}

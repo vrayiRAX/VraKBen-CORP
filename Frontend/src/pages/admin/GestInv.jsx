@@ -1,12 +1,13 @@
 // src/pages/admin/GestInv.jsx
 import { useState, useEffect } from 'react';
-import { obtenerProductos, crearProducto } from '../../services/catalogoService';
+import { obtenerProductos, crearProducto, subirImagenProducto } from '../../services/catalogoService';
 
 export default function GestInv({ isDarkMode }) {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '', price: '', stock: '', sku: '', imageUrl: '' });
+  const [form, setForm] = useState({ name: '', description: '', price: '', stock: '', sku: '' });
+  const [imageFile, setImageFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -38,17 +39,32 @@ export default function GestInv({ isDarkMode }) {
   useEffect(() => { cargar(); }, []);
 
   const handleChange = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+  const handleFileChange = (e) => setImageFile(e.target.files[0]);
 
   const handleCrear = async (e) => {
     e.preventDefault();
     setSaving(true); setMsg('');
     try {
-      await crearProducto({ name: form.name, description: form.description, price: parseFloat(form.price), stock: parseInt(form.stock), sku: form.sku, imageUrl: form.imageUrl });
+      // 1. Crear el producto sin imagen
+      await crearProducto({ 
+        name: form.name, 
+        description: form.description, 
+        price: parseFloat(form.price), 
+        stock: parseInt(form.stock), 
+        sku: form.sku 
+      });
+
+      // 2. Si hay imagen, subirla (se requiere el SKU recién creado)
+      if (imageFile) {
+        await subirImagenProducto(form.sku, imageFile);
+      }
+
       setMsg('✅ Producto creado exitosamente');
-      setForm({ name: '', description: '', price: '', stock: '', sku: '', imageUrl: '' });
+      setForm({ name: '', description: '', price: '', stock: '', sku: '' });
+      setImageFile(null);
       setShowForm(false);
       cargar();
-    } catch { setMsg('❌ Error al crear el producto'); }
+    } catch { setMsg('❌ Error al crear el producto o subir la imagen'); }
     finally { setSaving(false); }
   };
 
@@ -93,8 +109,8 @@ export default function GestInv({ isDarkMode }) {
             <input name="description" value={form.description} onChange={handleChange} placeholder="Descripción del producto" style={inputStyle} />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>URL de Imagen</label>
-            <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="https://ejemplo.com/foto.jpg" style={inputStyle} />
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Subir Imagen</label>
+            <input type="file" accept="image/*" onChange={handleFileChange} style={inputStyle} />
           </div>
           {msg && <p style={{ gridColumn: '1 / -1', margin: 0, textAlign: 'center' }}>{msg}</p>}
           <button type="submit" disabled={saving} style={{
@@ -117,7 +133,7 @@ export default function GestInv({ isDarkMode }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
             <thead>
               <tr style={{ backgroundColor: isDarkMode ? '#2b2b2b' : '#f8f9fa' }}>
-                {['SKU', 'Nombre', 'Descripción', 'Precio', 'Stock'].map(h => (
+                {['Imagen', 'SKU', 'Nombre', 'Descripción', 'Precio', 'Stock'].map(h => (
                   <th key={h} style={{ padding: '12px 16px', textAlign: 'left', borderBottom: theme.border, color: theme.textMuted }}>{h}</th>
                 ))}
               </tr>
@@ -125,6 +141,13 @@ export default function GestInv({ isDarkMode }) {
             <tbody>
               {productos.map((p, i) => (
                 <tr key={p.id || i} style={{ borderBottom: theme.border }}>
+                  <td style={{ padding: '12px 16px' }}>
+                    {p.imageUrl ? (
+                      <img src={p.imageUrl} alt={p.name} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                    ) : (
+                      <div style={{ width: '50px', height: '50px', backgroundColor: '#e9ecef', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#adb5bd', fontSize: '0.8rem' }}>Sin Img</div>
+                    )}
+                  </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'monospace', color: '#3a86ff' }}>{p.sku}</td>
                   <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{p.name}</td>
                   <td style={{ padding: '12px 16px', color: theme.textMuted, fontSize: '0.85rem' }}>{p.description}</td>

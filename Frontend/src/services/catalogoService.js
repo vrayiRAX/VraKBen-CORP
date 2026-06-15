@@ -15,3 +15,15 @@ export const crearProducto = async (producto) => {
   const response = await apiClient.post('/api/catalog/create', producto);
   return response.data;
 };
+
+export const subirImagenProducto = async (sku, imageFile) => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  const response = await apiClient.post(`/api/catalog/upload/${sku}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};

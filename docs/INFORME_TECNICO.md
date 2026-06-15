@@ -133,11 +133,12 @@ La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Exc
 | `GET` | `/api/auth/users/{username}` | — | Datos del usuario | ✅ |
 
 ### ms-catalog (`:8084`)
-**Responsabilidad:** CRUD del catálogo de repuestos.
+**Responsabilidad:** CRUD del catálogo de repuestos y almacenamiento estático de imágenes locales.
 
 | Método | Endpoint | Body | Respuesta | Auth |
 |---|---|---|---|---|
-| `GET` | `/api/catalog/all` | — | `List<ProductCatalog>` | ✅ |
+| `GET` | `/api/catalog/all` | — | `List<ProductCatalogDTO>` | ✅ |
+| `POST` | `/api/catalog/upload/{sku}`| `MultipartFile` | `ProductCatalogDTO` actualizado | ✅ (ADMIN) |
 | `GET` | `/api/catalog/{sku}` | — | `ProductCatalog` | ✅ |
 | `POST` | `/api/catalog/create` | `{sku, name, brand, category, description, price, imageUrl}` | Producto creado | ✅ |
 

@@ -14,6 +14,10 @@ export default function Perfil() {
   const [searchedVin, setSearchedVin] = useState(null);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
+  // Para el historial de pedidos
+  const [myOrders, setMyOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+
   // Formulario para nuevo historial
   const [newEntry, setNewEntry] = useState({ description: '', mileage: '', technicianName: '' });
   const [isAddingEntry, setIsAddingEntry] = useState(false);
@@ -28,6 +32,13 @@ export default function Perfil() {
       })
       .catch(err => console.error("Error al cargar el perfil:", err))
       .finally(() => setLoadingProfile(false));
+
+    // Cargar historial de pedidos del usuario
+    setLoadingOrders(true);
+    apiClient.get(`/api/orders/my-orders/${user.sub}`)
+      .then(res => setMyOrders(Array.isArray(res.data) ? res.data : []))
+      .catch(err => console.error("Error al cargar pedidos:", err))
+      .finally(() => setLoadingOrders(false));
   }, [user]);
 
   const handleSearchHistory = async (e) => {
@@ -212,6 +223,62 @@ export default function Perfil() {
 
         </div>
       </div>
+
+      {/* ── MIS PEDIDOS ── */}
+      <div className="card" style={{ padding: '30px', marginTop: '10px' }}>
+        <h3 style={{ margin: '0 0 20px 0', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ width: 4, height: 22, background: 'var(--accent)', borderRadius: 4, display: 'inline-block' }} />
+          🧾 Mis Pedidos
+        </h3>
+
+        {loadingOrders ? (
+          <p style={{ color: 'var(--text-muted)' }}>Cargando historial de pedidos...</p>
+        ) : myOrders.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px dashed var(--border)', color: 'var(--text-muted)' }}>
+            No tienes pedidos realizados aún. ¡Ve al catálogo y compra algo!
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: 'var(--bg-secondary)' }}>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>#</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>Producto</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>Cantidad</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>Total</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>Fecha</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.85rem' }}>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myOrders.map((order, idx) => (
+                  <tr key={order.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>#{order.id}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 600 }}>{order.productName || `Producto #${order.productId}`}</td>
+                    <td style={{ padding: '12px 16px' }}>x{order.quantity}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>
+                      ${order.totalAmount?.toLocaleString('es-CL')}
+                    </td>
+                    <td style={{ padding: '12px 16px', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                      {order.orderDate ? new Date(order.orderDate).toLocaleDateString('es-CL') : '—'}
+                    </td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <span style={{
+                        padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700,
+                        background: order.status === 'COMPLETED' ? 'rgba(56, 176, 0, 0.15)' : 'rgba(230, 57, 70, 0.15)',
+                        color: order.status === 'COMPLETED' ? '#38b000' : '#e63946',
+                      }}>
+                        {order.status === 'COMPLETED' ? '✅ Completado' : '❌ Sin Stock'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

@@ -338,16 +338,22 @@ apiClient.interceptors.response.use(
 
 ### Estrategia de Testing
 
-Se implementaron **tests unitarios** con JUnit 5 y Mockito. La capa de base de datos se simula completamente con mocks, por lo que los tests no requieren una BD real ni contenedores.
+El proyecto cuenta con dos capas de validación:
+1. **Tests Unitarios**: Implementados con JUnit 5 y Mockito. La capa de base de datos se simula completamente con mocks.
+2. **Tests de Integración**: Implementados con **Testcontainers**. Levantan contenedores de PostgreSQL reales de forma efímera durante la ejecución de los tests para probar la persistencia y los endpoints REST (`TestRestTemplate`) de punta a punta, sin afectar bases de datos locales o de producción.
 
 ### Cobertura Actual
 
-| Microservicio | Clase | Tests | Casos |
-|---|---|---|---|
-| ms-auth-server | `AuthServiceTest` | 4 | Login OK, Login incorrecto, Registro OK, Usuario ya existe |
-| ms-catalog | `CatalogServiceTest` | 4 | Listar todo, Buscar SKU OK, SKU no encontrado, Guardar |
-| ms-supplier-procurement | `ProcurementServiceTest` | 4 | Crear orden, Aprobar, Rechazar (No encontrada), Listar |
-| ms-stock | `StockServiceTest` | 3 | Reducir stock OK, Producto no encontrado, Stock insuficiente |
+### Cobertura Actual
+
+| Microservicio | Clase | Tests | Casos | Tipo |
+|---|---|---|---|---|
+| ms-auth-server | `AuthServiceTest` | 4 | Login OK, Login incorrecto, Registro OK, Usuario ya existe | Unitario |
+| ms-catalog | `CatalogServiceTest` | 4 | Listar todo, Buscar SKU OK, SKU no encontrado, Guardar | Unitario |
+| ms-supplier-procurement | `ProcurementServiceTest` | 4 | Crear orden, Aprobar, Rechazar (No encontrada), Listar | Unitario |
+| ms-stock | `StockServiceTest` | 3 | Reducir stock OK, Producto no encontrado, Stock insuficiente | Unitario |
+| ms-catalog | `CatalogIntegrationTest` | 2 | Creación de producto, Recuperación (GET) usando BD Testcontainers | Integración |
+| ms-order-management| `OrderIntegrationTest` | 2 | Conexion BD Testcontainers, GET Historial de Órdenes REST | Integración |
 | ms-order-management | `OrderServiceTest` | 2 | Orden exitosa (stock OK), Orden fallida (Sin stock) |
 | ms-job-orders | `JobOrderServiceTest` | 3 | Crear orden (IN_PROGRESS), Completar orden OK, Orden no encontrada |
 | ms-vehicle-history | `VehicleHistoryServiceTest` | 2 | Agregar entrada al historial, Obtener historial completo |

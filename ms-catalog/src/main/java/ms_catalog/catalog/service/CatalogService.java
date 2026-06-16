@@ -43,7 +43,7 @@ public class CatalogService {
     }
 
     public ProductCatalog getProductBySku(String sku) {
-        return repository.findBySku(sku).orElse(null);
+        return repository.findBySku(sku).orElseThrow(() -> new RuntimeException("Producto no encontrado en catálogo"));
     }
 
     public ProductCatalog saveProduct(ProductCatalog product) {

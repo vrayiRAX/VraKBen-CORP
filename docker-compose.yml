@@ -25,6 +25,16 @@ services:
     networks:
       - vrakben-net
 
+  # 3. Mensajería Asíncrona RabbitMQ
+  vrakben-rabbitmq:
+    image: rabbitmq:3-management
+    container_name: vrakben-rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI (user: guest / guest)
+    networks:
+      - vrakben-net
+
   # 2. Service Discovery (Eureka)
   eureka-server:
     build: ./ms-eureka-server
@@ -106,16 +116,19 @@ services:
     networks:
       - vrakben-net
 
-  # 8. Gestión de Órdenes / Ventas
+  # 8. Gestión de Órdenes / Ventas (con mensajería RabbitMQ)
   ms-order-management:
     build: ./ms-order-management
     container_name: ms-order-management
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_RABBITMQ_HOST=vrakben-rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     depends_on:
       - vrakben-db
       - eureka-server
+      - vrakben-rabbitmq
     networks:
       - vrakben-net
 

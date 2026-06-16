@@ -171,7 +171,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

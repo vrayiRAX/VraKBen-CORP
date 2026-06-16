@@ -99,6 +99,45 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Actualiza un producto existente en el catálogo.
+     */
+    @Operation(summary = "Actualizar producto", description = "Actualiza la información de un producto dado su SKU.")
+    @PutMapping("/update/{sku}")
+    public ResponseEntity<ProductCatalogDTO> update(@PathVariable String sku, @RequestBody ProductCatalogRequestDTO request) {
+        try {
+            ProductCatalog product = new ProductCatalog();
+            product.setName(request.getName());
+            product.setBrand(request.getBrand());
+            product.setCategory(request.getCategory());
+            product.setDescription(request.getDescription());
+            product.setPrice(request.getPrice());
+            product.setStock(request.getStock());
+            
+            ProductCatalog updatedProduct = service.updateProduct(sku, product);
+            return ResponseEntity.ok(convertToDTO(updatedProduct));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Elimina un producto por su SKU.
+     *
+     * @param sku El SKU del producto a eliminar.
+     * @return 204 No Content si se eliminó con éxito, 400 Bad Request en caso de error.
+     */
+    @Operation(summary = "Eliminar producto", description = "Elimina un producto del catálogo dado su SKU.")
+    @DeleteMapping("/{sku}")
+    public ResponseEntity<Void> delete(@PathVariable String sku) {
+        try {
+            service.deleteProductBySku(sku);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private ProductCatalogDTO convertToDTO(ProductCatalog product) {
         return new ProductCatalogDTO(
                 product.getId(),

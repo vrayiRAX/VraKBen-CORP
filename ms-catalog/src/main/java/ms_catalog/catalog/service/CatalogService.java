@@ -74,6 +74,29 @@ public class CatalogService {
     }
 
     /**
+     * Actualiza un producto existente en el catálogo.
+     *
+     * @param sku SKU del producto a actualizar.
+     * @param updatedData Nuevos datos.
+     * @return El producto actualizado.
+     */
+    @CacheEvict(value = "catalog", key = "'all'")
+    public ProductCatalog updateProduct(String sku, ProductCatalog updatedData) {
+        ProductCatalog existing = repository.findBySku(sku)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado en catálogo"));
+        
+        existing.setName(updatedData.getName());
+        existing.setBrand(updatedData.getBrand());
+        existing.setCategory(updatedData.getCategory());
+        existing.setDescription(updatedData.getDescription());
+        existing.setPrice(updatedData.getPrice());
+        existing.setStock(updatedData.getStock());
+        // sku is not updated because it's the identifier, image is updated separately or kept.
+        
+        return repository.save(existing);
+    }
+
+    /**
      * Sube una imagen para un producto identificado por su SKU.
      * Guarda el archivo en el sistema de archivos local y actualiza el campo imageUrl en la BD.
      * Invalida el caché del catálogo para reflejar la nueva imagen.
@@ -94,7 +117,7 @@ public class CatalogService {
             Files.createDirectories(uploadPath);
         }
 
-        // Generar nombre único para el archivo
+        // Generar nombre ǧnico para el archivo
         String originalFilename = imageFile.getOriginalFilename();
         String extension = (originalFilename != null && originalFilename.contains("."))
                 ? originalFilename.substring(originalFilename.lastIndexOf('.'))
@@ -109,5 +132,18 @@ public class CatalogService {
         String imageUrl = serverUrl + "/images/" + newFilename;
         product.setImageUrl(imageUrl);
         return repository.save(product);
+    }
+
+    /**
+     * Elimina un producto del catǭlogo por su SKU.
+     * Invalida el cachǸ del catǭlogo.
+     *
+     * @param sku El SKU del producto a eliminar.
+     */
+    @CacheEvict(value = "catalog", key = "'all'")
+    public void deleteProductBySku(String sku) {
+        ProductCatalog product = repository.findBySku(sku)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado en catǭlogo"));
+        repository.delete(product);
     }
 }

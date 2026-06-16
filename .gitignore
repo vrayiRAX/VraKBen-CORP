@@ -7,3 +7,6 @@ target/
 *.class
 .DS_Store
 *.log
+
+# Imágenes subidas localmente (ms-catalog)
+uploads/

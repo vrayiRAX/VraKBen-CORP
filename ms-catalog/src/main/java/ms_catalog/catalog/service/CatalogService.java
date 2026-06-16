@@ -4,6 +4,8 @@ import ms_catalog.catalog.model.ProductCatalog;
 import ms_catalog.catalog.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +19,11 @@ import java.util.UUID;
 
 /**
  * Servicio que gestiona el catálogo de productos VraKBen.
- * Incluye operaciones CRUD y la subida de imágenes al almacenamiento local.
+ * Incluye operaciones CRUD, caché Redis y la subida de imágenes al almacenamiento local.
+ *
+ * <p>El método {@link #getAllProducts()} está cacheado en Redis con la clave "catalog::all".
+ * Cada operación de escritura ({@link #saveProduct}, {@link #uploadImage}) invalida dicho caché
+ * garantizando que el cliente siempre vea datos consistentes.</p>
  */
 @Service
 public class CatalogService {
@@ -38,6 +44,14 @@ public class CatalogService {
     @Value("${catalog.server.url:http://localhost:8084}")
     private String serverUrl;
 
+    /**
+     * Retorna todos los productos del catálogo.
+     * El resultado se almacena en Redis con la clave "catalog::all" para evitar
+     * consultas repetidas a la base de datos en peticiones frecuentes.
+     *
+     * @return Lista de todos los productos disponibles.
+     */
+    @Cacheable(value = "catalog", key = "'all'")
     public List<ProductCatalog> getAllProducts() {
         return repository.findAll();
     }
@@ -46,6 +60,15 @@ public class CatalogService {
         return repository.findBySku(sku).orElseThrow(() -> new RuntimeException("Producto no encontrado en catálogo"));
     }
 
+    /**
+     * Guarda un producto nuevo o actualiza uno existente.
+     * Invalida la entrada de caché "catalog::all" para que la siguiente
+     * consulta al listado refleje el nuevo producto.
+     *
+     * @param product El producto a guardar.
+     * @return El producto persistido con su ID generado.
+     */
+    @CacheEvict(value = "catalog", key = "'all'")
     public ProductCatalog saveProduct(ProductCatalog product) {
         return repository.save(product);
     }
@@ -53,12 +76,14 @@ public class CatalogService {
     /**
      * Sube una imagen para un producto identificado por su SKU.
      * Guarda el archivo en el sistema de archivos local y actualiza el campo imageUrl en la BD.
+     * Invalida el caché del catálogo para reflejar la nueva imagen.
      *
      * @param sku       El SKU del producto al que pertenece la imagen.
      * @param imageFile El archivo de imagen enviado como multipart/form-data.
      * @return El producto actualizado con la nueva URL de imagen.
      * @throws RuntimeException si el producto no existe o falla la escritura del archivo.
      */
+    @CacheEvict(value = "catalog", key = "'all'")
     public ProductCatalog uploadImage(String sku, MultipartFile imageFile) throws IOException {
         ProductCatalog product = repository.findBySku(sku)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con SKU: " + sku));
@@ -85,4 +110,4 @@ public class CatalogService {
         product.setImageUrl(imageUrl);
         return repository.save(product);
     }
-}
+}

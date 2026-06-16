@@ -27,3 +27,13 @@ export const subirImagenProducto = async (sku, imageFile) => {
   });
   return response.data;
 };
+
+export const eliminarProducto = async (sku) => {
+  const response = await apiClient.delete(`/api/catalog/${sku}`);
+  return response.data;
+};
+
+export const actualizarProducto = async (sku, producto) => {
+  const response = await apiClient.put(`/api/catalog/update/${sku}`, producto);
+  return response.data;
+};

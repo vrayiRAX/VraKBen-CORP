@@ -1,6 +1,7 @@
 // src/pages/admin/GestInv.jsx
 import { useState, useEffect } from 'react';
-import { obtenerProductos, crearProducto, subirImagenProducto } from '../../services/catalogoService';
+import { obtenerProductos, crearProducto, subirImagenProducto, eliminarProducto, actualizarProducto } from '../../services/catalogoService';
+import { Trash2, Edit2 } from 'lucide-react';
 
 export default function GestInv({ isDarkMode }) {
   const [productos, setProductos] = useState([]);
@@ -10,6 +11,8 @@ export default function GestInv({ isDarkMode }) {
   const [imageFile, setImageFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editSku, setEditSku] = useState(null);
 
   const theme = {
     bg: isDarkMode ? '#121212' : '#f4f7f6',
@@ -41,38 +44,72 @@ export default function GestInv({ isDarkMode }) {
   const handleChange = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
   const handleFileChange = (e) => setImageFile(e.target.files[0]);
 
-  const handleCrear = async (e) => {
+  const handleCrearOEditar = async (e) => {
     e.preventDefault();
     setSaving(true); setMsg('');
     try {
-      // 1. Crear el producto sin imagen
-      await crearProducto({ 
+      const payload = { 
         name: form.name, 
         description: form.description, 
         price: parseFloat(form.price), 
         stock: parseInt(form.stock), 
         sku: form.sku 
-      });
+      };
 
-      // 2. Si hay imagen, subirla (se requiere el SKU recién creado)
-      if (imageFile) {
-        await subirImagenProducto(form.sku, imageFile);
+      if (isEditing) {
+        await actualizarProducto(editSku, payload);
+        if (imageFile) await subirImagenProducto(editSku, imageFile);
+        setMsg('✅ Producto actualizado exitosamente');
+      } else {
+        await crearProducto(payload);
+        if (imageFile) await subirImagenProducto(form.sku, imageFile);
+        setMsg('✅ Producto creado exitosamente');
       }
 
-      setMsg('✅ Producto creado exitosamente');
       setForm({ name: '', description: '', price: '', stock: '', sku: '' });
       setImageFile(null);
       setShowForm(false);
+      setIsEditing(false);
+      setEditSku(null);
       cargar();
-    } catch { setMsg('❌ Error al crear el producto o subir la imagen'); }
+    } catch { setMsg('❌ Error al guardar el producto'); }
     finally { setSaving(false); }
+  };
+
+  const handleEdit = (p) => {
+    setForm({ name: p.name, description: p.description, price: p.price, stock: p.stock, sku: p.sku });
+    setIsEditing(true);
+    setEditSku(p.sku);
+    setShowForm(true);
+    setImageFile(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleEliminar = async (sku, nombre) => {
+    if (window.confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}" (SKU: ${sku})?`)) {
+      try {
+        await eliminarProducto(sku);
+        cargar();
+      } catch (err) {
+        alert('❌ Error al eliminar el producto.');
+      }
+    }
   };
 
   return (
     <div style={{ padding: '40px', backgroundColor: theme.bg, color: theme.text, minHeight: '80vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
         <h1 style={{ margin: 0 }}>⚙️ Gestión de Inventario</h1>
-        <button onClick={() => setShowForm(s => !s)} style={{
+        <button onClick={() => {
+          setShowForm(s => {
+            if (s) {
+              setIsEditing(false);
+              setForm({ name: '', description: '', price: '', stock: '', sku: '' });
+              setEditSku(null);
+            }
+            return !s;
+          });
+        }} style={{
           padding: '10px 20px', backgroundColor: '#e63946', color: 'white',
           border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
         }}>
@@ -81,9 +118,9 @@ export default function GestInv({ isDarkMode }) {
       </div>
       <p style={{ color: theme.textMuted, marginBottom: '30px' }}>Administra el catálogo de repuestos y su stock.</p>
 
-      {/* Formulario de creación */}
+      {/* Formulario de creación/edición */}
       {showForm && (
-        <form onSubmit={handleCrear} style={{
+        <form onSubmit={handleCrearOEditar} style={{
           backgroundColor: theme.card, border: theme.border, borderRadius: '10px',
           padding: '25px', marginBottom: '30px', display: 'grid',
           gridTemplateColumns: '1fr 1fr', gap: '15px'
@@ -94,7 +131,7 @@ export default function GestInv({ isDarkMode }) {
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>SKU *</label>
-            <input name="sku" required value={form.sku} onChange={handleChange} placeholder="TOY-OIL-001" style={inputStyle} />
+            <input name="sku" required value={form.sku} onChange={handleChange} placeholder="TOY-OIL-001" style={inputStyle} disabled={isEditing} />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Precio ($) *</label>
@@ -118,7 +155,7 @@ export default function GestInv({ isDarkMode }) {
             color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold',
             cursor: saving ? 'not-allowed' : 'pointer'
           }}>
-            {saving ? 'Guardando...' : 'Guardar Producto'}
+            {saving ? 'Guardando...' : (isEditing ? 'Actualizar Producto' : 'Guardar Producto')}
           </button>
         </form>
       )}
@@ -133,7 +170,7 @@ export default function GestInv({ isDarkMode }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
             <thead>
               <tr style={{ backgroundColor: isDarkMode ? '#2b2b2b' : '#f8f9fa' }}>
-                {['Imagen', 'SKU', 'Nombre', 'Descripción', 'Precio', 'Stock'].map(h => (
+                {['Imagen', 'SKU', 'Nombre', 'Descripción', 'Precio', 'Stock', 'Acciones'].map(h => (
                   <th key={h} style={{ padding: '12px 16px', textAlign: 'left', borderBottom: theme.border, color: theme.textMuted }}>{h}</th>
                 ))}
               </tr>
@@ -158,6 +195,30 @@ export default function GestInv({ isDarkMode }) {
                       backgroundColor: p.stock > 10 ? '#38b00022' : '#e6394622',
                       color: p.stock > 10 ? '#38b000' : '#e63946',
                     }}>{p.stock} u.</span>
+                  </td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button 
+                        onClick={() => handleEdit(p)}
+                        title="Editar producto"
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          color: '#3a86ff', padding: '5px', display: 'flex', alignItems: 'center'
+                        }}
+                      >
+                        <Edit2 size={20} />
+                      </button>
+                      <button 
+                        onClick={() => handleEliminar(p.sku, p.name)}
+                        title="Eliminar producto"
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          color: '#e63946', padding: '5px', display: 'flex', alignItems: 'center'
+                        }}
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -1,7 +1,7 @@
 # 📚 VraKBen-CORP — Documento Técnico Completo
 
 > **Uso:** Referencia técnica del proyecto. Base para el informe PDF de evaluación.
-> Última actualización: 2026-05-13
+> Última actualización: 2026-06-16
 
 ---
 
@@ -338,9 +338,9 @@ apiClient.interceptors.response.use(
 
 ### Estrategia de Testing
 
-Se implementaron **tests unitarios** con JUnit 5 y Mockito. La capa de base de datos se simula completamente con mocks, por lo que los tests no requieren una BD real ni contenedores.
+Se implementan **dos capas de testing**: tests **unitarios** (JUnit 5 + Mockito, sin BD real) y tests de **integración** (Testcontainers + PostgreSQL 15 efímero, compatibles con Spring Boot 4.x).
 
-### Cobertura Actual
+### Tests Unitarios (JUnit 5 + Mockito)
 
 | Microservicio | Clase | Tests | Casos |
 |---|---|---|---|
@@ -353,7 +353,17 @@ Se implementaron **tests unitarios** con JUnit 5 y Mockito. La capa de base de d
 | ms-vehicle-history | `VehicleHistoryServiceTest` | 2 | Agregar entrada al historial, Obtener historial completo |
 | ms-appointment-scheduler | `AppointmentServiceTest` | 3 | Agendar con descuento de stock, Agendar sin descuento, Rechazo por falta de stock |
 | ms-shopping-cart | `CartServiceTest` | 2 | (Pruebas unitarias de manipulación de carrito) |
-| **TOTAL** | | **27** | ✅ **0 fallos en validación de DTOs y lógica** |
+| **TOTAL unitarios** | | **27** | ✅ **0 fallos en validación de DTOs y lógica** |
+
+### Tests de Integración (Testcontainers + PostgreSQL real)
+
+Se usan `@Testcontainers` + `@SpringBootTest(webEnvironment=NONE)` con `@ServiceConnection` para inyectar automáticamente el datasource del contenedor PostgreSQL efímero.
+
+| Microservicio | Clase | Tests | Qué valida |
+|---|---|---|---|
+| ms-catalog | `CatalogRepositoryIntegrationTest` | 2 | Persistir producto + `findBySku` en PostgreSQL 15 real |
+| ms-order-management | `OrderRepositoryIntegrationTest` | 2 | Persistir órdenes + `findByUsernameOrderByOrderDateDesc` con filtro multi-usuario |
+| **TOTAL integración** | | **4** | ✅ Capa de datos validada con BD real efímera |
 
 ### Ejemplo de Test (Happy Path + Error Path)
 
@@ -384,9 +394,13 @@ void testUpdateOrderStatus_NotFound_ThrowsException() {   // Error Path
 ### Ejecutar los Tests
 
 ```bash
-# Tests corren automáticamente en el build de Docker
+# Tests unitarios (corren en Docker build automáticamente)
 docker-compose build ms-catalog
-# Buscar en el output: "[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0"
+# Buscar: "[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0"
+
+# Tests de integración (requiere Docker Desktop corriendo localmente)
+./mvnw test -Dtest=CatalogRepositoryIntegrationTest   # en ms-catalog/
+./mvnw test -Dtest=OrderRepositoryIntegrationTest     # en ms-order-management/
 ```
 
 ---
@@ -506,8 +520,10 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 | `feature/ev3-testing`                | Auditoría EV3: Cobertura de Tests al 90%                                | ✅ Mergeado   |
 | `feature/ev3-mechanic-integration`   | EV3 Final: Dashboard mecánico con datos reales (job-orders + stock)     | ✅ Mergeado   |
 | `feature/ev3-user-profile`           | EV3 Final: Perfil cliente conectado con Auth y Vehicle History          | ✅ Mergeado   |
+| `feature/ev3-payment-flow`           | Flujo de pago completo con Feign Client + historial de órdenes          | ✅ Mergeado   |
+| `feature/ev3-image-upload`           | Subida real de imágenes en ms-catalog (multipart + almacenamiento local) | ✅ Mergeado   |
+| `feature/ev3-integration-tests-v2`   | Tests de integración con Testcontainers (SB4 compatible)                | ✅ Mergeado   |
 | `feature/conflict-demo` | Demostración de conflicto Git | ✅ Resuelto |
-| `feature/microservices-backend` | Tests unitarios, rutas gateway, limpieza Eureka y refactor DTOs | 🟡 En progreso |
 
 > [!NOTE]
 > Se ha creado la guía `.github/GITHUB_FLOW_GUIDE.md` como estándar oficial del equipo para creación de ramas y Pull Requests, asegurando que `main` siempre esté en estado desplegable.
@@ -562,15 +578,17 @@ eficiencia operacional y experiencia del cliente.
 
 ## 12. Roadmap — Próximos Pasos
 
-| Prioridad | Tarea | Microservicio |
-|---|---|---|
+| Prioridad | Tarea | Microservicio | Estado |
+|---|---|---|---|
 | 🔴 Alta | Conectar panel mecánico a datos reales | ms-job-orders, ms-stock-engine | ✅ Completado |
 | 🔴 Alta | Persistencia real del perfil de usuario | ms-auth-server | ✅ Completado |
 | 🔴 Alta | Historial de vehículos en perfil del cliente | ms-vehicle-history | ✅ Completado |
-| 🟠 Media | Proceso de pago completo (Transbank) | ms-order-management |
-| 🟡 Baja | Seguridad por rol en el Gateway (no solo por token) | bff |
-| 🟡 Baja | Tests de integración con Testcontainers | Todos los microservicios |
-| 🟡 Baja | Subida real de imágenes (AWS S3 / MinIO) | ms-catalog |
+| 🔴 Alta | Flujo de pago completo con descuento de stock (Feign) | ms-order-management, ms-stock | ✅ Completado |
+| 🔴 Alta | Subida real de imágenes de productos (multipart) | ms-catalog | ✅ Completado |
+| 🔴 Alta | Tests de integración con Testcontainers | ms-catalog, ms-order-management | ✅ Completado |
+| 🟠 Media | Proceso de pago (Transbank WebPay Plus) | ms-order-management | 🔄 Pendiente |
+| 🟡 Baja | Seguridad por rol en el Gateway (no solo por token) | bff | ✅ Completado (RBAC stock/procurement) |
+| 🟡 Baja | Documentación Swagger en todos los microservicios | Todos | 🔄 En progreso (catalog, orders) |
 
 ---
 
@@ -581,13 +599,15 @@ VraKBen-CORP representa una solución de software empresarial completa que abord
 **Logros técnicos del proyecto:**
 
 - ✅ **Arquitectura de microservicios real** con 11 servicios independientes orquestados en Docker
-- ✅ **API Gateway / BFF** con validación JWT centralizada y CORS global
+- ✅ **API Gateway / BFF** con validación JWT centralizada, CORS global y RBAC por ruta
 - ✅ **Service Discovery** dinámico vía Netflix Eureka
 - ✅ **Frontend React moderno** con roles, rutas protegidas e interceptores JWT
-- ✅ **27 tests unitarios** (JUnit 5 + Mockito) con 0 fallos cubriendo 9 microservicios
+- ✅ **27 tests unitarios** (JUnit 5 + Mockito) + **4 tests de integración** (Testcontainers) con 0 fallos
 - ✅ **DTOs** en todos los controladores (nunca se expone la entidad JPA)
 - ✅ **Git Flow** con múltiples PRs, branches y resolución de conflictos documentada
-- ✅ **Documentación completa** (READMEs por microservicio, diagramas UML PlantUML)
+- ✅ **Documentación completa** (READMEs por microservicio, diagramas UML PlantUML, Swagger en ms-catalog y ms-orders)
+- ✅ **Feign Client** inter-microservicio: `ms-order-management` → `ms-stock-engine` en tiempo real
+- ✅ **Subida real de imágenes** con multipart upload, almacenamiento en disco y servicio de recursos estáticos
 
 **El sistema está en producción local** y puede levantarse con un solo comando:
 ```bash

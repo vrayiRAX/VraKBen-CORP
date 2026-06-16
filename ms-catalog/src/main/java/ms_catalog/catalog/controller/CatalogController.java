@@ -138,6 +138,20 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Reduce el stock de un producto por ID.
+     */
+    @Operation(summary = "Reducir stock", description = "Reduce el stock de un producto dado su ID.")
+    @PutMapping("/reduce/{id}")
+    public ResponseEntity<Void> reduceStock(@PathVariable Long id, @RequestParam Integer quantity) {
+        try {
+            service.reduceStock(id, quantity);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private ProductCatalogDTO convertToDTO(ProductCatalog product) {
         return new ProductCatalogDTO(
                 product.getId(),

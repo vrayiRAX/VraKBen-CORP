@@ -146,4 +146,24 @@ public class CatalogService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado en catǭlogo"));
         repository.delete(product);
     }
-}
+
+    /**
+     * Reduce el stock de un producto dado su ID.
+     * Invalida el caché para reflejar el cambio en toda la aplicación.
+     *
+     * @param id ID del producto.
+     * @param quantity Cantidad a reducir.
+     */
+    @CacheEvict(value = "catalog", key = "'all'")
+    public void reduceStock(Long id, Integer quantity) {
+        ProductCatalog product = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        if (product.getStock() < quantity) {
+            throw new RuntimeException("Stock insuficiente para el producto: " + product.getName());
+        }
+
+        product.setStock(product.getStock() - quantity);
+        repository.save(product);
+    }
+}

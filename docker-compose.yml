@@ -16,6 +16,15 @@ services:
     networks:
       - vrakben-net
 
+  # 2. Cache Redis
+  vrakben-redis:
+    image: redis:7-alpine
+    container_name: vrakben-redis
+    ports:
+      - "6380:6379"
+    networks:
+      - vrakben-net
+
   # 2. Service Discovery (Eureka)
   eureka-server:
     build: ./ms-eureka-server
@@ -53,18 +62,21 @@ services:
     networks:
       - vrakben-net
 
-  # 5. Catálogo de Repuestos (con puerto trasero y BD corregida)
+  # 6. Catálogo de Repuestos (con caché Redis)
   ms-catalog:
     build: ./ms-catalog
     container_name: ms-catalog
     ports:
-      - "8084:8084" # Puerta trasera para acceso directo
+      - "8084:8084"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://vrakben-db:5432/vrakben_db
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_REDIS_HOST=vrakben-redis
+      - SPRING_REDIS_PORT=6379
     depends_on:
       - vrakben-db
       - eureka-server
+      - vrakben-redis
     networks:
       - vrakben-net
 

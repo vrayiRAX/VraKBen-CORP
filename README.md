@@ -9,6 +9,8 @@
 [![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)](https://docs.docker.com/compose/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7-dc382d)](https://redis.io/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-ff6600)](https://www.rabbitmq.com/)
 
 ---
 
@@ -70,8 +72,10 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
                              │
          [ms-appointments] [ms-vehicle-history] [ms-job-orders] [ms-procurement]
                                                                     :8088
-                             │
+                             |
                  [PostgreSQL :5432 — vrakben_db]
+                 [Redis :6380 — Caché Catálogo]
+                 [RabbitMQ :5672 — Mensajería Órdenes]
 ```
 
 ---
@@ -129,6 +133,9 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
 | **Testcontainers** | Tests de integración con PostgreSQL real efímero |
 | **Springdoc OpenAPI 2.8.9** | Documentación Swagger de endpoints REST |
 | **Maven 3.9.6** | Gestión de dependencias (compilado en Docker) |
+| **Redis 7** | Caché en memoria para el catálogo |
+| **RabbitMQ 3** | Bus de mensajería asíncrona para órdenes de compra |
+| **JaCoCo 0.8.12** | Reportes de cobertura de código backend |
 
 > ⚠️ El BFF usa Spring Boot **3.4.0** + Spring Cloud **2024.0.0**. Los demás microservicios usan **4.0.3**. Esta diferencia es intencional: `spring-cloud-starter-gateway` no es compatible con Spring Boot 4.x aún.
 
@@ -142,6 +149,7 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
 | **Recharts** | Gráficas y métricas interactivas |
 | **Lucide React** | Iconos |
 | **CSS Puro** | Estilos sin frameworks externos |
+| **Vitest + RTL** | Testing unitario y de UI con 100% cobertura en servicios |
 
 ---
 
@@ -332,6 +340,17 @@ El proyecto cuenta con **dos capas de testing**:
 | ms-order-management | `OrderRepositoryIntegrationTest` | 2 | Persistencia + query `findByUsernameOrderByOrderDateDesc` contra PostgreSQL 15 real |
 | **TOTAL integración** | | **4** | ✅ Capa de datos con BD efímera |
 
+### Tests Frontend (Vitest + React Testing Library)
+
+| Componente/Servicio | Tests | Qué valida | Cobertura |
+|---|---|---|---|
+| `authService` | 4 | Login OK/Error, Registro OK/Error | 100% |
+| `catalogoService` | 6 | Listar, Buscar SKU, Crear, Subir imagen | 100% |
+| `carritoService` | 5 | Agregar, Obtener, Vaciar | 100% |
+| `Catalogo.jsx` | 6 | Render de lista, Estados vacíos, Botón añadir | 86% |
+| `Login.jsx` | 8 | Inputs, Loading, Error 401, Error de Red | 54% |
+| **TOTAL frontend** | **29** | ✅ Lógica de servicios y UI principal | **100% en servicios** |
+
 ```bash
 # Tests unitarios corren en el build de Docker (sin -DskipTests)
 docker-compose build ms-catalog
@@ -402,6 +421,9 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 | `feature/ev3-payment-flow` | Flujo de pago completo con descuento de stock vía Feign Client |
 | `feature/ev3-image-upload` | Subida real de imágenes en `ms-catalog` con almacenamiento local |
 | `feature/ev3-integration-tests-v2` | Tests de integración con Testcontainers (Spring Boot 4.x compatible) |
+| `feature/ev3-jacoco` | Reportes de cobertura JaCoCo + Caché con Redis en Catálogo |
+| `feature/ev3-vitest-frontend` | Integración de Vitest y 29 tests para React |
+| `feature/ev3-rabbitmq` | Mensajería asíncrona con RabbitMQ en órdenes de compra |
 | `feature/conflict-demo` | Demostración de resolución de conflictos Git |
 
 ---
@@ -427,6 +449,10 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 | 15 | RBAC en Gateway: protección de `/api/stock/**` y `/api/procurement/**` por rol ADMIN | ✅ Completado |
 | 16 | Subida real de imágenes: multipart en `ms-catalog`, almacenamiento local + URL pública | ✅ Completado |
 | 17 | Tests de integración con Testcontainers (PostgreSQL efímero, SB4 compatible) | ✅ Completado |
+| 18 | Reportes de cobertura JaCoCo (9 microservicios) | ✅ Completado |
+| 19 | Caché Redis para listar catálogo en `ms-catalog` | ✅ Completado |
+| 20 | Testing Frontend con Vitest y React Testing Library (29 tests) | ✅ Completado |
+| 21 | Mensajería asíncrona RabbitMQ para notificaciones de órdenes de compra | ✅ Completado |
 
 ---
 
@@ -455,8 +481,12 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 - **Tests de Integración Testcontainers**: Se ejecutan localmente con Docker Desktop activo. Levantan un PostgreSQL 15 real efímero y validan la capa de persistencia de `ms-catalog` y `ms-order-management`.
 - **Persistencia del perfil**: Los datos del perfil de usuario y su historial de vehículos se obtienen en tiempo real mediante integraciones con `ms-auth-server` y `ms-vehicle-history`.
 - **Feign Client entre microservicios**: `ms-order-management` llama a `ms-stock-engine` vía Feign Client para descontar stock en tiempo real al procesar una orden de compra.
+- **Mensajería Asíncrona (RabbitMQ)**: `ms-order-management` publica un evento a `vrakben.exchange` al terminar una orden. Un consumer (`OrderNotificationListener`) lo escucha simulando un correo.
+- **Caché (Redis)**: `ms-catalog` cacheados sus productos en la llave `products` de Redis para reducir carga en PostgreSQL.
+- **Cobertura de Código (JaCoCo)**: Todos los microservicios backend generan un reporte HTML en `target/site/jacoco` al ejecutar `mvn verify`.
 - **Imágenes de productos**: El admin sube imágenes físicas (multipart) via `POST /api/catalog/upload/{sku}`. Se almacenan en `ms-catalog/uploads/images/` y se sirven como recursos estáticos en `/images/**`.
 - **Springdoc OpenAPI**: `ms-catalog` y `ms-order-management` exponen documentación Swagger en `/swagger-ui/index.html`.
+
 
 ---
 

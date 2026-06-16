@@ -6,6 +6,7 @@ Microservicio encargado del catálogo de productos/repuestos del taller. Gestion
 
 - **Spring Boot**
 - **Spring Data JPA** + **PostgreSQL**
+- **Redis 7** (Caché en memoria)
 - **Puerto:** `8084`
 - **Eureka Name:** `ms-catalog`
 

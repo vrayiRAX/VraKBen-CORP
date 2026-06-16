@@ -10,6 +10,7 @@ Aplicación web React moderna para el sistema de gestión del taller VraKBen-COR
 - **Recharts** para gráficas de métricas
 - **Lucide React** para iconos
 - **CSS puro** (sin frameworks)
+- **Vitest + React Testing Library** para pruebas unitarias y de componentes
 
 ## Arrancar en Desarrollo
 
@@ -18,6 +19,18 @@ cd frontend
 npm install
 npm run dev
 # → http://localhost:5173
+```
+
+## Testing (Vitest)
+
+El frontend incluye **29 pruebas unitarias y de integración** que aseguran la correcta funcionalidad de la lógica de negocio y componentes clave. Los servicios (comunicación con el API Gateway) tienen **100% de cobertura**.
+
+```bash
+# Ejecutar pruebas
+npm test
+
+# Ejecutar pruebas y generar reporte de cobertura
+npm run test:coverage
 ```
 
 ## Estructura de Carpetas

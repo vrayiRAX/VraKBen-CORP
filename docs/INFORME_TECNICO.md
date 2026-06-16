@@ -114,10 +114,12 @@ La automotriz **VraKBen** opera con herramientas descentralizadas (planillas Exc
 | RNF-02 | Los tokens JWT deben validarse antes de enrutar cualquier petición protegida | Seguridad | Filtro en API Gateway |
 | RNF-03 | El sistema debe ser escalable horizontalmente por microservicio | Escalabilidad | Independencia de contenedores |
 | RNF-04 | Si un microservicio falla, los demás no deben verse afectados | Disponibilidad | Aislamiento Docker |
-| RNF-05 | El tiempo de respuesta del catálogo no debe superar 2 segundos | Rendimiento | JPA + índices BD |
-| RNF-06 | El código debe tener tests unitarios con 0 fallos | Calidad | JUnit 5 + Mockito |
+| RNF-05 | El tiempo de respuesta del catálogo no debe superar 2 segundos | Rendimiento | Caché Redis + JPA |
+| RNF-06 | El código debe tener tests unitarios con 0 fallos | Calidad | JUnit 5 + Mockito + JaCoCo |
 | RNF-07 | Cada controlador debe usar DTOs, no entidades JPA directas | Mantenibilidad | DTO Pattern |
 | RNF-08 | Todo el sistema debe poder levantarse con un solo comando Docker | Despliegue | `docker-compose up --build -d` |
+| RNF-09 | El frontend debe tener cobertura de pruebas en la lógica de negocio | Calidad | Vitest + React Testing Library |
+| RNF-10 | Las notificaciones de órdenes no deben bloquear el hilo principal | Rendimiento | RabbitMQ Asíncrono |
 
 ---
 
@@ -365,6 +367,23 @@ Se usan `@Testcontainers` + `@SpringBootTest(webEnvironment=NONE)` con `@Service
 | ms-order-management | `OrderRepositoryIntegrationTest` | 2 | Persistir órdenes + `findByUsernameOrderByOrderDateDesc` con filtro multi-usuario |
 | **TOTAL integración** | | **4** | ✅ Capa de datos validada con BD real efímera |
 
+### Tests Frontend (Vitest + React Testing Library)
+
+Para cumplir con las métricas de calidad en el lado cliente, se implementaron pruebas usando **Vitest**.
+
+| Componente/Servicio | Tests | Qué valida | Cobertura |
+|---|---|---|---|
+| `authService` | 4 | Login y registro HTTP | 100% |
+| `catalogoService` | 6 | Endpoints del catálogo y subida multipart | 100% |
+| `carritoService` | 5 | Operaciones CRUD del carrito | 100% |
+| `Catalogo.jsx` | 6 | UI rendering, empty state, añadir producto | 86% |
+| `Login.jsx` | 8 | Inputs, loaders, manejo de error 401 | 54% |
+| **TOTAL** | **29** | ✅ Lógica frontend crítica asegurada | |
+
+### Cobertura de Código (JaCoCo)
+
+Todos los microservicios generan un reporte de cobertura en cada build gracias al plugin de **JaCoCo**. La meta es mantener los servicios core por encima del 80% en sus paquetes de lógica (`/service`). Reporte disponible en `target/site/jacoco/index.html`.
+
 ### Ejemplo de Test (Happy Path + Error Path)
 
 ```java
@@ -460,7 +479,9 @@ SELECT * FROM product_catalog LIMIT 5;
 | `ms-job-orders` | `./ms-job-orders` | — | vrakben-db, eureka |
 | `ms-appointment-scheduler` | `./ms-appointment-scheduler` | — | vrakben-db, eureka |
 | `ms-vehicle-history` | `./ms-vehicle-history` | — | vrakben-db, eureka |
-| `ms-order-management` | `./ms-order-management` | — | vrakben-db, eureka |
+| `ms-order-management` | `./ms-order-management` | — | vrakben-db, eureka, vrakben-rabbitmq |
+| `vrakben-redis` | `redis:7-alpine` | 6380 | — |
+| `vrakben-rabbitmq`| `rabbitmq:3-management`| 5672, 15672| — |
 
 **Red:** `vrakben-net` (bridge) — todos los contenedores se comunican por nombre de servicio.
 **Volumen:** `vrakben-db-data` — persiste la BD entre reinicios.
@@ -523,6 +544,9 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 | `feature/ev3-payment-flow`           | Flujo de pago completo con Feign Client + historial de órdenes          | ✅ Mergeado   |
 | `feature/ev3-image-upload`           | Subida real de imágenes en ms-catalog (multipart + almacenamiento local) | ✅ Mergeado   |
 | `feature/ev3-integration-tests-v2`   | Tests de integración con Testcontainers (SB4 compatible)                | ✅ Mergeado   |
+| `feature/ev3-jacoco`                 | Reportes de cobertura JaCoCo + Caché con Redis en Catálogo              | ✅ Mergeado   |
+| `feature/ev3-vitest-frontend`        | Integración de Vitest y 29 tests para React con cobertura en servicios  | ✅ Mergeado   |
+| `feature/ev3-rabbitmq`               | Mensajería asíncrona con RabbitMQ en órdenes de compra                  | ✅ Mergeado   |
 | `feature/conflict-demo` | Demostración de conflicto Git | ✅ Resuelto |
 
 > [!NOTE]
@@ -586,6 +610,9 @@ eficiencia operacional y experiencia del cliente.
 | 🔴 Alta | Flujo de pago completo con descuento de stock (Feign) | ms-order-management, ms-stock | ✅ Completado |
 | 🔴 Alta | Subida real de imágenes de productos (multipart) | ms-catalog | ✅ Completado |
 | 🔴 Alta | Tests de integración con Testcontainers | ms-catalog, ms-order-management | ✅ Completado |
+| 🔴 Alta | Testing Frontend con Vitest (29 tests) | frontend | ✅ Completado |
+| 🔴 Alta | Mensajería asíncrona con RabbitMQ | ms-order-management | ✅ Completado |
+| 🔴 Alta | Caché con Redis en el catálogo | ms-catalog | ✅ Completado |
 | 🟠 Media | Proceso de pago (Transbank WebPay Plus) | ms-order-management | 🔄 Pendiente |
 | 🟡 Baja | Seguridad por rol en el Gateway (no solo por token) | bff | ✅ Completado (RBAC stock/procurement) |
 | 🟡 Baja | Documentación Swagger en todos los microservicios | Todos | 🔄 En progreso (catalog, orders) |
@@ -608,6 +635,9 @@ VraKBen-CORP representa una solución de software empresarial completa que abord
 - ✅ **Documentación completa** (READMEs por microservicio, diagramas UML PlantUML, Swagger en ms-catalog y ms-orders)
 - ✅ **Feign Client** inter-microservicio: `ms-order-management` → `ms-stock-engine` en tiempo real
 - ✅ **Subida real de imágenes** con multipart upload, almacenamiento en disco y servicio de recursos estáticos
+- ✅ **Caché en Memoria** con Redis para acelerar la carga del catálogo
+- ✅ **Mensajería Asíncrona** con RabbitMQ para orquestar eventos de negocio
+- ✅ **Calidad Asegurada** con reportes JaCoCo en backend y Vitest en frontend
 
 **El sistema está en producción local** y puede levantarse con un solo comando:
 ```bash

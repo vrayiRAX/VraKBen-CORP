@@ -88,12 +88,12 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
 
 ### 2. 🛒 Portal de Clientes
 
-- **Catálogo Visual** de repuestos con imágenes, precio y descripción (`ms-catalog`).
-- **Carrito de Compras** con persistencia de sesión (`ms-shopping-cart`).
-- **Checkout y Órdenes** con historial de compras (`ms-order-management`).
+- **Catálogo Visual** de repuestos con imágenes reales subidas por el admin, precio y descripción (`ms-catalog`).
+- **Carrito de Compras** con persistencia de sesión, soporte multi-ítem y vaciado automático post-pago (`ms-shopping-cart`).
+- **Checkout y Órdenes** con flujo de pago completo: descuento de stock en tiempo real vía Feign Client + historial por usuario (`ms-order-management`).
 - **Agendar Citas** en el taller desde la plataforma web (`ms-appointment-scheduler`).
 - **Historial de Vehículos** con registros de mantenimientos anteriores (`ms-vehicle-history`).
-- **Perfil de Usuario** con foto editable, datos personales y vehículos con patentes formato chileno (ABCD-12).
+- **Perfil de Usuario** con foto editable, datos personales, vehículos con patentes formato chileno (ABCD-12) e historial de pedidos con estado.
 
 ### 3. 🔩 Intranet del Taller (Mecánico)
 
@@ -103,10 +103,11 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
 
 ### 4. 🖥️ Panel de Control (Admin)
 
-- **Gestión de Bodega**: Control completo del inventario (`ms-stock-engine`).
+- **Gestión de Inventario**: Crear productos con subida real de imagen (archivo local) directamente desde el formulario.
 - **Métricas con Gráficas Recharts**: datos reales de ventas y catálogo.
 - **Gestión de Usuarios y Roles**: Búsqueda y administración de cuentas.
 - **Gestión de Solicitudes**: Aprobar o rechazar solicitudes de materiales de los mecánicos.
+- **RBAC en Gateway**: Rutas `/api/stock/**` y `/api/procurement/**` bloqueadas a roles sin `ROLE_ADMIN`.
 
 ---
 
@@ -124,7 +125,9 @@ VraKBen-CORP migra a una **arquitectura de microservicios con Spring Cloud** que
 | **JJWT 0.11.5** | Generación y validación de tokens JWT |
 | **PostgreSQL 15** | Base de datos relacional centralizada |
 | **Docker + Docker Compose** | Containerización y orquestación |
-| **JUnit 5 + Mockito** | Tests unitarios de los microservicios |
+| **JUnit 5 + Mockito** | Tests unitarios de los microservicios (27 tests, 0 fallos) |
+| **Testcontainers** | Tests de integración con PostgreSQL real efímero |
+| **Springdoc OpenAPI 2.8.9** | Documentación Swagger de endpoints REST |
 | **Maven 3.9.6** | Gestión de dependencias (compilado en Docker) |
 
 > ⚠️ El BFF usa Spring Boot **3.4.0** + Spring Cloud **2024.0.0**. Los demás microservicios usan **4.0.3**. Esta diferencia es intencional: `spring-cloud-starter-gateway` no es compatible con Spring Boot 4.x aún.
@@ -304,19 +307,40 @@ El Controller no conoce la BD. El Service contiene la lógica de negocio.
 
 ## 🧪 Testing
 
-Tests unitarios implementados con **JUnit 5** y **Mockito** (sin dependencia de BD real):
+El proyecto cuenta con **dos capas de testing**:
+
+### Tests Unitarios (JUnit 5 + Mockito)
 
 | Microservicio | Clase de Test | Tests | Casos cubiertos |
 |---|---|---|---|
 | ms-auth-server | `AuthServiceTest` | 4 | Login OK, Login incorrecto, Registro OK, Usuario duplicado |
 | ms-catalog | `CatalogServiceTest` | 4 | Listar, Buscar por SKU OK, SKU no encontrado, Guardar |
 | ms-supplier-procurement | `ProcurementServiceTest` | 5 | Crear, Aprobar, Rechazar, No encontrada, Listar todo |
-| **Total** | | **13** | ✅ **0 fallos** |
+| ms-stock | `StockServiceTest` | 3 | Reducir stock OK, Producto no encontrado, Stock insuficiente |
+| ms-order-management | `OrderServiceTest` | 2 | Orden exitosa (stock OK), Orden fallida (sin stock) |
+| ms-job-orders | `JobOrderServiceTest` | 3 | Crear, Completar, No encontrada |
+| ms-vehicle-history | `VehicleHistoryServiceTest` | 2 | Agregar entrada, Obtener historial |
+| ms-shopping-cart | `CartServiceTest` | 2 | Agregar ítem, Listar por RUT |
+| ms-appointment-scheduler | `AppointmentServiceTest` | 2 | Agendar OK, Sin stock |
+| **TOTAL unitarios** | | **27** | ✅ **0 fallos** |
+
+### Tests de Integración (Testcontainers + PostgreSQL real)
+
+| Microservicio | Clase de Test | Tests | Qué valida |
+|---|---|---|---|
+| ms-catalog | `CatalogRepositoryIntegrationTest` | 2 | Persistencia + query `findBySku` contra PostgreSQL 15 real |
+| ms-order-management | `OrderRepositoryIntegrationTest` | 2 | Persistencia + query `findByUsernameOrderByOrderDateDesc` contra PostgreSQL 15 real |
+| **TOTAL integración** | | **4** | ✅ Capa de datos con BD efímera |
 
 ```bash
-# Los tests se ejecutan en el build de Docker (sin -DskipTests)
+# Tests unitarios corren en el build de Docker (sin -DskipTests)
 docker-compose build ms-catalog
-# → "[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0"
+# → "Tests run: 4, Failures: 0, Errors: 0, Skipped: 0"
+
+# Tests de integración (requiere Docker Desktop corriendo)
+# Ejecutar desde el directorio del microservicio:
+./mvnw test -Dtest=CatalogRepositoryIntegrationTest
+./mvnw test -Dtest=OrderRepositoryIntegrationTest
 ```
 
 ---
@@ -372,9 +396,12 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 |---|---|
 | `main` | Código estable |
 | `feature/frontend-improvements` | Mejoras UI, fix Gateway, integración frontend-backend |
-| `feature/testing-and-dtos` | Tests unitarios + DTOs (PR hacia main) |
-| `feature/ev3-mechanic-integration` | EV3 Final: Dashboard mecánico con datos reales (`job-orders` + `stock`) |
-| `feature/ev3-user-profile` | EV3 Final: Perfil cliente conectado con PostgreSQL (Auth y Vehicle History) |
+| `feature/testing-and-dtos` | Tests unitarios + DTOs |
+| `feature/ev3-mechanic-integration` | Dashboard mecánico con datos reales (`job-orders` + `stock`) |
+| `feature/ev3-user-profile` | Perfil cliente conectado con PostgreSQL |
+| `feature/ev3-payment-flow` | Flujo de pago completo con descuento de stock vía Feign Client |
+| `feature/ev3-image-upload` | Subida real de imágenes en `ms-catalog` con almacenamiento local |
+| `feature/ev3-integration-tests-v2` | Tests de integración con Testcontainers (Spring Boot 4.x compatible) |
 | `feature/conflict-demo` | Demostración de resolución de conflictos Git |
 
 ---
@@ -392,11 +419,14 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 | 7 | Integración completa de todos los servicios en `docker-compose.yml` | ✅ Completado |
 | 8 | Desarrollo del Frontend React (roles, paneles, catálogo con imágenes) | ✅ Completado |
 | 9 | Integración Frontend ↔ Backend vía API Gateway (eliminación de bypasses) | ✅ Completado |
-| 10 | Tests JUnit 5 + Mockito en 3 microservicios (13 tests, 0 fallos) | ✅ Completado |
+| 10 | Tests JUnit 5 + Mockito en 9 microservicios (27 tests, 0 fallos) | ✅ Completado |
 | 11 | DTOs en controladores (Entity → DTO explícito con `toDTO()`) | ✅ Completado |
 | 12 | Conexión de paneles del Mecánico a datos reales (job-orders, stock) | ✅ Completado |
 | 13 | Persistencia real del perfil de usuario y vehículos en BD | ✅ Completado |
-| 14 | Proceso de pago completo (integración Transbank) | 🔄 Pendiente |
+| 14 | Flujo de pago completo: Feign Client stock → historial de órdenes por usuario | ✅ Completado |
+| 15 | RBAC en Gateway: protección de `/api/stock/**` y `/api/procurement/**` por rol ADMIN | ✅ Completado |
+| 16 | Subida real de imágenes: multipart en `ms-catalog`, almacenamiento local + URL pública | ✅ Completado |
+| 17 | Tests de integración con Testcontainers (PostgreSQL efímero, SB4 compatible) | ✅ Completado |
 
 ---
 
@@ -421,8 +451,12 @@ docker-compose exec vrakben-db psql -U user_vrakben -d vrakben_db
 - **Contraseñas**: Almacenadas con `BCryptPasswordEncoder` vía Spring Security.
 - **Base de datos compartida**: Todos los microservicios comparten `vrakben_db`. En producción se recomienda una BD por servicio (*Database per Service pattern*).
 - **`POSTGRES_DB`**: La base de datos `vrakben_db` se crea automáticamente al levantar el contenedor de PostgreSQL.
-- **Tests en Docker**: Los Dockerfiles de `ms-auth-server`, `ms-catalog` y `ms-supplier-procurement` corren los tests unitarios en el proceso de build (sin `-DskipTests`). Los `contextLoads` de integración están `@Disabled` ya que requieren Docker-in-Docker.
-- **Persistencia del perfil**: Los datos del perfil de usuario y su historial de vehículos ahora se obtienen en tiempo real mediante integraciones con `ms-auth-server` y `ms-vehicle-history` hacia la BD PostgreSQL.
+- **Tests en Docker**: Los Dockerfiles corren los tests unitarios en el proceso de build (sin `-DskipTests`). Los `contextLoads` de integración están `@Disabled` ya que requieren Docker-in-Docker.
+- **Tests de Integración Testcontainers**: Se ejecutan localmente con Docker Desktop activo. Levantan un PostgreSQL 15 real efímero y validan la capa de persistencia de `ms-catalog` y `ms-order-management`.
+- **Persistencia del perfil**: Los datos del perfil de usuario y su historial de vehículos se obtienen en tiempo real mediante integraciones con `ms-auth-server` y `ms-vehicle-history`.
+- **Feign Client entre microservicios**: `ms-order-management` llama a `ms-stock-engine` vía Feign Client para descontar stock en tiempo real al procesar una orden de compra.
+- **Imágenes de productos**: El admin sube imágenes físicas (multipart) via `POST /api/catalog/upload/{sku}`. Se almacenan en `ms-catalog/uploads/images/` y se sirven como recursos estáticos en `/images/**`.
+- **Springdoc OpenAPI**: `ms-catalog` y `ms-order-management` exponen documentación Swagger en `/swagger-ui/index.html`.
 
 ---
 
